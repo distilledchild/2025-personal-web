@@ -10,7 +10,11 @@ import { spawn } from 'child_process';
 import { toZonedTime, fromZonedTime } from 'date-fns-tz';
 import { generateSignedUrl, generateSignedUrlsForPrefix, isValidFilePath } from './utils/gcsHelper.js';
 import billingRoutes from './routes/billing.js';
+import YahooFinance2 from 'yahoo-finance2';
 
+const yf = new YahooFinance2({
+    suppressNotices: ['yahooSurvey', 'ripHistorical']
+});
 
 
 const __filename = fileURLToPath(import.meta.url);
@@ -206,6 +210,57 @@ app.get('/api/interests/art-museums', async (req, res) => {
         res.json(enrichedMuseums);
     } catch (err) {
         console.error('Error fetching art museums:', err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+// Get Market & Commodities Data (Yahoo Finance 2)
+app.get('/api/finance/market-data', async (req, res) => {
+    try {
+        const tickers = {
+            'S&P 500': '^GSPC',
+            'NASDAQ': '^IXIC',
+            'Apple': 'AAPL',
+            'Gold': 'GC=F',
+            'Silver': 'SI=F',
+            'Copper': 'HG=F'
+        };
+
+        const results = await Promise.all(
+            Object.entries(tickers).map(async ([name, symbol]) => {
+                try {
+                    const quote = await yf.quote(symbol);
+                    // Fetch last 7 days of historical data using chart() since historical() is deprecated in v3
+                    const queryOptions = { 
+                        period1: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                        period2: new Date().toISOString().split('T')[0],
+                        interval: '1d'
+                    };
+                    const chartData = await yf.chart(symbol, queryOptions);
+                    
+                    const history = (chartData.quotes || []).map(h => ({
+                        date: new Date(h.date).toISOString().split('T')[0],
+                        close: h.close
+                    }));
+
+                    return {
+                        name,
+                        symbol,
+                        price: quote.regularMarketPrice,
+                        change: quote.regularMarketChange,
+                        changePercent: quote.regularMarketChangePercent,
+                        currency: quote.currency || 'USD',
+                        history
+                    };
+                } catch (e) {
+                    console.error(`Error fetching data for ${symbol}:`, e);
+                    return { name, symbol, error: 'Unavailable' };
+                }
+            })
+        );
+        res.json(results);
+    } catch (err) {
+        console.error('Error fetching finance data:', err);
         res.status(500).json({ error: 'Internal server error' });
     }
 });

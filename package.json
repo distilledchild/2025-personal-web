@@ -47,7 +47,8 @@
     "remark-gfm": "^4.0.1",
     "socket.io": "^4.8.1",
     "socket.io-client": "^4.8.1",
-    "three": "^0.181.2"
+    "three": "^0.181.2",
+    "yahoo-finance2": "^3.14.0"
   },
   "devDependencies": {
     "@types/node": "^22.14.0",
