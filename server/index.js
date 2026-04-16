@@ -223,34 +223,75 @@ app.get('/api/finance/market-data', async (req, res) => {
             'WTI Crude Oil': 'CL=F',
             'Gold': 'GC=F',
             'Silver': 'SI=F',
-            'Copper': 'HG=F'
+            'Copper': 'HG=F',
+            'US Dollar (DXY)': 'DX-Y.NYB',
+            'Volatility (VIX)': '^VIX',
+            'US 10-Yr Yield': '^TNX',
+            'GLD ETF Flow': 'GLD',
+            'IAU ETF Flow': 'IAU'
         };
 
         const results = await Promise.all(
             Object.entries(tickers).map(async ([name, symbol]) => {
                 try {
                     const quote = await yf.quote(symbol);
-                    // Fetch last 7 days of historical data using chart() since historical() is deprecated in v3
+                    // Fetch last 12 days to safely bypass weekends and holidays
                     const queryOptions = { 
-                        period1: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                        period1: new Date(Date.now() - 12 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
                         period2: new Date().toISOString().split('T')[0],
                         interval: '1d'
                     };
                     const chartData = await yf.chart(symbol, queryOptions);
                     
-                    const history = (chartData.quotes || []).map(h => ({
-                        date: new Date(h.date).toISOString().split('T')[0],
-                        close: h.close
-                    }));
+                    let history = (chartData.quotes || [])
+                        .filter(h => h.close != null)
+                        .map(h => ({
+                            date: new Date(h.date).toISOString().split('T')[0],
+                            close: h.close
+                        }));
+
+                    // Use Eastern Time (ET) for today's date
+                    const etNow = new Date(new Date().toLocaleString('en-US', { timeZone: 'America/New_York' }));
+                    const todayStr = `${etNow.getFullYear()}-${String(etNow.getMonth() + 1).padStart(2, '0')}-${String(etNow.getDate()).padStart(2, '0')}`;
+
+                    // Debug: log what Yahoo returned
+                    console.log(`[${symbol}] todayStr=${todayStr}, last history date=${history[history.length-1]?.date}, regularMarketPrice=${quote.regularMarketPrice}`);
+
+                    // Always force today's live price as the final point
+                    if (quote.regularMarketPrice != null) {
+                        history = history.filter(h => h.date !== todayStr); // remove any existing today entry (close may be null)
+                        history.push({ date: todayStr, close: quote.regularMarketPrice });
+                    }
+                    
+                    // Slice to exactly 5 elements
+                    history = history.slice(-5);
+                    console.log(`[${symbol}] final history dates:`, history.map(h => h.date));
+
+                    let displayCurrency = quote.currency || 'USD';
+                    if (symbol === '^VIX' || symbol === 'DX-Y.NYB') displayCurrency = 'Pts';
+                    if (symbol === '^TNX') displayCurrency = '%';
+
+                    let displayPrice = quote.regularMarketPrice;
+                    let displayChange = quote.regularMarketChange;
+                    let displayChangePercent = quote.regularMarketChangePercent;
+
+                    // For ETF Flows, use sharesOutstanding as the primary metric
+                    if (symbol === 'GLD' || symbol === 'IAU') {
+                        displayPrice = quote.sharesOutstanding ? (quote.sharesOutstanding / 1000000) : 0;
+                        displayCurrency = 'M Shares';
+                        displayChange = 0;
+                        displayChangePercent = 0;
+                    }
 
                     return {
                         name,
                         symbol,
-                        price: quote.regularMarketPrice,
-                        change: quote.regularMarketChange,
-                        changePercent: quote.regularMarketChangePercent,
-                        currency: quote.currency || 'USD',
-                        history
+                        price: displayPrice,
+                        change: displayChange,
+                        changePercent: displayChangePercent,
+                        currency: displayCurrency,
+                        history,
+                        fetchedAt: new Date().toLocaleString('en-US', { timeZone: 'America/New_York', hour: '2-digit', minute: '2-digit', hour12: true }) + ' ET'
                     };
                 } catch (e) {
                     console.error(`Error fetching data for ${symbol}:`, e);
@@ -262,6 +303,319 @@ app.get('/api/finance/market-data', async (req, res) => {
     } catch (err) {
         console.error('Error fetching finance data:', err);
         res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+// FRED Macro Data cache
+let macroCache = null;
+let lastMacroFetch = 0;
+const MACRO_CACHE_DURATION = 12 * 60 * 60 * 1000; // 12 hours
+
+// Get Macroeconomic Indicators (FRED API)
+app.get('/api/finance/macro-data', async (req, res) => {
+    try {
+        const now = Date.now();
+        if (macroCache && (now - lastMacroFetch < MACRO_CACHE_DURATION)) {
+            return res.json(macroCache);
+        }
+
+        const apiKey = process.env.FRED_API_KEY;
+        if (!apiKey) {
+            return res.status(500).json({ error: 'FRED API key not configured' });
+        }
+
+        const macroSeries = [
+            { id: 'CPIAUCSL', name: 'US Consumer Price Index (CPI)', unit: 'Index' },
+            { id: 'PCEPI', name: 'US Personal Consumption (PCE)', unit: 'Index' },
+            { id: 'DFII10', name: '10-Year TIPS (Real Yield)', unit: '%' },
+            { id: 'FEDFUNDS', name: 'Federal Funds Rate', unit: '%' },
+            { id: 'GDPC1', name: 'Real GDP Growth Rate', unit: '%', params: '&units=pca' },
+            { id: 'PAYEMS', name: 'Non-Farm Payrolls (NFP)', unit: 'K' },
+            { id: 'M2SL', name: 'M2 Money Supply', unit: 'B$' },
+            { id: 'T10Y2Y', name: '10Y-2Y Yield Spread', unit: '%' },
+            { id: 'T10YIE', name: '10Y Inflation Expectation', unit: '%' },
+            { id: 'RRPONTSYD', name: 'Reverse Repo (Overnight)', unit: 'B$' }
+        ];
+
+        const results = await Promise.all(
+            macroSeries.map(async (series) => {
+                try {
+                    const historyDays = series.id === 'GDPC1' ? 3 * 365 : 210;
+                    const startDate = new Date(Date.now() - historyDays * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+
+                    const extraParams = series.params || '';
+                    const response = await fetch(`https://api.stlouisfed.org/fred/series/observations?series_id=${series.id}&api_key=${apiKey}&file_type=json&observation_start=${startDate}&sort_order=asc${extraParams}`);
+                    
+                    if (!response.ok) {
+                        throw new Error(`FRED API Status: ${response.status}`);
+                    }
+                    
+                    const data = await response.json();
+                    
+                    if (!data || !data.observations) {
+                        throw new Error(`No observations for ${series.id}`);
+                    }
+                    
+                    const validObs = data.observations
+                        .filter(obs => obs.value !== '.')
+                        .map(obs => ({
+                            date: obs.date,
+                            value: parseFloat(obs.value)
+                        }));
+                    
+                    if (validObs.length === 0) {
+                        throw new Error(`Empty data for ${series.id}`);
+                    }
+
+                    const latest = validObs[validObs.length - 1];
+                    const previous = validObs[validObs.length - 2];
+                    let change = 0;
+                    let changePercent = 0;
+                    
+                    if (latest && previous) {
+                        change = latest.value - previous.value;
+                        changePercent = (change / previous.value) * 100;
+                    }
+
+                    return {
+                        id: series.id,
+                        name: series.name,
+                        unit: series.unit,
+                        currentValue: latest ? latest.value : null,
+                        currentDate: latest ? latest.date : null,
+                        change,
+                        changePercent,
+                        history: validObs,
+                        fetchedAt: new Date().toLocaleString('en-US', { timeZone: 'America/New_York', hour: '2-digit', minute: '2-digit', hour12: true }) + ' ET'
+                    };
+                } catch (seriesErr) {
+                    console.error(`[FRED] Skipping ${series.id} due to error:`, seriesErr.message);
+                    return {
+                        id: series.id,
+                        name: series.name,
+                        unit: series.unit,
+                        error: seriesErr.message,
+                        history: []
+                    };
+                }
+            })
+        );
+
+        // --- NEW: Alpha Vantage News Sentiment Analysis ---
+        try {
+            const avApiKey = process.env.ALPHA_VANTAGE_API_KEY;
+            if (!avApiKey) {
+                console.warn('[Alpha Vantage] ALPHA_VANTAGE_API_KEY is not configured; skipping sentiment.');
+            } else {
+            const avResponse = await fetch(`https://www.alphavantage.co/query?function=NEWS_SENTIMENT&limit=50&apikey=${avApiKey}`);
+            const avData = await avResponse.json();
+            
+            if (avData && avData.feed) {
+                const feed = avData.feed;
+                let totalScore = 0;
+                let bullishCount = 0;
+                let bearishCount = 0;
+                let neutralCount = 0;
+
+                feed.forEach(item => {
+                    const score = parseFloat(item.overall_sentiment_score);
+                    totalScore += score;
+                    if (score >= 0.15) bullishCount++;
+                    else if (score <= -0.15) bearishCount++;
+                    else neutralCount++;
+                });
+
+                const avgScore = totalScore / feed.length;
+                // Normalize avgScore (-0.35 to 0.35) to Index (0 to 100)
+                // Formula: ((score + 0.35) / 0.7) * 100
+                const sentimentIndex = Math.min(100, Math.max(0, ((avgScore + 0.35) / 0.7) * 100));
+                
+                // Add as a pseudo-macro indicator
+                results.push({
+                    id: 'SENTIMENT_AI',
+                    name: 'Investor Sentiment (AI)',
+                    unit: 'Index',
+                    currentValue: parseFloat(sentimentIndex.toFixed(1)),
+                    currentDate: new Date().toISOString().split('T')[0],
+                    change: bullishCount - bearishCount, // Qualitative change
+                    changePercent: (bullishCount / feed.length) * 100, // Bullish ratio
+                    history: [], // NEWS API doesn't provide easy history without multiple calls
+                    details: {
+                        bullish: Math.round((bullishCount / feed.length) * 100),
+                        neutral: Math.round((neutralCount / feed.length) * 100),
+                        bearish: Math.round((bearishCount / feed.length) * 100)
+                    },
+                    fetchedAt: new Date().toLocaleString('en-US', { timeZone: 'America/New_York', hour: '2-digit', minute: '2-digit', hour12: true }) + ' ET'
+                });
+            }
+            }
+        } catch (avErr) {
+            console.error('Error fetching Alpha Vantage sentiment:', avErr);
+        }
+        // --------------------------------------------------
+
+        macroCache = results;
+        lastMacroFetch = now;
+        res.json(results);
+    } catch (err) {
+        console.error('Error fetching FRED macro data:', err);
+        res.status(500).json({ error: 'Internal server error while fetching macro data', details: err.message, stack: err.stack });
+    }
+});
+
+// Get FOMC Schedule + Rate History (Release ID: 52 + FEDFUNDS)
+app.get('/api/finance/fomc-schedule', async (req, res) => {
+    try {
+        const apiKey = process.env.FRED_API_KEY;
+
+        // Fetch 2 years of FEDFUNDS to ensure we have enough data for 8+ meetings
+        const [fomcResp, rateResp] = await Promise.all([
+            fetch(`https://api.stlouisfed.org/fred/release/dates?release_id=52&api_key=${apiKey}&file_type=json`),
+            fetch(`https://api.stlouisfed.org/fred/series/observations?series_id=FEDFUNDS&api_key=${apiKey}&file_type=json&observation_start=${new Date(Date.now() - 730 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]}&sort_order=asc`)
+        ]);
+
+        const fomcData = await fomcResp.json();
+        const rateData = await rateResp.json();
+
+        if (!fomcData.release_dates) return res.json({ events: [], rateHistory: [] });
+
+        const now = new Date().toISOString().split('T')[0];
+        const allDates = fomcData.release_dates.map(d => d.date).sort();
+        
+        const pastDates = allDates.filter(d => d <= now);
+        const nextDates = allDates.filter(d => d > now);
+
+        // Always show last 8 past meetings (count-based, not date-based)
+        const past8Dates = pastDates.slice(-8);
+
+        // Map FEDFUNDS monthly observations to a lookup array (sorted ascending)
+        const rateHistory = (rateData.observations || [])
+            .filter(o => o.value !== '.')
+            .map(o => ({ date: o.date, rate: parseFloat(o.value) }));
+
+        // For each FOMC date, find the matching FEDFUNDS rate:
+        // - First try same month, then fallback to the nearest preceding month
+        const findRate = (dateStr) => {
+            const [y, m] = dateStr.split('-');
+            // Same month match
+            const sameMonth = rateHistory.find(r => r.date.startsWith(`${y}-${m}`));
+            if (sameMonth) return sameMonth.rate;
+            // Fallback: latest rate before this date
+            const before = rateHistory.filter(r => r.date < dateStr);
+            return before.length > 0 ? before[before.length - 1].rate : null;
+        };
+
+        const events = [
+            ...past8Dates.map(d => ({ date: d, status: 'past', rate: findRate(d) })),
+            ...nextDates.slice(0, 1).map(d => ({ date: d, status: 'next', rate: null }))
+        ];
+
+        res.json({ events, rateHistory });
+    } catch (err) {
+        console.error('Error fetching FOMC schedule:', err);
+        res.json({ events: [], rateHistory: [] });
+    }
+});
+
+let goldReservesCache = null;
+let lastGoldReservesFetch = 0;
+
+// Get Central Bank Gold Reserves (Top Buyers) via DBnomics (IMF IFS Data)
+app.get('/api/finance/gold-reserves', async (req, res) => {
+    try {
+        const now = Date.now();
+        if (goldReservesCache && (now - lastGoldReservesFetch < 3600000)) {
+            return res.json(goldReservesCache);
+        }
+
+        const nationCodes = [
+            { code: 'US', id: 'M.US.RAFAGOLDV_OZT', name: 'USA', color: '#10B981' },
+            { code: 'DE', id: 'M.DE.RAFAGOLDV_OZT', name: 'Germany', color: '#000000' },
+            { code: 'IT', id: 'M.IT.RAFAGOLDV_OZT', name: 'Italy', color: '#008C45' },
+            { code: 'FR', id: 'M.FR.RAFAGOLDV_OZT', name: 'France', color: '#0055A4' },
+            { code: 'RU', id: 'M.RU.RAFAGOLDV_OZT', name: 'Russia', color: '#3B82F6' },
+            { code: 'CN', id: 'M.CN.RAFAGOLDV_OZT', name: 'China', color: '#EF4444' },
+            { code: 'CH', id: 'M.CH.RAFAGOLDV_OZT', name: 'Switzerland', color: '#D50032' },
+            { code: 'IN', id: 'M.IN.RAFAGOLDV_OZT', name: 'India', color: '#F59E0B' },
+            { code: 'JP', id: 'M.JP.RAFAGOLDV_OZT', name: 'Japan', color: '#BC002D' },
+            { code: 'NL', id: 'M.NL.RAFAGOLDV_OZT', name: 'Netherlands', color: '#AE1C28' },
+            { code: 'TR', id: 'M.TR.RAFAGOLDV_OZT', name: 'Turkey', color: '#EC4899' },
+            { code: 'PL', id: 'M.PL.RAFAGOLDV_OZT', name: 'Poland', color: '#DC143C' },
+            { code: 'TW', id: 'M.TW.RAFAGOLDV_OZT', name: 'Taiwan', color: '#8B5CF6' },
+            { code: 'PT', id: 'M.PT.RAFAGOLDV_OZT', name: 'Portugal', color: '#046A38' },
+            { code: 'UZ', id: 'M.UZ.RAFAGOLDV_OZT', name: 'Uzbekistan', color: '#0099B5' }
+        ];
+
+        // Fetch data from DBnomics for each nation
+        const allResults = await Promise.all(
+            nationCodes.map(async (n) => {
+                try {
+                    // API: IMF IFS Series - Official Reserve Assets, Gold (Millions of Ounces)
+                    // Final Verified Format FROM BROWSER: IMF/IFS/M.{CODE}.RAFAGOLDV_OZT
+                    // DBnomics v22 defaults `observations=false`, so period/value arrays are omitted unless enabled.
+                    const url = `https://api.db.nomics.world/v22/series/IMF/IFS/${n.id}?limit=100&observations=1`;
+                    const response = await fetch(url);
+                    if (!response.ok) {
+                        console.warn(`[DBNOMICS] No data for ${n.name} (${response.status})`);
+                        return { name: n.name, observations: [] };
+                    }
+                    const data = await response.json();
+                    
+                    const doc = data?.series?.docs?.[0];
+                    if (doc && Array.isArray(doc.period) && Array.isArray(doc.value)) {
+                        const observations = doc.period.map((date, idx) => {
+                            const val = parseFloat(doc.value[idx]);
+                            return {
+                                date: date.length === 7 ? `${date}-01` : date, // YYYY-MM to YYYY-MM-DD
+                                value: isNaN(val) ? null : val * 31.1035 // Million Oz to Metric Tonnes
+                            };
+                        }).filter(o => o.value !== null);
+                        
+                        console.log(`[DBNOMICS-SUCCESS] ${n.name}: ${observations.length} records.`);
+                        return { name: n.name, observations };
+                    }
+                    return { name: n.name, observations: [] };
+                } catch (e) {
+                    console.error(`[DBNOMICS-ERROR] ${n.name}:`, e.message);
+                    return { name: n.name, observations: [] };
+                }
+            })
+        );
+
+        // Merge logic
+        const allDates = new Set();
+        const nationData = {};
+        allResults.forEach(({ name, observations }) => {
+            nationData[name] = {};
+            if (Array.isArray(observations)) {
+                observations.forEach(obs => {
+                    allDates.add(obs.date);
+                    nationData[name][obs.date] = obs.value;
+                });
+            }
+        });
+
+        const sortedDates = Array.from(allDates).sort().slice(-84); // Last 7 years
+
+        const lastKnownValues = {};
+        nationCodes.forEach(n => lastKnownValues[n.name] = null);
+
+        const finalData = sortedDates.map(date => {
+            const entry = { date };
+            nationCodes.forEach(n => {
+                const val = nationData[n.name]?.[date];
+                if (val !== undefined && val !== null) lastKnownValues[n.name] = val;
+                entry[n.name] = lastKnownValues[n.name];
+            });
+            return entry;
+        });
+
+        goldReservesCache = { data: finalData, countryConfig: nationCodes };
+        lastGoldReservesFetch = now;
+        res.json(goldReservesCache);
+    } catch (err) {
+        console.error('Error in Gold Reserves route:', err);
+        res.status(500).json({ error: 'Internal server error processing gold reserves' });
     }
 });
 
