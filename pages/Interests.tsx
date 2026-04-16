@@ -1124,7 +1124,7 @@ export const Interests: React.FC<{ isAuthorized: boolean }> = ({ isAuthorized })
                                             group-hover:text-orange-600
                                             ${subId === '1' ? 'text-orange-600' : ''}
                                         `}>
-                                            1. Market & Commodities
+                                            1. Gold Timing Model
                                         </p>
                                     </div>
                                     <div

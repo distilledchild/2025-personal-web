@@ -300,8 +300,8 @@ const MarketCommodities: React.FC = () => {
         <>
             <div className="flex justify-between items-center">
                 <div>
-                    <h3 className="text-2xl font-bold text-slate-900 mb-2">Market & Commodities</h3>
-                    <p className="text-slate-500 text-lg">Real-time indicators & recent trends</p>
+                    <h3 className="text-2xl font-bold text-slate-900 mb-2">Gold Timing with Signals</h3>
+                    <p className="text-slate-500 text-lg">Signal-based analysis of gold market conditions and risk regimes</p>
                 </div>
                 {loadingMarket && (
                     <div className="text-orange-500 font-medium flex items-center gap-2">
@@ -493,37 +493,37 @@ const MarketCommodities: React.FC = () => {
             <div className="mt-8">
                 <h4 className="text-xl font-bold text-slate-800 mb-4">Macro Indicators: Metal Ratios</h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="bg-gradient-to-br from-slate-50 to-slate-100 rounded-2xl border border-slate-200 p-6 shadow-sm">
+                    <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm hover:shadow-md transition-shadow">
                         <div className="flex justify-between items-start">
                             <div>
                                 <h5 className="font-bold text-slate-800 text-lg mb-1">Gold / Silver Ratio</h5>
                                 <p className="text-sm text-slate-500 mb-4">Exchange Ratio (Risk-Aversion Indicator)</p>
                             </div>
-                            <div className="p-2 bg-yellow-100 rounded-lg">
-                                <span className="text-yellow-700 font-bold">Safe-Haven</span>
+                            <div className="px-3 py-1.5 rounded-lg text-[13px] font-bold text-white shadow-md bg-gradient-to-br from-[#FFA300] via-[#FF7700] to-[#FF5500]">
+                                Safe-Haven
                             </div>
                         </div>
-                        <div className="text-3xl font-black text-slate-900 font-mono mb-3">
+                        <div className="text-3xl font-black text-slate-900 font-mono mb-3 tracking-tight">
                             {isFetchError ? 'Data Unavailable' : (gsRatio || 'Loading...')}
                         </div>
-                        <div className="text-sm bg-orange-100 text-orange-800 px-3 py-2 rounded-lg font-medium inline-block">
+                        <div className="text-[12px] bg-orange-50 text-orange-700 px-3 py-2 rounded-lg font-bold border border-orange-100 inline-block shadow-sm">
                             💡 &gt; 80 indicates strong risk-off sentiment
                         </div>
                     </div>
-                    <div className="bg-gradient-to-br from-slate-50 to-slate-100 rounded-2xl border border-slate-200 p-6 shadow-sm">
+                    <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm hover:shadow-md transition-shadow">
                         <div className="flex justify-between items-start">
                             <div>
                                 <h5 className="font-bold text-slate-800 text-lg mb-1">Copper / Gold Ratio</h5>
                                 <p className="text-sm text-slate-500 mb-4">Exchange Ratio (Economic Expansion Indicator)</p>
                             </div>
-                            <div className="p-2 bg-blue-100 rounded-lg">
-                                <span className="text-blue-700 font-bold">Expansion</span>
+                            <div className="px-3 py-1.5 rounded-lg text-[13px] font-bold text-white shadow-md bg-gradient-to-br from-[#FFA300] via-[#FF7700] to-[#FF5500]">
+                                Expansion
                             </div>
                         </div>
-                        <div className="text-3xl font-black text-slate-900 font-mono mb-3">
+                        <div className="text-3xl font-black text-slate-900 font-mono mb-3 tracking-tight">
                             {isFetchError ? 'Data Unavailable' : (cgRatio || 'Loading...')}
                         </div>
-                        <div className="text-sm bg-blue-100 text-blue-800 px-3 py-2 rounded-lg font-medium inline-block">
+                        <div className="text-[12px] bg-orange-50 text-orange-700 px-3 py-2 rounded-lg font-bold border border-orange-100 inline-block shadow-sm">
                             💡 Uptrend signals economic expansion &amp; rising industrial demand
                         </div>
                     </div>
