@@ -10,6 +10,13 @@ import { Interests } from './pages/Interests';
 import { Contact } from './pages/Contact';
 import { StravaCallback } from './pages/StravaCallback';
 import { API_URL } from './utils/apiConfig';
+import {
+  clearStoredUserProfile,
+  fetchMemberRole,
+  getStoredUserProfile,
+  setStoredUserProfile,
+  subscribeToUserProfileChanges
+} from './utils/auth';
 
 const Home: React.FC = () => (
   <div className="relative w-full h-[100dvh] flex flex-col items-center justify-center overflow-hidden bg-black">
@@ -79,20 +86,15 @@ const Layout: React.FC = () => {
 
   React.useEffect(() => {
     const checkAuth = async () => {
-      const stored = localStorage.getItem('user_profile');
+      const stored = getStoredUserProfile<any>();
       if (stored) {
         try {
-          const userData = JSON.parse(stored);
-          setUserRole(userData.role);
+          setUserRole(stored.role ?? null);
 
           // Check authorization from MEMBER collection
-          const response = await fetch(`${API_URL}/api/member/role/${userData.email}`);
-          if (response.ok) {
-            const data = await response.json();
-            setIsAuthorized(data.authorized);
-          } else {
-            setIsAuthorized(false);
-          }
+          const data = await fetchMemberRole(stored.email);
+          setIsAuthorized(Boolean(data.authorized));
+          setUserRole((data.role as string | null | undefined) ?? stored.role ?? null);
         } catch (e) {
           console.error("Failed to parse user profile or check authorization", e);
           setIsAuthorized(false);
@@ -105,15 +107,10 @@ const Layout: React.FC = () => {
 
     checkAuth();
 
-    // Listen for storage changes (works across tabs)
-    window.addEventListener('storage', checkAuth);
-
-    // Poll for changes in same tab (since storage event doesn't fire in same tab)
-    const interval = setInterval(checkAuth, 5000);
+    const unsubscribe = subscribeToUserProfileChanges(checkAuth);
 
     return () => {
-      window.removeEventListener('storage', checkAuth);
-      clearInterval(interval);
+      unsubscribe();
     };
   }, []);
 
@@ -266,10 +263,10 @@ const GoogleLogin: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const stored = localStorage.getItem('user_profile');
+    const stored = getStoredUserProfile<any>();
     if (stored) {
       try {
-        setUser(JSON.parse(stored));
+        setUser(stored);
       } catch (e) {
         console.error("Failed to parse user profile", e);
       }
@@ -280,7 +277,7 @@ const GoogleLogin: React.FC = () => {
     if (user) {
       // Logout logic if needed, or just show info
       if (confirm('Do you want to logout?')) {
-        localStorage.removeItem('user_profile');
+        clearStoredUserProfile();
         setUser(null);
         // Redirect to home if on any /todo page (including /todo/personal, /todo/dev)
         if (location.pathname.startsWith('/todo')) {
@@ -357,7 +354,7 @@ const OAuthCallback: React.FC = () => {
         })
         .then(data => {
           if (data.picture) {
-            localStorage.setItem('user_profile', JSON.stringify(data));
+            setStoredUserProfile(data);
             setStatus('Login successful! Redirecting...');
             setTimeout(() => navigate('/'), 1000);
           }

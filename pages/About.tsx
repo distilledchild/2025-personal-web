@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { API_URL } from '../utils/apiConfig';
 import { AboutMe } from './about/AboutMe';
 import { AboutMilestones } from './about/AboutMilestones';
 import { AboutAcademics } from './about/AboutAcademics';
 import { PageHeader } from '../components/PageHeader';
+import { fetchMemberRole, getStoredUserProfile, subscribeToUserProfileChanges } from '../utils/auth';
 
 export const About: React.FC = () => {
     const { tab } = useParams<{ tab: string }>();
@@ -15,20 +15,14 @@ export const About: React.FC = () => {
     useEffect(() => {
         // Check user auth status
         const checkAuth = async () => {
-            const storedUser = localStorage.getItem('user_profile');
+            const storedUser = getStoredUserProfile<any>();
             if (storedUser) {
                 try {
-                    const parsedUser = JSON.parse(storedUser);
-                    setUser(parsedUser);
+                    setUser(storedUser);
 
                     // Check authorization from MEMBER collection
-                    const response = await fetch(`${API_URL}/api/member/role/${parsedUser.email}`);
-                    if (response.ok) {
-                        const data = await response.json();
-                        setIsAuthorized(data.authorized);
-                    } else {
-                        setIsAuthorized(false);
-                    }
+                    const data = await fetchMemberRole(storedUser.email);
+                    setIsAuthorized(Boolean(data.authorized));
                 } catch (err) {
                     console.error('Failed to check authorization:', err);
                     setIsAuthorized(false);
@@ -42,14 +36,10 @@ export const About: React.FC = () => {
         // Initial check
         checkAuth();
 
-        // Listen for storage changes
-        window.addEventListener('storage', checkAuth);
-        // Poll for changes
-        const interval = setInterval(checkAuth, 1000);
+        const unsubscribe = subscribeToUserProfileChanges(checkAuth);
 
         return () => {
-            window.removeEventListener('storage', checkAuth);
-            clearInterval(interval);
+            unsubscribe();
         };
     }, []);
 

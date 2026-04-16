@@ -6,6 +6,7 @@ import { TodoNote } from './TodoNote';
 import { TodoBilling } from './TodoBilling';
 import { API_URL } from '../utils/apiConfig';
 import { PageHeader } from '../components/PageHeader';
+import { fetchMemberRole, getStoredUserProfile } from '../utils/auth';
 
 const AUDIT_STALE_THRESHOLD_MS = 2 * 60 * 60 * 1000;
 const AUDIT_POLL_INTERVAL_MS = 5 * 60 * 1000;
@@ -58,15 +59,13 @@ export const Todo: React.FC = () => {
     React.useEffect(() => {
         const checkAuth = async () => {
             // Get user data
-            const userData = localStorage.getItem('user_profile');
+            const userData = getStoredUserProfile<any>();
             if (userData) {
                 try {
-                    const parsedUser = JSON.parse(userData);
-                    setUser(parsedUser);
+                    setUser(userData);
 
                     // Check authorization
-                    const response = await fetch(`${API_URL}/api/member/role/${parsedUser.email}`);
-                    const data = await response.json();
+                    const data = await fetchMemberRole(userData.email);
                     setIsAuthorized(data.authorized);
                     setIsAdmin(String(data.role || '').toUpperCase() === 'ADMIN');
                 } catch (e) {

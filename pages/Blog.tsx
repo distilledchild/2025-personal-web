@@ -13,6 +13,7 @@ import { API_URL } from '../utils/apiConfig';
 import { Pagination } from '../components/Pagination';
 import { BlogLayout } from '../components/BlogLayout';
 import { BlogGrid } from '../components/BlogGrid';
+import { fetchMemberRole, getStoredUserProfile, subscribeToUserProfileChanges } from '../utils/auth';
 
 const COOKING_TEMPLATE = `# 
 
@@ -153,13 +154,12 @@ export const Blog: React.FC = () => {
 
         // Get user data from localStorage (set by Google OAuth)
         const checkAuth = async () => {
-            const userData = localStorage.getItem('user_profile');
+            const userData = getStoredUserProfile<any>();
             if (userData) {
                 try {
-                    const parsedUser = JSON.parse(userData);
                     const newUser = {
-                        ...parsedUser,
-                        userId: parsedUser.sub || parsedUser.id || parsedUser.email
+                        ...userData,
+                        userId: userData.sub || userData.id || userData.email
                     };
 
                     // Only update state if different
@@ -169,13 +169,8 @@ export const Blog: React.FC = () => {
                     });
 
                     // Check authorization from MEMBER collection
-                    const response = await fetch(`${API_URL}/api/member/role/${parsedUser.email}`);
-                    if (response.ok) {
-                        const data = await response.json();
-                        setIsAuthorized(data.authorized);
-                    } else {
-                        setIsAuthorized(false);
-                    }
+                    const data = await fetchMemberRole(userData.email);
+                    setIsAuthorized(Boolean(data.authorized));
                 } catch (e) {
                     console.error('Failed to parse user data or check authorization', e);
                     setIsAuthorized(false);
@@ -189,15 +184,10 @@ export const Blog: React.FC = () => {
         // Initial check
         checkAuth();
 
-        // Listen for storage changes (works across tabs)
-        window.addEventListener('storage', checkAuth);
-
-        // Poll for changes in same tab (since storage event doesn't fire in same tab)
-        const interval = setInterval(checkAuth, 5000);
+        const unsubscribe = subscribeToUserProfileChanges(checkAuth);
 
         return () => {
-            window.removeEventListener('storage', checkAuth);
-            clearInterval(interval);
+            unsubscribe();
         };
     }, []);
 

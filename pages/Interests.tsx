@@ -4,6 +4,7 @@ import { Plane, Dumbbell, BarChart3, ChevronLeft, ChevronRight, PersonStanding, 
 import { ComposableMap, Geographies, Geography, Marker, Annotation } from 'react-simple-maps';
 import { geoCentroid, geoAlbersUsa } from 'd3-geo';
 import { API_URL } from '../utils/apiConfig';
+import { fetchMemberRole, getStoredUserProfile, subscribeToUserProfileChanges } from '../utils/auth';
 import {
     ComposedChart,
     Line,
@@ -195,26 +196,19 @@ export const Interests: React.FC<{ isAuthorized: boolean }> = ({ isAuthorized })
     useEffect(() => {
         const fetchAdminRole = async () => {
             try {
-                const stored = localStorage.getItem('user_profile');
+                const stored = getStoredUserProfile<any>();
                 if (!stored) {
                     setIsAdminUser(false);
                     return;
                 }
 
-                const profile = JSON.parse(stored);
-                const email = profile?.email;
+                const email = stored?.email;
                 if (!email) {
                     setIsAdminUser(false);
                     return;
                 }
 
-                const response = await fetch(`${API_URL}/api/member/role/${encodeURIComponent(email)}`);
-                if (!response.ok) {
-                    setIsAdminUser(false);
-                    return;
-                }
-
-                const roleData = await response.json();
+                const roleData = await fetchMemberRole(email);
                 setIsAdminUser(String(roleData?.role || '').toUpperCase() === 'ADMIN');
             } catch (error) {
                 console.error('Failed to fetch admin role:', error);
@@ -223,21 +217,10 @@ export const Interests: React.FC<{ isAuthorized: boolean }> = ({ isAuthorized })
         };
 
         fetchAdminRole();
-
-        const handleStorageChange = () => {
-            fetchAdminRole();
-        };
-
-        const handleWindowFocus = () => {
-            fetchAdminRole();
-        };
-
-        window.addEventListener('storage', handleStorageChange);
-        window.addEventListener('focus', handleWindowFocus);
+        const unsubscribe = subscribeToUserProfileChanges(fetchAdminRole);
 
         return () => {
-            window.removeEventListener('storage', handleStorageChange);
-            window.removeEventListener('focus', handleWindowFocus);
+            unsubscribe();
         };
     }, [isAuthorized]);
 
