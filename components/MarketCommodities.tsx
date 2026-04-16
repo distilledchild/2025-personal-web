@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { ResponsiveContainer, ComposedChart, Line, YAxis, XAxis, Tooltip } from 'recharts';
+import { API_URL } from '../utils/apiConfig';
 import { getOrFetchCached } from '../utils/clientCache';
 
 interface MarketData {
@@ -43,7 +44,6 @@ interface MacroData {
     error?: string;
 }
 
-const API_URL = import.meta.env.VITE_API_URL || '';
 const MARKET_CACHE_TTL_MS = 2 * 60 * 1000;
 const MACRO_CACHE_TTL_MS = 30 * 60 * 1000;
 const FOMC_CACHE_TTL_MS = 6 * 60 * 60 * 1000;
