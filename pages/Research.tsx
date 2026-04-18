@@ -6,6 +6,7 @@ import { FileText, GitBranch, Database, Search, Cat } from 'lucide-react';
 import { ResearchLoopBrowser } from './ResearchLoopBrowser';
 import { ResearchBreedchain } from './ResearchBreedchain';
 import { ResearchPEInteractions } from './ResearchPEInteractions';
+import { ResearchPaperFinder } from './ResearchPaperFinder';
 import { PageHeader } from '../components/PageHeader';
 
 const singleCellQCMetrics = [
@@ -280,6 +281,7 @@ export const Research: React.FC = () => {
     ...(isDev ? [{ label: 'Hi-C Browser', icon: Database, color: 'text-teal-500 border-teal-500', activeBg: 'bg-teal-50 ring-teal-200', slug: 'hicbrowser' }] : []),
     { label: 'Breedchain', icon: Cat, color: 'text-teal-500 border-teal-500', activeBg: 'bg-teal-50 ring-teal-200', slug: 'breedchain' },
     { label: 'PE Interactions', icon: GitBranch, color: 'text-teal-500 border-teal-500', activeBg: 'bg-teal-50 ring-teal-200', slug: 'peinteractions' },
+    { label: 'PaperFinder', icon: Search, color: 'text-teal-500 border-teal-500', activeBg: 'bg-teal-50 ring-teal-200', slug: 'paperfinder' },
     { label: 'Single-cell Seq', icon: Database, color: 'text-teal-500 border-teal-500', activeBg: 'bg-teal-50 ring-teal-200', slug: 'singlecellseq' },
     { label: 'AlphaGenome', icon: FileText, color: 'text-teal-500 border-teal-500', activeBg: 'bg-teal-50 ring-teal-200', slug: 'deeplearningenhancer' },
   ];
@@ -342,6 +344,7 @@ export const Research: React.FC = () => {
           ) : null}
           {requestedSlug === 'breedchain' && <ResearchBreedchain />}
           {requestedSlug === 'peinteractions' && <ResearchPEInteractions />}
+          {requestedSlug === 'paperfinder' && <ResearchPaperFinder />}
           {requestedSlug === 'singlecellseq' && <SingleCell />}
           {requestedSlug === 'deeplearningenhancer' && <EnhancerID />}
         </div>

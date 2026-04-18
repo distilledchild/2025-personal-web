@@ -760,6 +760,298 @@ app.get('/api/research/hic-data', async (req, res) => {
     }
 });
 
+const PUBMED_EUTILS_BASE = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils';
+const SEMANTIC_SCHOLAR_BASE = 'https://api.semanticscholar.org/graph/v1';
+
+function buildNcbiParams(params) {
+    const searchParams = new URLSearchParams({
+        ...params,
+        tool: process.env.NCBI_TOOL || 'distilledchild-paperfinder'
+    });
+
+    if (process.env.NCBI_EMAIL) {
+        searchParams.set('email', process.env.NCBI_EMAIL);
+    }
+
+    if (process.env.NCBI_API_KEY) {
+        searchParams.set('api_key', process.env.NCBI_API_KEY);
+    }
+
+    return searchParams;
+}
+
+async function fetchJsonWithTimeout(url, options = {}, timeoutMs = 15000) {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), timeoutMs);
+
+    try {
+        const response = await fetch(url, {
+            ...options,
+            signal: controller.signal
+        });
+
+        const text = await response.text();
+        const payload = text ? JSON.parse(text) : {};
+
+        if (!response.ok) {
+            const message = payload?.message || payload?.error || text || `HTTP ${response.status}`;
+            throw new Error(message);
+        }
+
+        return payload;
+    } finally {
+        clearTimeout(timeout);
+    }
+}
+
+function getArticleId(summary, idType) {
+    if (!Array.isArray(summary?.articleids)) return '';
+    const articleId = summary.articleids.find((item) => item.idtype === idType);
+    return articleId?.value || '';
+}
+
+function getPublicationYear(summary) {
+    const candidates = [summary?.sortpubdate, summary?.epubdate, summary?.pubdate];
+
+    for (const candidate of candidates) {
+        const match = String(candidate || '').match(/\b(?:19|20)\d{2}\b/);
+        if (match) return Number.parseInt(match[0], 10);
+    }
+
+    return null;
+}
+
+function normalizePubMedSummary(summary, rank) {
+    const pmid = String(summary?.uid || '');
+    const doi = getArticleId(summary, 'doi');
+    const authors = Array.isArray(summary?.authors)
+        ? summary.authors.map((author) => author?.name).filter(Boolean)
+        : [];
+
+    return {
+        pmid,
+        rank,
+        title: summary?.title || 'Untitled publication',
+        journal: summary?.fulljournalname || summary?.source || '',
+        pubDate: summary?.pubdate || summary?.sortpubdate || '',
+        year: getPublicationYear(summary),
+        authors,
+        doi,
+        pubMedUrl: `https://pubmed.ncbi.nlm.nih.gov/${pmid}/`,
+        semanticScholarId: '',
+        semanticScholarUrl: '',
+        citationCount: null,
+        influentialCitationCount: null,
+        referenceCount: null,
+        score: null,
+        scoreBreakdown: {
+            pubMedRelevance: 0,
+            citations: 0,
+            influentialCitations: 0,
+            recency: 0
+        },
+        fieldsOfStudy: [],
+        abstract: '',
+        tldr: '',
+        openAccessPdfUrl: ''
+    };
+}
+
+async function searchPubMed(query, limit) {
+    const params = buildNcbiParams({
+        db: 'pubmed',
+        term: query,
+        retmax: String(limit),
+        retmode: 'json',
+        sort: 'relevance'
+    });
+
+    const payload = await fetchJsonWithTimeout(`${PUBMED_EUTILS_BASE}/esearch.fcgi?${params.toString()}`);
+    const result = payload?.esearchresult || {};
+
+    return {
+        ids: Array.isArray(result.idlist) ? result.idlist : [],
+        totalAvailable: Number.parseInt(result.count || '0', 10) || 0
+    };
+}
+
+async function fetchPubMedSummaries(pmids) {
+    if (!pmids.length) return [];
+
+    const params = buildNcbiParams({
+        db: 'pubmed',
+        id: pmids.join(','),
+        retmode: 'json'
+    });
+
+    const payload = await fetchJsonWithTimeout(`${PUBMED_EUTILS_BASE}/esummary.fcgi?${params.toString()}`);
+    const result = payload?.result || {};
+    const orderedIds = Array.isArray(result.uids) ? result.uids : pmids;
+
+    return orderedIds
+        .map((pmid, index) => result[pmid] ? normalizePubMedSummary(result[pmid], index + 1) : null)
+        .filter(Boolean);
+}
+
+async function fetchSemanticScholarPapers(papers) {
+    const ids = papers
+        .filter((paper) => paper.pmid)
+        .map((paper) => `PMID:${paper.pmid}`);
+
+    if (!ids.length) {
+        return { papersByLookupId: new Map(), warning: '' };
+    }
+
+    const fields = [
+        'paperId',
+        'url',
+        'title',
+        'year',
+        'venue',
+        'externalIds',
+        'citationCount',
+        'influentialCitationCount',
+        'referenceCount',
+        'fieldsOfStudy',
+        'abstract',
+        'tldr',
+        'openAccessPdf'
+    ].join(',');
+
+    const headers = { 'Content-Type': 'application/json' };
+    if (process.env.SEMANTIC_SCHOLAR_API_KEY) {
+        headers['x-api-key'] = process.env.SEMANTIC_SCHOLAR_API_KEY;
+    }
+
+    try {
+        const payload = await fetchJsonWithTimeout(
+            `${SEMANTIC_SCHOLAR_BASE}/paper/batch?fields=${encodeURIComponent(fields)}`,
+            {
+                method: 'POST',
+                headers,
+                body: JSON.stringify({ ids })
+            },
+            20000
+        );
+
+        const papersByLookupId = new Map();
+        ids.forEach((lookupId, index) => {
+            if (payload?.[index]) {
+                papersByLookupId.set(lookupId, payload[index]);
+            }
+        });
+
+        return { papersByLookupId, warning: '' };
+    } catch (error) {
+        console.warn('[PAPERFINDER] Semantic Scholar enrichment failed:', error.message);
+        return {
+            papersByLookupId: new Map(),
+            warning: 'Citation enrichment is temporarily unavailable; PubMed results are still shown.'
+        };
+    }
+}
+
+function mergeSemanticScholarData(paper, semanticScholarPaper) {
+    if (!semanticScholarPaper) return paper;
+
+    return {
+        ...paper,
+        semanticScholarId: semanticScholarPaper.paperId || '',
+        semanticScholarUrl: semanticScholarPaper.url || '',
+        citationCount: Number.isFinite(semanticScholarPaper.citationCount) ? semanticScholarPaper.citationCount : null,
+        influentialCitationCount: Number.isFinite(semanticScholarPaper.influentialCitationCount) ? semanticScholarPaper.influentialCitationCount : null,
+        referenceCount: Number.isFinite(semanticScholarPaper.referenceCount) ? semanticScholarPaper.referenceCount : null,
+        fieldsOfStudy: Array.isArray(semanticScholarPaper.fieldsOfStudy) ? semanticScholarPaper.fieldsOfStudy.filter(Boolean) : [],
+        abstract: semanticScholarPaper.abstract || '',
+        tldr: semanticScholarPaper.tldr?.text || '',
+        openAccessPdfUrl: semanticScholarPaper.openAccessPdf?.url || ''
+    };
+}
+
+function normalizeLogScore(value, maxValue) {
+    if (!Number.isFinite(value) || value <= 0 || !Number.isFinite(maxValue) || maxValue <= 0) {
+        return 0;
+    }
+
+    return Math.log10(value + 1) / Math.log10(maxValue + 1);
+}
+
+function calculateRecencyScore(year) {
+    if (!Number.isFinite(year)) return 0;
+
+    const currentYear = new Date().getFullYear();
+    const age = Math.max(0, currentYear - year);
+    return Math.max(0, 1 - (age / 10));
+}
+
+function scoreAndSortPapers(papers) {
+    const maxCitationCount = Math.max(0, ...papers.map((paper) => paper.citationCount || 0));
+    const maxInfluentialCitationCount = Math.max(0, ...papers.map((paper) => paper.influentialCitationCount || 0));
+    const rankRange = Math.max(1, papers.length - 1);
+
+    return papers
+        .map((paper) => {
+            const pubMedRelevance = papers.length <= 1 ? 1 : 1 - ((paper.rank - 1) / rankRange);
+            const citations = normalizeLogScore(paper.citationCount, maxCitationCount);
+            const influentialCitations = normalizeLogScore(paper.influentialCitationCount, maxInfluentialCitationCount);
+            const recency = calculateRecencyScore(paper.year);
+            const weightedScore = (
+                (0.45 * pubMedRelevance) +
+                (0.25 * citations) +
+                (0.20 * influentialCitations) +
+                (0.10 * recency)
+            ) * 100;
+
+            return {
+                ...paper,
+                score: Number(weightedScore.toFixed(1)),
+                scoreBreakdown: {
+                    pubMedRelevance: Number((pubMedRelevance * 100).toFixed(1)),
+                    citations: Number((citations * 100).toFixed(1)),
+                    influentialCitations: Number((influentialCitations * 100).toFixed(1)),
+                    recency: Number((recency * 100).toFixed(1))
+                }
+            };
+        })
+        .sort((a, b) => {
+            if (b.score !== a.score) return b.score - a.score;
+            return a.rank - b.rank;
+        });
+}
+
+app.get('/api/research/paperfinder', async (req, res) => {
+    try {
+        const query = String(req.query.query || '').trim();
+        const requestedLimit = Number.parseInt(req.query.limit || '25', 10);
+        const limit = Math.min(Math.max(Number.isFinite(requestedLimit) ? requestedLimit : 25, 1), 50);
+
+        if (query.length < 2) {
+            return res.status(400).json({ error: 'query must contain at least two characters' });
+        }
+
+        const { ids, totalAvailable } = await searchPubMed(query, limit);
+        const pubMedPapers = await fetchPubMedSummaries(ids);
+        const { papersByLookupId, warning } = await fetchSemanticScholarPapers(pubMedPapers);
+        const enrichedPapers = pubMedPapers.map((paper) => mergeSemanticScholarData(
+            paper,
+            papersByLookupId.get(`PMID:${paper.pmid}`)
+        ));
+        const papers = scoreAndSortPapers(enrichedPapers);
+
+        res.json({
+            query,
+            limit,
+            count: papers.length,
+            totalAvailable,
+            papers,
+            enrichmentWarning: warning
+        });
+    } catch (err) {
+        console.error('[PAPERFINDER] Search failed:', err);
+        res.status(500).json({ error: 'Unable to search publications right now.' });
+    }
+});
+
 const techBlogSchema = new mongoose.Schema({
     category: String,
     title: String,

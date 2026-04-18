@@ -20,6 +20,7 @@ import {
 } from 'recharts';
 import { PageHeader } from '../components/PageHeader';
 import { Pagination } from '../components/Pagination';
+import { DataTable, DataTableColumn } from '../components/DataTable';
 import MarketCommodities from '../components/MarketCommodities';
 
 const geoUrl = "https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json";
@@ -377,6 +378,59 @@ export const Interests: React.FC<{ isAuthorized: boolean }> = ({ isAuthorized })
     const endIndex = startIndex + itemsPerPage;
     const currentActivities = stravaActivities.slice(startIndex, endIndex);
 
+    const workoutColumns = useMemo<DataTableColumn<StravaActivity>[]>(() => [
+        {
+            key: 'date',
+            header: 'Date',
+            render: (activity) => new Date(activity.start_date).toLocaleDateString('en-US', {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric'
+            })
+        },
+        {
+            key: 'activityName',
+            header: 'Activity Name',
+            className: 'font-medium text-slate-900',
+            render: (activity) => activity.name
+        },
+        {
+            key: 'type',
+            header: 'Type',
+            render: (activity) => (
+                activity.sport_type.toLowerCase() === 'walk' ? (
+                    <PersonStanding size={24} className="text-[#FFCC80]" />
+                ) : activity.sport_type.toLowerCase().includes('ride') || activity.sport_type.toLowerCase() === 'bike' || activity.sport_type.toLowerCase() === 'virtualride' ? (
+                    <Bike size={24} className="text-[#FF7700]" />
+                ) : activity.sport_type.toLowerCase() === 'run' || activity.sport_type.toLowerCase() === 'running' ? (
+                    <Footprints size={24} className="text-[#FFA300]" />
+                ) : (
+                    <span className="text-xs text-gray-600">{activity.sport_type}</span>
+                )
+            )
+        },
+        {
+            key: 'distance',
+            header: 'Distance',
+            render: (activity) => `${(activity.distance / 1000).toFixed(2)} km`
+        },
+        {
+            key: 'time',
+            header: 'Time',
+            render: (activity) => `${Math.floor(activity.moving_time / 3600)}h ${Math.floor((activity.moving_time % 3600) / 60)}m`
+        },
+        {
+            key: 'elevation',
+            header: 'Elevation',
+            render: (activity) => `${activity.total_elevation_gain.toFixed(0)} m`
+        },
+        {
+            key: 'avgSpeed',
+            header: 'Avg Speed',
+            render: (activity) => `${(activity.average_speed * 3.6).toFixed(1)} km/h`
+        }
+    ], []);
+
     const handleNextPage = () => {
         if (currentPage < totalPages) {
             setCurrentPage(currentPage + 1);
@@ -644,81 +698,13 @@ export const Interests: React.FC<{ isAuthorized: boolean }> = ({ isAuthorized })
                                     </div>
 
                                     {/* Activity Table with Pagination */}
-                                    <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-                                        <div className="overflow-x-auto">
-                                            <table className="w-full table-fixed">
-                                                <thead className="bg-gradient-to-r from-orange-50 to-slate-50">
-                                                    <tr>
-                                                        <th className="px-6 py-4 text-left text-sm font-bold text-slate-700 border-b border-slate-200">Date</th>
-                                                        <th className="px-6 py-4 text-left text-sm font-bold text-slate-700 border-b border-slate-200">Activity Name</th>
-                                                        <th className="px-6 py-4 text-left text-sm font-bold text-slate-700 border-b border-slate-200">Type</th>
-                                                        <th className="px-6 py-4 text-left text-sm font-bold text-slate-700 border-b border-slate-200">Distance</th>
-                                                        <th className="px-6 py-4 text-left text-sm font-bold text-slate-700 border-b border-slate-200">Time</th>
-                                                        <th className="px-6 py-4 text-left text-sm font-bold text-slate-700 border-b border-slate-200">Elevation</th>
-                                                        <th className="px-6 py-4 text-left text-sm font-bold text-slate-700 border-b border-slate-200">Avg Speed</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    {currentActivities.map((activity, index) => (
-                                                        <tr
-                                                            key={activity.id}
-                                                            className={`hover:bg-orange-50 transition-colors ${index % 2 === 0 ? 'bg-white' : 'bg-slate-50/50'}`}
-                                                        >
-                                                            <td className="px-6 py-4 text-sm text-slate-600 border-b border-slate-100">
-                                                                {new Date(activity.start_date).toLocaleDateString('en-US', {
-                                                                    month: 'short',
-                                                                    day: 'numeric',
-                                                                    year: 'numeric'
-                                                                })}
-                                                            </td>
-                                                            <td className="px-6 py-4 text-sm font-medium text-slate-900 border-b border-slate-100">
-                                                                {activity.name}
-                                                            </td>
-                                                            <td className="px-6 py-4 text-sm text-slate-600 border-b border-slate-100">
-                                                                {activity.sport_type.toLowerCase() === 'walk' ? (
-                                                                    <PersonStanding size={24} className="text-[#FFCC80]" />
-                                                                ) : activity.sport_type.toLowerCase().includes('ride') || activity.sport_type.toLowerCase() === 'bike' || activity.sport_type.toLowerCase() === 'virtualride' ? (
-                                                                    <Bike size={24} className="text-[#FF7700]" />
-                                                                ) : activity.sport_type.toLowerCase() === 'run' || activity.sport_type.toLowerCase() === 'running' ? (
-                                                                    <Footprints size={24} className="text-[#FFA300]" />
-                                                                ) : (
-                                                                    <span className="text-xs text-gray-600">{activity.sport_type}</span>
-                                                                )}
-                                                            </td>
-                                                            <td className="px-6 py-4 text-sm text-slate-600 border-b border-slate-100">
-                                                                {(activity.distance / 1000).toFixed(2)} km
-                                                            </td>
-                                                            <td className="px-6 py-4 text-sm text-slate-600 border-b border-slate-100">
-                                                                {Math.floor(activity.moving_time / 3600)}h {Math.floor((activity.moving_time % 3600) / 60)}m
-                                                            </td>
-                                                            <td className="px-6 py-4 text-sm text-slate-600 border-b border-slate-100">
-                                                                {activity.total_elevation_gain.toFixed(0)} m
-                                                            </td>
-                                                            <td className="px-6 py-4 text-sm text-slate-600 border-b border-slate-100">
-                                                                {(activity.average_speed * 3.6).toFixed(1)} km/h
-                                                            </td>
-                                                        </tr>
-                                                    ))}
-                                                    {/* Fill empty rows to maintain 5-row height */}
-                                                    {Array.from({ length: Math.max(0, itemsPerPage - currentActivities.length) }).map((_, index) => (
-                                                        <tr
-                                                            key={`empty-${index}`}
-                                                            className={`${(currentActivities.length + index) % 2 === 0 ? 'bg-white' : 'bg-slate-50/50'}`}
-                                                        >
-                                                            <td className="px-6 py-4 text-sm text-slate-600 border-b border-slate-100">&nbsp;</td>
-                                                            <td className="px-6 py-4 text-sm text-slate-600 border-b border-slate-100">&nbsp;</td>
-                                                            <td className="px-6 py-4 text-sm text-slate-600 border-b border-slate-100">&nbsp;</td>
-                                                            <td className="px-6 py-4 text-sm text-slate-600 border-b border-slate-100">&nbsp;</td>
-                                                            <td className="px-6 py-4 text-sm text-slate-600 border-b border-slate-100">&nbsp;</td>
-                                                            <td className="px-6 py-4 text-sm text-slate-600 border-b border-slate-100">&nbsp;</td>
-                                                            <td className="px-6 py-4 text-sm text-slate-600 border-b border-slate-100">&nbsp;</td>
-                                                        </tr>
-                                                    ))}
-                                                </tbody>
-                                            </table>
-                                        </div>
-
-                                    </div>
+                                    <DataTable
+                                        columns={workoutColumns}
+                                        rows={currentActivities}
+                                        getRowKey={(activity) => activity.id}
+                                        theme="orange"
+                                        minRows={itemsPerPage}
+                                    />
 
                                     {/* Pagination Controls - Detached */}
                                     <div className="mt-8">

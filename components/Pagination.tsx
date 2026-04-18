@@ -1,7 +1,7 @@
 import React from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
-export type PaginationTheme = 'pink' | 'purple' | 'orange' | 'gray' | 'slate';
+export type PaginationTheme = 'pink' | 'purple' | 'orange' | 'teal' | 'gray' | 'slate';
 export type PaginationVariant = 'numbered' | 'compact';
 
 interface PaginationProps {
@@ -25,6 +25,7 @@ const themeConfig: Record<PaginationTheme, { active: string; activeHover: string
     pink: { active: 'bg-pink-500 text-white', activeHover: 'hover:bg-pink-600' },
     purple: { active: 'bg-purple-500 text-white', activeHover: 'hover:bg-purple-600' },
     orange: { active: 'bg-[#FFA300] text-white', activeHover: 'hover:bg-[#FF8C00]' },
+    teal: { active: 'bg-teal-500 text-white', activeHover: 'hover:bg-teal-600' },
     gray: { active: 'bg-gray-500 text-white', activeHover: 'hover:bg-gray-600' },
     slate: { active: 'bg-slate-700 text-white', activeHover: 'hover:bg-slate-800' },
 };
