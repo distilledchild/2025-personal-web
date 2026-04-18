@@ -82,7 +82,7 @@ const Layout: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
   const [userRole, setUserRole] = React.useState<string | null>(null);
   const [isAuthorized, setIsAuthorized] = React.useState(false);
-  const researchDefaultPath = import.meta.env.DEV ? '/research/hicbrowser' : '/research/loopbrowser';
+  const researchDefaultPath = '/research/paperfinder';
 
   React.useEffect(() => {
     const checkAuth = async () => {
