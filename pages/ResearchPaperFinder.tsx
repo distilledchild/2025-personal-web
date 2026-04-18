@@ -32,15 +32,40 @@ interface PaperFinderResponse {
   enrichmentWarning?: string;
 }
 
-const formatAuthors = (authors: string[]) => {
-  if (!authors.length) return 'Unknown authors';
-  if (authors.length <= 3) return authors.join(', ');
-  return `${authors.slice(0, 3).join(', ')} et al.`;
+const formatLeadAuthor = (authors: string[]) => {
+  if (!authors.length) return 'Unknown';
+  if (authors.length === 1) return authors[0];
+  return `${authors[0]} et al.`;
 };
 
 const formatCount = (value: number | null) => {
   if (value === null || Number.isNaN(value)) return 'NA';
   return value.toLocaleString();
+};
+
+const PublicationCell: React.FC<{ paper: PaperFinderPaper }> = ({ paper }) => {
+  const abstractText = paper.abstract || paper.tldr || '';
+
+  return (
+    <div className="group relative space-y-2" tabIndex={0}>
+      <p className="font-bold leading-snug text-slate-950">{paper.title}</p>
+      {abstractText && (
+        <p className="line-clamp-2 text-xs leading-relaxed text-slate-500">
+          {abstractText}
+        </p>
+      )}
+
+      {abstractText && (
+        <div className="pointer-events-none invisible absolute left-0 top-full z-30 mt-3 w-[min(680px,calc(100vw-4rem))] rounded-lg border border-teal-200 bg-white p-5 text-left opacity-0 shadow-xl transition-all duration-150 group-hover:visible group-hover:opacity-100 group-focus:visible group-focus:opacity-100">
+          <p className="mb-3 text-sm font-bold leading-snug text-slate-950">{paper.title}</p>
+          <p className="text-xs font-semibold uppercase tracking-wide text-teal-700">Abstract</p>
+          <p className="mt-2 max-h-72 overflow-y-auto pr-2 text-sm leading-relaxed text-slate-600 scrollbar-hide">
+            {abstractText}
+          </p>
+        </div>
+      )}
+    </div>
+  );
 };
 
 const itemsPerPage = 5;
@@ -115,33 +140,21 @@ export const ResearchPaperFinder: React.FC = () => {
     {
       key: 'publication',
       header: 'Publication',
-      headerClassName: 'w-[38%]',
+      headerClassName: 'w-[34%]',
       className: 'align-top',
-      render: (paper) => (
-        <div className="space-y-2">
-          <p className="font-bold leading-snug text-slate-950">{paper.title}</p>
-          <p className="text-xs leading-relaxed text-slate-600">{formatAuthors(paper.authors)}</p>
-          {(paper.tldr || paper.abstract) && (
-            <p className="line-clamp-2 text-xs leading-relaxed text-slate-500">
-              {paper.tldr || paper.abstract}
-            </p>
-          )}
-          {paper.fieldsOfStudy.length > 0 && (
-            <div className="flex flex-wrap gap-1">
-              {paper.fieldsOfStudy.slice(0, 3).map((field) => (
-                <span key={field} className="rounded-md bg-slate-100 px-2 py-1 text-[11px] font-semibold text-slate-600">
-                  {field}
-                </span>
-              ))}
-            </div>
-          )}
-        </div>
-      ),
+      render: (paper) => <PublicationCell paper={paper} />,
+    },
+    {
+      key: 'authors',
+      header: 'Authors',
+      headerClassName: 'w-[12%]',
+      className: 'align-top font-medium text-slate-700',
+      render: (paper) => formatLeadAuthor(paper.authors),
     },
     {
       key: 'score',
       header: 'Score',
-      headerClassName: 'w-[8%]',
+      headerClassName: 'w-[7%]',
       className: 'align-top',
       render: (paper) => (
         <span className="rounded-md bg-teal-500 px-2 py-1 font-bold text-white">
@@ -152,26 +165,21 @@ export const ResearchPaperFinder: React.FC = () => {
     {
       key: 'journal',
       header: 'Journal',
-      headerClassName: 'w-[16%]',
-      className: 'align-top',
-      render: (paper) => (
-        <>
-          <span className="font-semibold text-slate-700">{paper.journal || 'Unknown journal'}</span>
-          {paper.pubDate && <span className="mt-1 block text-xs text-slate-500">{paper.pubDate}</span>}
-        </>
-      ),
+      headerClassName: 'w-[14%]',
+      className: 'align-top font-semibold text-slate-700',
+      render: (paper) => paper.journal || 'Unknown journal',
     },
     {
       key: 'year',
       header: 'Year',
       headerClassName: 'w-[8%]',
       className: 'align-top font-bold text-slate-800',
-      render: (paper) => paper.year || 'NA',
+      render: (paper) => paper.pubDate || paper.year || 'NA',
     },
     {
       key: 'citations',
       header: 'Citations',
-      headerClassName: 'w-[9%]',
+      headerClassName: 'w-[8%]',
       className: 'align-top',
       render: (paper) => (
         <span className="rounded-md bg-teal-100 px-2 py-1 font-bold text-teal-900">
@@ -182,7 +190,7 @@ export const ResearchPaperFinder: React.FC = () => {
     {
       key: 'influential',
       header: 'Influential',
-      headerClassName: 'w-[9%]',
+      headerClassName: 'w-[8%]',
       className: 'align-top',
       render: (paper) => (
         <span className="rounded-md bg-teal-100 px-2 py-1 font-bold text-teal-900">
@@ -193,7 +201,7 @@ export const ResearchPaperFinder: React.FC = () => {
     {
       key: 'links',
       header: 'Links',
-      headerClassName: 'w-[14%]',
+      headerClassName: 'w-[9%]',
       className: 'align-top',
       render: (paper) => (
         <div className="flex flex-col gap-2">
@@ -247,9 +255,14 @@ export const ResearchPaperFinder: React.FC = () => {
           <div className="space-y-2">
             <p className="text-sm font-bold uppercase tracking-wide text-teal-700">PaperFinder</p>
             <h3 className="text-3xl font-bold text-slate-950">Find publications from PubMed with citation context.</h3>
-            <p className="text-sm leading-relaxed text-slate-700">
-              Search terms are sent to PubMed first, where candidate PMIDs are retrieved by relevance. The server then enriches those papers through Semantic Scholar and sorts them by a weighted score: 45% PubMed relevance rank, 25% citation count, 20% influential citation count, and 10% publication recency. Citation signals use log scaling so one highly cited review does not flatten the rest of the list.
-            </p>
+            <div className="text-sm leading-relaxed text-slate-700">
+              <p className="font-semibold text-slate-800">
+                Score = 0.45(PubMed relevance) + 0.25(log citations) + 0.20(log influential citations) + 0.10(recency)
+              </p>
+              <p className="text-xs text-slate-600">
+                PubMed finds candidate PMIDs; Semantic Scholar adds citation signals before sorting.
+              </p>
+            </div>
           </div>
 
           <form onSubmit={handleSubmit} className="flex flex-col gap-3 sm:flex-row">
@@ -307,7 +320,7 @@ export const ResearchPaperFinder: React.FC = () => {
           getRowKey={(paper) => paper.pmid}
           theme="teal"
           minRows={itemsPerPage}
-          tableClassName="min-w-[1180px] w-full table-fixed"
+          tableClassName="min-w-[1280px] w-full table-fixed"
           emptyState={isLoading ? (
             <span className="inline-flex items-center gap-2 font-semibold">
               <Loader2 className="h-4 w-4 animate-spin text-teal-500" />

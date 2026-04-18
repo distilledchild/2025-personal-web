@@ -47,11 +47,12 @@ export function DataTable<T>({
     tableClassName = 'w-full table-fixed'
 }: DataTableProps<T>) {
     const { header, hover } = themeConfig[theme];
-    const emptyRowCount = Math.max(0, minRows - rows.length);
+    const hasEmptyState = rows.length === 0 && Boolean(emptyState);
+    const emptyRowCount = hasEmptyState ? 0 : Math.max(0, minRows - rows.length);
 
     return (
         <div className={`bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden ${className}`}>
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto scrollbar-hide">
                 <table className={tableClassName}>
                     <thead className={header}>
                         <tr>
@@ -82,7 +83,7 @@ export function DataTable<T>({
                             </tr>
                         ))}
 
-                        {rows.length === 0 && emptyState ? (
+                        {hasEmptyState ? (
                             <tr>
                                 <td colSpan={columns.length} className="px-6 py-10 text-center text-sm text-slate-500 border-b border-slate-100">
                                     {emptyState}
