@@ -14,7 +14,7 @@ const projectRoot = path.resolve(__dirname, '..');
 
 dotenv.config({ path: path.resolve(projectRoot, '.env') });
 
-const DEFAULT_GDOC_PATH = '/Users/pete/Library/CloudStorage/GoogleDrive-wellclouder@gmail.com/My Drive/jobs/cv_resume/mine/byPlaces/latest_submit/bio/CV_PanjunKim_BASE_shared_w_Hao.gdoc';
+const DEFAULT_GDOC_PATH = '/Users/pete/Library/CloudStorage/GoogleDrive-wellclouder@gmail.com/My Drive/jobs/cv_resume/mine/byPlaces/latest_submit/bio/CV_PanjunKim_BASE.gdoc';
 const DEFAULT_STATE_PATH = path.resolve(projectRoot, '.cache/cv-sync-state.json');
 const DEFAULT_INTERVAL_SECONDS = 600;
 
@@ -43,6 +43,7 @@ function parseArgs(argv) {
         dryRun: args.has('--dry-run'),
         force: args.has('--force'),
         printConfig: args.has('--print-config'),
+        sourceDocId: getOption('--source-doc-id') || process.env.CV_SOURCE_DOC_ID || '',
         gdocPath: getOption('--gdoc-path') || process.env.CV_SOURCE_GDOC_PATH || DEFAULT_GDOC_PATH,
         statePath: getOption('--state-path') || process.env.CV_SYNC_STATE_PATH || DEFAULT_STATE_PATH,
         intervalSeconds: Number(getOption('--interval-seconds') || process.env.CV_SYNC_INTERVAL_SECONDS || DEFAULT_INTERVAL_SECONDS),
@@ -299,7 +300,17 @@ async function updateTargetPdfFile(drive, targetFileId, pdfBuffer) {
 }
 
 async function syncAcademicCv(config) {
-    const gdocInfo = readDocIdFromGdocFile(config.gdocPath);
+    let docId = extractGoogleFileId(config.sourceDocId);
+    let gdocInfo = { docId, email: '', resourceKey: '' };
+
+    if (!docId) {
+        if (config.gdocPath && fs.existsSync(config.gdocPath)) {
+            gdocInfo = readDocIdFromGdocFile(config.gdocPath);
+        } else {
+            throw new Error('Google Doc ID is not specified. Please set CV_SOURCE_DOC_ID in env or provide a valid .gdoc file path.');
+        }
+    }
+
     const drive = await getDriveClient();
     const targetFileId = await resolveTargetFileId(config);
     const state = loadJson(config.statePath, {});
@@ -365,8 +376,14 @@ async function runOnce(config) {
 }
 
 async function runWatch(config) {
+    let docId = extractGoogleFileId(config.sourceDocId);
+    if (!docId && config.gdocPath && fs.existsSync(config.gdocPath)) {
+        try {
+            docId = readDocIdFromGdocFile(config.gdocPath).docId;
+        } catch {}
+    }
     console.log(`Watching Google Doc changes via Drive modifiedTime polling every ${config.intervalSeconds} seconds.`);
-    console.log(`Source gdoc pointer: ${config.gdocPath}`);
+    console.log(`Source Google Doc ID: ${docId || 'unknown'}`);
     for (;;) {
         try {
             await runOnce(config);
@@ -381,13 +398,18 @@ async function main() {
     const config = parseArgs(process.argv);
 
     if (config.printConfig) {
-        const gdocInfo = readDocIdFromGdocFile(config.gdocPath);
+        let docId = extractGoogleFileId(config.sourceDocId);
+        if (!docId && config.gdocPath && fs.existsSync(config.gdocPath)) {
+            try {
+                docId = readDocIdFromGdocFile(config.gdocPath).docId;
+            } catch {}
+        }
         const targetFileId = await resolveTargetFileId(config).catch(() => '');
         console.log(JSON.stringify({
+            sourceDocId: docId || '',
             gdocPath: config.gdocPath,
             statePath: config.statePath,
             intervalSeconds: config.intervalSeconds,
-            sourceDocId: gdocInfo.docId,
             targetFileId
         }, null, 2));
         return;

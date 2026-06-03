@@ -19,11 +19,6 @@ export interface ResearchTab {
   color: string;
 }
 
-export interface ChatMessage {
-  role: 'user' | 'model';
-  text: string;
-}
-
 export interface Client {
   id: number;
   created_at: string;

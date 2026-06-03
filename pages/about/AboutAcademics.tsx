@@ -79,6 +79,12 @@ export const AboutAcademics: React.FC<AboutAcademicsProps> = ({ user, isAuthoriz
         fetchAboutAcademic();
     }, []);
 
+    useEffect(() => {
+        if (aboutAcademic?.links?.cv) {
+            setIsIframeLoading(true);
+        }
+    }, [aboutAcademic?.links?.cv]);
+
     const fetchAboutAcademic = async () => {
         try {
             setIsLoading(true);
@@ -175,6 +181,9 @@ export const AboutAcademics: React.FC<AboutAcademicsProps> = ({ user, isAuthoriz
         return url;
     };
 
+    const cvUrl = aboutAcademic?.links?.cv || '';
+    const embedUrl = getEmbedUrl(cvUrl);
+
     return (
         <div className="animate-fadeIn flex flex-col lg:flex-row gap-8 flex-1 min-h-0 relative">
             {/* Left Sidebar - Links Section */}
@@ -216,9 +225,6 @@ export const AboutAcademics: React.FC<AboutAcademicsProps> = ({ user, isAuthoriz
             <div className="flex-1 min-h-0 overflow-y-auto">
                 <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-8">
                     <h3 className="text-2xl font-bold text-slate-900 mb-6">Curriculum Vitae</h3>
-                    {console.log('Current Academic Data:', aboutAcademic)}
-                    {console.log('CV URL:', aboutAcademic?.links?.cv)}
-                    {console.log('Embed URL:', getEmbedUrl(aboutAcademic?.links?.cv || ''))}
 
                     {/* PDF Viewer */}
                     <div className="mb-8">
@@ -231,9 +237,9 @@ export const AboutAcademics: React.FC<AboutAcademicsProps> = ({ user, isAuthoriz
                                 </div>
                             )}
 
-                            {aboutAcademic?.links?.cv ? (
+                            {embedUrl ? (
                                 <iframe
-                                    src={getEmbedUrl(aboutAcademic.links.cv)}
+                                    src={embedUrl}
                                     className={`w-full h-full transition-opacity duration-500 ${isIframeLoading ? 'opacity-0' : 'opacity-100'}`}
                                     allow="autoplay"
                                     title="Curriculum Vitae PDF"
@@ -285,15 +291,15 @@ export const AboutAcademics: React.FC<AboutAcademicsProps> = ({ user, isAuthoriz
                                 <h4 className="text-lg font-bold text-slate-800 mb-4">External Links</h4>
                                 <div className="space-y-4">
                                     <div>
-                                        <label className="block text-sm font-bold text-slate-700 mb-1">Google Drive CV URL (Share Link)</label>
+                                        <label className="block text-sm font-bold text-slate-700 mb-1">CV Display URL</label>
                                         <input
                                             type="text"
                                             value={academicLinksForm.cv}
                                             onChange={e => setAcademicLinksForm(prev => ({ ...prev, cv: e.target.value }))}
                                             className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                            placeholder="https://drive.google.com/file/d/.../view?usp=sharing"
+                                            placeholder="https://storage.googleapis.com/.../cv/latest.pdf"
                                         />
-                                        <p className="text-xs text-slate-500 mt-1">Paste the 'Share' link from Google Drive. It will be automatically converted for embedding.</p>
+                                        <p className="text-xs text-slate-500 mt-1">Google Drive share links are converted for embedding; published GCS PDF URLs are used directly.</p>
                                     </div>
                                     <div>
                                         <label className="block text-sm font-bold text-slate-700 mb-1">ORCiD URL</label>

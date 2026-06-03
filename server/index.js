@@ -7,6 +7,9 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import multer from 'multer';
 import { spawn } from 'child_process';
+import { PDFDocument } from 'pdf-lib';
+import { PDFParse } from 'pdf-parse';
+import { google } from 'googleapis';
 import { toZonedTime, fromZonedTime } from 'date-fns-tz';
 import { generateSignedUrl, generateSignedUrlsForPrefix, isValidFilePath } from './utils/gcsHelper.js';
 import billingRoutes from './routes/billing.js';
@@ -59,6 +62,9 @@ dotenv.config({ path: path.resolve(__dirname, '../.env') });
 
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
+const DEFAULT_ACADEMIC_CV_GDOC_PATH = '/Users/pete/Library/CloudStorage/GoogleDrive-wellclouder@gmail.com/My Drive/jobs/cv_resume/mine/byPlaces/latest_submit/bio/CV_PanjunKim_BASE.gdoc';
+const DEFAULT_ACADEMIC_CV_GCS_OBJECT = 'about/cv.pdf';
+const DEFAULT_ACADEMIC_CV_QUIET_WINDOW_SECONDS = 300;
 
 // Determine Redirect URI based on environment
 const isProduction = process.env.NODE_ENV === 'production';
@@ -140,6 +146,7 @@ app.get('/api/ready', (req, res) => {
         db: getDbHealth()
     });
 });
+
 
 // Configure multer for memory storage
 const upload = multer({
@@ -2009,6 +2016,21 @@ const aboutAcademicSchema = new mongoose.Schema({
 
 const AboutAcademic = mongoose.model('AboutAcademic', aboutAcademicSchema);
 
+const academicCvSyncStateSchema = new mongoose.Schema({
+    key: { type: String, unique: true, default: 'academic-cv' },
+    sourceDocId: String,
+    sourceName: String,
+    sourceModifiedTime: String,
+    publishedUrl: String,
+    gcsBucket: String,
+    gcsObject: String,
+    lastPublishedAt: Date,
+    lastCheckedAt: Date,
+    updated_at: { type: Date, default: Date.now }
+}, { collection: 'ACADEMIC_CV_SYNC_STATE' });
+
+const AcademicCvSyncState = mongoose.model('AcademicCvSyncState', academicCvSyncStateSchema);
+
 // Milestone Schema
 const milestoneSchema = new mongoose.Schema({
     date: Date,
@@ -2173,6 +2195,378 @@ app.put('/api/about-me/:id', async (req, res) => {
     }
 });
 
+function extractGoogleFileId(input) {
+    if (!input) return '';
+    const value = String(input).trim();
+    const directIdMatch = value.match(/^[a-zA-Z0-9_-]{20,}$/);
+    if (directIdMatch) return directIdMatch[0];
+    const fileMatch = value.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+    if (fileMatch?.[1]) return fileMatch[1];
+    const docMatch = value.match(/\/document\/d\/([a-zA-Z0-9_-]+)/);
+    if (docMatch?.[1]) return docMatch[1];
+    const idParam = value.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+    if (idParam?.[1]) return idParam[1];
+    return '';
+}
+
+function readGoogleDocIdFromGdocPath(gdocPath) {
+    if (!gdocPath || !fs.existsSync(gdocPath)) {
+        return '';
+    }
+
+    const parsed = JSON.parse(fs.readFileSync(gdocPath, 'utf-8'));
+    return extractGoogleFileId(parsed.doc_id || '');
+}
+
+function resolveAcademicCvSourceDocId() {
+    const configuredDocId = extractGoogleFileId(process.env.CV_SOURCE_DOC_ID || '');
+    if (configuredDocId) return configuredDocId;
+
+    const configuredGdocPath = process.env.CV_SOURCE_GDOC_PATH || DEFAULT_ACADEMIC_CV_GDOC_PATH;
+    return readGoogleDocIdFromGdocPath(configuredGdocPath);
+}
+
+function buildGoogleDriveAuth() {
+    const scopes = ['https://www.googleapis.com/auth/drive'];
+
+    if (process.env.GCP_SERVICE_ACCOUNT_KEY) {
+        return new google.auth.GoogleAuth({
+            credentials: JSON.parse(process.env.GCP_SERVICE_ACCOUNT_KEY),
+            scopes
+        });
+    }
+
+    if (process.env.GOOGLE_APPLICATION_CREDENTIALS) {
+        return new google.auth.GoogleAuth({
+            keyFile: process.env.GOOGLE_APPLICATION_CREDENTIALS,
+            scopes
+        });
+    }
+
+    const localKeyPath = path.resolve(__dirname, '../service-account-key.json');
+    if (fs.existsSync(localKeyPath)) {
+        return new google.auth.GoogleAuth({
+            keyFile: localKeyPath,
+            scopes
+        });
+    }
+
+    return new google.auth.GoogleAuth({ scopes });
+}
+
+async function getGoogleDriveClient() {
+    const auth = buildGoogleDriveAuth();
+    const authClient = await auth.getClient();
+    return google.drive({ version: 'v3', auth: authClient });
+}
+
+async function exportGoogleDocToPdf(drive, fileId) {
+    const response = await drive.files.export(
+        {
+            fileId,
+            mimeType: 'application/pdf'
+        },
+        {
+            responseType: 'arraybuffer'
+        }
+    );
+
+    return Buffer.from(response.data);
+}
+
+async function maybeStripLeadingCvCoverPage(pdfBuffer) {
+    const originalPdf = await PDFDocument.load(pdfBuffer);
+    const pageCount = originalPdf.getPageCount();
+
+    if (pageCount <= 1 || process.env.CV_STRIP_LEADING_COVER === 'false') {
+        return {
+            buffer: pdfBuffer,
+            stripped: false,
+            firstPageText: '',
+            pageCount
+        };
+    }
+
+    const parser = new PDFParse({ data: Buffer.from(pdfBuffer) });
+    const readPageText = async (pageNumber) => {
+        const parsed = await parser.getText({ partial: [pageNumber] });
+        return String(parsed.text || '').trim();
+    };
+    const normalizePageText = (value) => value
+        .replace(/\s+/g, ' ')
+        .trim()
+        .toLowerCase()
+        .replace(/--\s*\d+\s+of\s+\d+\s*--/g, '')
+        .trim();
+
+    let firstPageText = '';
+    let secondPageText = '';
+    try {
+        firstPageText = await readPageText(1);
+        if (pageCount > 1) {
+            secondPageText = await readPageText(2);
+        }
+    } catch (error) {
+        await parser.destroy();
+        return {
+            buffer: pdfBuffer,
+            stripped: false,
+            firstPageText,
+            pageCount
+        };
+    }
+
+    const normalizedFirstPage = normalizePageText(firstPageText);
+    const normalizedSecondPage = normalizePageText(secondPageText);
+
+    const firstPageTabMatch = normalizedFirstPage.match(/^tab\s+(\d+)$/);
+    const looksLikeDriveTabCover = Boolean(firstPageTabMatch) && normalizedFirstPage.length <= 16;
+    const looksLikeCvCover = normalizedFirstPage === 'cv' && normalizedSecondPage.includes('panjun kim');
+
+    if (!looksLikeDriveTabCover && !looksLikeCvCover) {
+        await parser.destroy();
+        return {
+            buffer: pdfBuffer,
+            stripped: false,
+            firstPageText,
+            pageCount
+        };
+    }
+
+    const firstTabName = normalizedFirstPage;
+    let pageIndexesToKeep = [];
+    let keepStartIndex = 2;
+    let keepEndExclusive = pageCount;
+
+    for (let pageNumber = 2; pageNumber <= pageCount; pageNumber += 1) {
+        let pageText = '';
+        try {
+            pageText = await readPageText(pageNumber);
+        } catch (err) {
+            continue;
+        }
+        const normalizedPage = normalizePageText(pageText);
+
+        const isNewTabCover = normalizedPage.length <= 25 && normalizedPage !== firstTabName;
+
+        if (!isNewTabCover) {
+            continue;
+        }
+
+        if (normalizedPage === firstTabName) {
+            keepStartIndex = pageNumber;
+            continue;
+        }
+
+        keepEndExclusive = pageNumber - 1;
+        break;
+    }
+
+    for (let pageIndex = keepStartIndex - 1; pageIndex < keepEndExclusive; pageIndex += 1) {
+        pageIndexesToKeep.push(pageIndex);
+    }
+
+    await parser.destroy();
+
+    if (pageIndexesToKeep.length === 0) {
+        return {
+            buffer: pdfBuffer,
+            stripped: false,
+            firstPageText,
+            pageCount
+        };
+    }
+
+    const trimmedPdf = await PDFDocument.create();
+    const copiedPages = await trimmedPdf.copyPages(originalPdf, pageIndexesToKeep);
+    copiedPages.forEach((page) => trimmedPdf.addPage(page));
+
+    return {
+        buffer: Buffer.from(await trimmedPdf.save()),
+        stripped: true,
+        firstPageText,
+        pageCount
+    };
+}
+
+function buildAcademicCvPublicUrl(bucketName, objectName, version) {
+    const configuredBaseUrl = (process.env.CV_PUBLIC_BASE_URL || '').trim().replace(/\/$/, '');
+    const encodedObjectName = objectName.split('/').map(encodeURIComponent).join('/');
+    const baseUrl = configuredBaseUrl
+        ? `${configuredBaseUrl}/${encodedObjectName}`
+        : `https://storage.googleapis.com/${bucketName}/${encodedObjectName}`;
+    return `${baseUrl}?v=${encodeURIComponent(version)}`;
+}
+
+async function publishAcademicCv({ force = false, dryRun = false } = {}) {
+    const sourceDocId = resolveAcademicCvSourceDocId();
+    if (!sourceDocId) {
+        throw new Error('CV_SOURCE_DOC_ID is not set and no readable CV_SOURCE_GDOC_PATH was found.');
+    }
+
+    const bucketName = process.env.GCS_BUCKET_NAME || 'distilledchild';
+    const objectName = process.env.CV_GCS_OBJECT || DEFAULT_ACADEMIC_CV_GCS_OBJECT;
+    const quietWindowSeconds = Number(process.env.CV_SYNC_QUIET_WINDOW_SECONDS || DEFAULT_ACADEMIC_CV_QUIET_WINDOW_SECONDS);
+    const drive = await getGoogleDriveClient();
+    const sourceMetaResponse = await drive.files.get({
+        fileId: sourceDocId,
+        fields: 'id,name,mimeType,modifiedTime,webViewLink'
+    });
+    const sourceMeta = sourceMetaResponse.data;
+
+    if (sourceMeta.mimeType !== 'application/vnd.google-apps.document') {
+        throw new Error(`CV source ${sourceDocId} is not a Google Doc. mimeType=${sourceMeta.mimeType}`);
+    }
+
+    const sourceModifiedTime = sourceMeta.modifiedTime || '';
+    const now = new Date();
+    const sourceModifiedAt = sourceModifiedTime ? new Date(sourceModifiedTime) : null;
+    const quietWindowMs = Number.isFinite(quietWindowSeconds) ? quietWindowSeconds * 1000 : DEFAULT_ACADEMIC_CV_QUIET_WINDOW_SECONDS * 1000;
+    const state = await AcademicCvSyncState.findOne({ key: 'academic-cv' }).lean();
+
+    const baseResult = {
+        sourceDocId,
+        sourceName: sourceMeta.name || '',
+        sourceModifiedTime,
+        previousSourceModifiedTime: state?.sourceModifiedTime || '',
+        bucketName,
+        objectName,
+        dryRun,
+        force,
+        skipped: false,
+        updated: false,
+        reason: ''
+    };
+
+    const isPublishedToCurrentObject =
+        state?.gcsBucket === bucketName &&
+        state?.gcsObject === objectName &&
+        Boolean(state?.publishedUrl);
+
+    if (!force && state?.sourceModifiedTime && state.sourceModifiedTime === sourceModifiedTime && isPublishedToCurrentObject) {
+        await AcademicCvSyncState.updateOne(
+            { key: 'academic-cv' },
+            { $set: { lastCheckedAt: now, updated_at: now } },
+            { upsert: true }
+        );
+        return {
+            ...baseResult,
+            skipped: true,
+            reason: 'source_not_modified',
+            publishedUrl: state.publishedUrl || ''
+        };
+    }
+
+    if (!force && sourceModifiedAt && now.getTime() - sourceModifiedAt.getTime() < quietWindowMs) {
+        await AcademicCvSyncState.updateOne(
+            { key: 'academic-cv' },
+            {
+                $set: {
+                    sourceDocId,
+                    sourceName: sourceMeta.name || '',
+                    lastCheckedAt: now,
+                    updated_at: now
+                }
+            },
+            { upsert: true }
+        );
+        return {
+            ...baseResult,
+            skipped: true,
+            reason: 'quiet_window'
+        };
+    }
+
+    const publishedUrl = buildAcademicCvPublicUrl(bucketName, objectName, sourceModifiedTime || now.toISOString());
+    if (dryRun) {
+        return {
+            ...baseResult,
+            updated: true,
+            publishedUrl
+        };
+    }
+
+    const pdfBuffer = await exportGoogleDocToPdf(drive, sourceDocId);
+    const cleanedPdf = await maybeStripLeadingCvCoverPage(pdfBuffer);
+    const file = storage.bucket(bucketName).file(objectName);
+
+    await file.save(cleanedPdf.buffer, {
+        resumable: false,
+        metadata: {
+            contentType: 'application/pdf',
+            cacheControl: 'public, max-age=60'
+        }
+    });
+
+    try {
+        await file.makePublic();
+    } catch (error) {
+        console.warn('[academic-cv-sync] makePublic skipped or failed:', error.message);
+    }
+
+    const aboutAcademic = await AboutAcademic.findOne({ show: 'Y' });
+    if (aboutAcademic) {
+        aboutAcademic.links = {
+            ...(aboutAcademic.links?.toObject ? aboutAcademic.links.toObject() : aboutAcademic.links || {}),
+            cv: publishedUrl
+        };
+        aboutAcademic.updated_at = now;
+        await aboutAcademic.save();
+    }
+
+    await AcademicCvSyncState.updateOne(
+        { key: 'academic-cv' },
+        {
+            $set: {
+                sourceDocId,
+                sourceName: sourceMeta.name || '',
+                sourceModifiedTime,
+                publishedUrl,
+                gcsBucket: bucketName,
+                gcsObject: objectName,
+                lastPublishedAt: now,
+                lastCheckedAt: now,
+                updated_at: now
+            }
+        },
+        { upsert: true }
+    );
+
+    return {
+        ...baseResult,
+        updated: true,
+        publishedUrl,
+        originalPageCount: cleanedPdf.pageCount,
+        strippedLeadingCoverPage: cleanedPdf.stripped,
+        firstPageText: cleanedPdf.firstPageText
+    };
+}
+
+function validateAcademicCvSyncToken(req, res, next) {
+    if (process.env.NODE_ENV !== 'production') {
+        return next();
+    }
+
+    const expectedToken = (process.env.CV_SYNC_TOKEN || '').trim();
+    if (!expectedToken) {
+        return res.status(503).json({ error: 'CV sync token is not configured' });
+    }
+
+    const bearerToken = (req.headers.authorization || '').replace(/^Bearer\s+/i, '').trim();
+    const headerToken = String(req.headers['x-api-key'] || req.headers['x-cv-sync-token'] || '').trim();
+    const providedToken = bearerToken || headerToken;
+
+    if (!providedToken) {
+        return res.status(401).json({ error: 'CV sync token is required' });
+    }
+
+    if (providedToken !== expectedToken) {
+        return res.status(403).json({ error: 'Invalid CV sync token' });
+    }
+
+    next();
+}
+
 // Upload profile picture to GCS
 app.post('/api/about-me/upload-profile-pic', upload.single('image'), async (req, res) => {
     try {
@@ -2318,6 +2712,37 @@ app.put('/api/about-academic/:id', async (req, res) => {
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+app.post('/api/admin/academic-cv/sync', validateAcademicCvSyncToken, async (req, res) => {
+    try {
+        const result = await publishAcademicCv({
+            force: req.query.force === 'true' || req.body?.force === true,
+            dryRun: req.query.dryRun === 'true' || req.body?.dryRun === true
+        });
+        res.json(result);
+    } catch (err) {
+        console.error('[academic-cv-sync] publish failed:', err);
+        res.status(500).json({ error: 'Failed to sync academic CV', details: err.message });
+    }
+});
+
+app.get('/api/admin/academic-cv/status', validateAcademicCvSyncToken, async (req, res) => {
+    try {
+        const sourceDocId = resolveAcademicCvSourceDocId();
+        const state = await AcademicCvSyncState.findOne({ key: 'academic-cv' }).lean();
+        res.json({
+            sourceDocConfigured: Boolean(sourceDocId),
+            sourceDocId: sourceDocId ? `${sourceDocId.slice(0, 6)}...${sourceDocId.slice(-6)}` : '',
+            bucketName: process.env.GCS_BUCKET_NAME || 'distilledchild',
+            objectName: process.env.CV_GCS_OBJECT || DEFAULT_ACADEMIC_CV_GCS_OBJECT,
+            quietWindowSeconds: Number(process.env.CV_SYNC_QUIET_WINDOW_SECONDS || DEFAULT_ACADEMIC_CV_QUIET_WINDOW_SECONDS),
+            state: state || null
+        });
+    } catch (err) {
+        console.error('[academic-cv-sync] status failed:', err);
+        res.status(500).json({ error: 'Failed to read academic CV sync status', details: err.message });
     }
 });
 
@@ -4487,6 +4912,62 @@ app.delete('/api/projects/:id', async (req, res) => {
 });
 
 const PORT = process.env.PORT || 4000;
+let academicCvWatcherProcess = null;
+
+const startAcademicCvWatcher = () => {
+    if (academicCvWatcherProcess) {
+        return;
+    }
+
+    const configuredDocId = process.env.CV_SOURCE_DOC_ID;
+    const configuredPath = process.env.CV_SOURCE_GDOC_PATH || DEFAULT_ACADEMIC_CV_GDOC_PATH;
+    const watcherEnabled = process.env.ENABLE_ACADEMIC_CV_WATCH !== 'false';
+    const isLocalWatcherCandidate = !isProduction && (Boolean(configuredDocId) || fs.existsSync(configuredPath));
+
+    if (!watcherEnabled || !isLocalWatcherCandidate) {
+        console.log('[academic-cv-sync] watcher not started', {
+            watcherEnabled,
+            isProduction,
+            gdocIdConfigured: Boolean(configuredDocId),
+            gdocPathExists: fs.existsSync(configuredPath)
+        });
+        return;
+    }
+
+    const watcherScriptPath = path.resolve(__dirname, 'sync-academic-cv.js');
+    academicCvWatcherProcess = spawn(process.execPath, [watcherScriptPath, '--watch'], {
+        cwd: __dirname,
+        env: process.env,
+        stdio: ['ignore', 'pipe', 'pipe']
+    });
+
+    academicCvWatcherProcess.stdout.on('data', (chunk) => {
+        process.stdout.write(`[academic-cv-sync] ${chunk}`);
+    });
+
+    academicCvWatcherProcess.stderr.on('data', (chunk) => {
+        process.stderr.write(`[academic-cv-sync] ${chunk}`);
+    });
+
+    academicCvWatcherProcess.on('exit', (code, signal) => {
+        console.log(`[academic-cv-sync] watcher exited (code=${code ?? 'null'}, signal=${signal ?? 'null'})`);
+        academicCvWatcherProcess = null;
+    });
+
+    console.log(`[academic-cv-sync] watcher started (Source Doc ID: ${configuredDocId || 'from .gdoc file'})`);
+};
+
+const stopAcademicCvWatcher = () => {
+    if (!academicCvWatcherProcess) {
+        return;
+    }
+
+    academicCvWatcherProcess.kill('SIGTERM');
+    academicCvWatcherProcess = null;
+};
+
+process.on('SIGINT', stopAcademicCvWatcher);
+process.on('SIGTERM', stopAcademicCvWatcher);
 
 const startServer = async () => {
     try {
@@ -4497,6 +4978,7 @@ const startServer = async () => {
     }
 
     setupOpenclawSecurityAuditScheduler();
+    startAcademicCvWatcher();
 
     server.listen(PORT, () => {
         console.log(`SERVER RUNNING ON PORT ${PORT}`);
