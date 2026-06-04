@@ -63,7 +63,7 @@ dotenv.config({ path: path.resolve(__dirname, '../.env') });
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
 const DEFAULT_ACADEMIC_CV_GDOC_PATH = '/Users/pete/Library/CloudStorage/GoogleDrive-wellclouder@gmail.com/My Drive/jobs/cv_resume/mine/byPlaces/latest_submit/bio/CV_PanjunKim_BASE.gdoc';
-const DEFAULT_ACADEMIC_CV_GCS_OBJECT = 'about/cv.pdf';
+const DEFAULT_ACADEMIC_CV_GCS_OBJECT = 'about/academic/cv.pdf';
 const DEFAULT_ACADEMIC_CV_QUIET_WINDOW_SECONDS = 300;
 
 // Determine Redirect URI based on environment
@@ -2584,7 +2584,7 @@ app.post('/api/about-me/upload-profile-pic', upload.single('image'), async (req,
         const file = req.file;
         const bucketName = process.env.GCS_BUCKET_NAME || 'distilledchild';
         const bucket = storage.bucket(bucketName);
-        const prefix = 'misc';
+        const prefix = 'about/me';
 
         // If this is a cropped image, only save to main file
         // If this is a new upload (not cropped), save to both original and main

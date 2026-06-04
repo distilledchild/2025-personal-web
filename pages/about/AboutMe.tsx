@@ -142,7 +142,7 @@ export const AboutMe: React.FC<AboutMeProps> = ({ user, isAuthorized }) => {
 
         try {
             // Use the original image for cropping
-            const imageSrc = `https://storage.googleapis.com/distilledchild/misc/distilledchild-profile-pic-original.jpg?t=${profilePicTimestamp}`;
+            const imageSrc = `https://storage.googleapis.com/distilledchild/about/me/distilledchild-profile-pic-original.jpg?t=${profilePicTimestamp}`;
             const croppedBlob = await getCroppedImg(imageSrc, croppedAreaPixels);
 
             if (croppedBlob) {
@@ -247,7 +247,7 @@ export const AboutMe: React.FC<AboutMeProps> = ({ user, isAuthorized }) => {
             <div className="block overflow-hidden">
                 <div className="float-left mr-8 mb-4">
                     <img
-                        src={`https://storage.googleapis.com/distilledchild/misc/distilledchild-profile-pic.jpg?t=${profilePicTimestamp}`}
+                        src={`https://storage.googleapis.com/distilledchild/about/me/distilledchild-profile-pic.jpg?t=${profilePicTimestamp}`}
                         alt="Profile"
                         className="w-72 h-72 rounded-2xl object-cover shadow-lg transition-all duration-300"
                         onError={(e) => {
@@ -344,7 +344,7 @@ export const AboutMe: React.FC<AboutMeProps> = ({ user, isAuthorized }) => {
                                                 {/* React Easy Crop Area */}
                                                 <div className="relative h-72 bg-slate-900 rounded-lg overflow-hidden">
                                                     <Cropper
-                                                        image={`https://storage.googleapis.com/distilledchild/misc/distilledchild-profile-pic-original.jpg?t=${profilePicTimestamp}`}
+                                                        image={`https://storage.googleapis.com/distilledchild/about/me/distilledchild-profile-pic-original.jpg?t=${profilePicTimestamp}`}
                                                         crop={crop}
                                                         zoom={zoom}
                                                         aspect={1}

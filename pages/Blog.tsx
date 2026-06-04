@@ -967,7 +967,7 @@ export const Blog: React.FC = () => {
     return (
         <>
             <BlogLayout
-                title="Blog"
+                title="Talks"
                 tabs={tabs}
                 activeTab={activeTab}
                 onTabChange={(id) => navigate(`/blog/${id}`)}
