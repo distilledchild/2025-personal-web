@@ -25,8 +25,13 @@ const Home: React.FC = () => (
 
     {/* Content Overlay - Z index 10, Pointer Events None allows clicking through to Canvas */}
     <div className="relative z-10 text-center space-y-4 px-4 pointer-events-none select-none mt-[-5vh]">
-      <h1 className="text-6xl md:text-8xl font-extrabold tracking-tight drop-shadow-2xl">
-        <span className="text-white">Computational </span>
+      <h1 
+        className="text-[7.5rem] md:text-[12rem] leading-none font-extrabold tracking-tight"
+        style={{ filter: "drop-shadow(0px 5px 15px rgba(0,0,0,0.45)) drop-shadow(0px 15px 35px rgba(0,0,0,0.45))" }}
+      >
+        <span className="text-white">
+          3D{' '}
+        </span>
         <br className="md:hidden" />
         <span
           className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-green-400 to-purple-400 animate-gradient pr-2"
@@ -36,7 +41,7 @@ const Home: React.FC = () => (
             backgroundClip: 'text'
           }}
         >
-          Biology
+          Genomics
         </span>
       </h1>
       <p className="text-lg md:text-xl text-slate-300 max-w-2xl mx-auto leading-relaxed">

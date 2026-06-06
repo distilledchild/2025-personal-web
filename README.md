@@ -125,4 +125,4 @@ The application integrates with Strava's API to fetch and display workout activi
 - Attempting to automate this would violate security principles and is technically blocked by browsers
 
 ---
-*This project demonstrates a blend of domain expertise in Computational Biology (Data Visualization) with modern Web Engineering (3D Graphics, Real-time Systems, OAuth Integration).*
+*This project demonstrates a blend of domain expertise in 3D Genomics (Data Visualization) with modern Web Engineering (3D Graphics, Real-time Systems, OAuth Integration).*
