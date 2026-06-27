@@ -261,12 +261,62 @@ const EnhancerID = () => (
   </div >
 );
 
+const variancePartitionReportPath = '/reports/variancepartition.html';
+
+const VariancePartitionReport = () => {
+  const [reportHeight, setReportHeight] = useState(900);
+
+  const centerReport = (iframe: HTMLIFrameElement) => {
+    const doc = iframe.contentDocument ?? iframe.contentWindow?.document;
+    if (!doc?.body || !doc.documentElement) return;
+
+    doc.documentElement.style.overflowX = 'hidden';
+    doc.body.style.overflowX = 'hidden';
+    doc.body.style.margin = '0 auto';
+    doc.body.style.maxWidth = '960px';
+    doc.body.style.padding = '32px 24px 56px';
+    doc.body.style.boxSizing = 'border-box';
+    doc.body.style.backgroundColor = '#ffffff';
+
+    setReportHeight(
+      Math.max(
+        doc.documentElement.scrollHeight,
+        doc.body.scrollHeight,
+        900
+      )
+    );
+  };
+
+  return (
+    <div className="animate-fadeIn">
+      <div className="mx-auto w-full max-w-6xl rounded-3xl border border-slate-200 bg-white shadow-sm overflow-hidden">
+        <iframe
+          src={variancePartitionReportPath}
+          title="VariancePartition report"
+          className="block w-full border-0 bg-white"
+          scrolling="no"
+          style={{ height: reportHeight }}
+          onLoad={(event) => {
+            const iframe = event.currentTarget;
+            centerReport(iframe);
+            window.setTimeout(() => centerReport(iframe), 200);
+            window.setTimeout(() => centerReport(iframe), 800);
+          }}
+        >
+          <a href={variancePartitionReportPath}>Open the VariancePartition report</a>
+        </iframe>
+      </div>
+    </div>
+  );
+};
+
 export const Research: React.FC = () => {
   const { submenu } = useParams<{ submenu?: string }>();
   const navigate = useNavigate();
 
   const tabs = [
     { label: 'PaperFinder', icon: Search, color: 'text-teal-500 border-teal-500', activeBg: 'bg-teal-50 ring-teal-200', slug: 'paperfinder' },
+    { label: 'VariancePartition', icon: FileText, color: 'text-teal-500 border-teal-500', activeBg: 'bg-teal-50 ring-teal-200', slug: 'variancepartition' },
     { label: 'Loop Browser', icon: Search, color: 'text-teal-500 border-teal-500', activeBg: 'bg-teal-50 ring-teal-200', slug: 'loopbrowser' },
     { label: 'Breedchain', icon: Cat, color: 'text-teal-500 border-teal-500', activeBg: 'bg-teal-50 ring-teal-200', slug: 'breedchain' },
     { label: 'PE Interactions', icon: GitBranch, color: 'text-teal-500 border-teal-500', activeBg: 'bg-teal-50 ring-teal-200', slug: 'peinteractions' },
@@ -328,6 +378,7 @@ export const Research: React.FC = () => {
           {requestedSlug === 'breedchain' && <ResearchBreedchain />}
           {requestedSlug === 'peinteractions' && <ResearchPEInteractions />}
           {requestedSlug === 'paperfinder' && <ResearchPaperFinder />}
+          {requestedSlug === 'variancepartition' && <VariancePartitionReport />}
           {requestedSlug === 'singlecellseq' && <SingleCell />}
           {requestedSlug === 'deeplearningenhancer' && <EnhancerID />}
         </div>
