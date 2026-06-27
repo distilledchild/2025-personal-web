@@ -266,17 +266,9 @@ const variancePartitionReportPath = '/reports/variancepartition.html';
 const VariancePartitionReport = () => {
   const [reportHeight, setReportHeight] = useState(900);
 
-  const centerReport = (iframe: HTMLIFrameElement) => {
+  const syncReportHeight = (iframe: HTMLIFrameElement) => {
     const doc = iframe.contentDocument ?? iframe.contentWindow?.document;
     if (!doc?.body || !doc.documentElement) return;
-
-    doc.documentElement.style.overflowX = 'hidden';
-    doc.body.style.overflowX = 'hidden';
-    doc.body.style.margin = '0 auto';
-    doc.body.style.maxWidth = '960px';
-    doc.body.style.padding = '32px 24px 56px';
-    doc.body.style.boxSizing = 'border-box';
-    doc.body.style.backgroundColor = '#ffffff';
 
     setReportHeight(
       Math.max(
@@ -289,7 +281,7 @@ const VariancePartitionReport = () => {
 
   return (
     <div className="animate-fadeIn">
-      <div className="mx-auto w-full max-w-6xl rounded-3xl border border-slate-200 bg-white shadow-sm overflow-hidden">
+      <div className="mx-auto w-full max-w-6xl bg-white">
         <iframe
           src={variancePartitionReportPath}
           title="VariancePartition report"
@@ -298,9 +290,9 @@ const VariancePartitionReport = () => {
           style={{ height: reportHeight }}
           onLoad={(event) => {
             const iframe = event.currentTarget;
-            centerReport(iframe);
-            window.setTimeout(() => centerReport(iframe), 200);
-            window.setTimeout(() => centerReport(iframe), 800);
+            syncReportHeight(iframe);
+            window.setTimeout(() => syncReportHeight(iframe), 200);
+            window.setTimeout(() => syncReportHeight(iframe), 800);
           }}
         >
           <a href={variancePartitionReportPath}>Open the VariancePartition report</a>
@@ -321,7 +313,6 @@ export const Research: React.FC = () => {
     { label: 'Breedchain', icon: Cat, color: 'text-teal-500 border-teal-500', activeBg: 'bg-teal-50 ring-teal-200', slug: 'breedchain' },
     { label: 'PE Interactions', icon: GitBranch, color: 'text-teal-500 border-teal-500', activeBg: 'bg-teal-50 ring-teal-200', slug: 'peinteractions' },
     { label: 'Single-cell Seq', icon: Database, color: 'text-teal-500 border-teal-500', activeBg: 'bg-teal-50 ring-teal-200', slug: 'singlecellseq' },
-    { label: 'AlphaGenome', icon: FileText, color: 'text-teal-500 border-teal-500', activeBg: 'bg-teal-50 ring-teal-200', slug: 'deeplearningenhancer' },
   ];
 
   const defaultSlug = tabs[0]?.slug || 'paperfinder';
