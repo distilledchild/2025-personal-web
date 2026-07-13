@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Plane, Dumbbell, BarChart3, ChevronLeft, ChevronRight, PersonStanding, Footprints, Bike, Palette, MapPin, X } from 'lucide-react';
+import { Plane, Dumbbell, BarChart3, ChevronLeft, ChevronRight, PersonStanding, Footprints, Bike, Palette, MapPin, X, UploadCloud, Save, Loader2 } from 'lucide-react';
 import { ComposableMap, Geographies, Geography, Marker, Annotation } from 'react-simple-maps';
 import { geoCentroid, geoAlbersUsa } from 'd3-geo';
 import { API_URL } from '../utils/apiConfig';
@@ -24,6 +24,7 @@ import { DataTable, DataTableColumn } from '../components/DataTable';
 import GoldMarketWorkspace from '../components/GoldMarketWorkspace';
 
 const geoUrl = "https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json";
+const hiddenAnalysisIds = new Set(['2', '3']);
 
 // Mock Data for Visualizations (Topic 4)
 const mockInteractionData = Array.from({ length: 50 }, (_, i) => ({
@@ -76,6 +77,19 @@ interface MonthlyStats {
     run: { distance: number; count: number };
 }
 
+interface WorkoutScreenshotDraft {
+    name: string;
+    sport_type: string;
+    distanceKm: string;
+    movingTimeText: string;
+    startDateLocal: string;
+    totalElevationGain: string;
+    location_text: string;
+    device_text: string;
+    average_pace_text: string;
+    ocr_text: string;
+}
+
 const isRideActivity = (sportType: string): boolean => {
     const normalized = sportType.toLowerCase();
     return normalized.includes('ride') || normalized === 'bike' || normalized === 'virtualride';
@@ -93,6 +107,54 @@ const formatPacePerKm = (distanceMeters: number, movingTimeSeconds: number): str
     }
 
     return `${minutes}:${String(seconds).padStart(2, '0')} /km`;
+};
+
+const formatDurationText = (seconds: number): string => {
+    const safeSeconds = Math.max(0, Math.round(Number(seconds) || 0));
+    const hours = Math.floor(safeSeconds / 3600);
+    const minutes = Math.floor((safeSeconds % 3600) / 60);
+    const remainingSeconds = safeSeconds % 60;
+
+    return hours > 0
+        ? `${hours}h ${minutes}m ${remainingSeconds}s`
+        : `${minutes}m ${remainingSeconds}s`;
+};
+
+const parseDurationText = (value: string): number => {
+    const text = value.toLowerCase().replace(/\s+/g, ' ').trim();
+    const hourMatch = text.match(/(\d+(?:\.\d+)?)\s*h/);
+    const minuteMatch = text.match(/(\d+(?:\.\d+)?)\s*m/);
+    const secondMatch = text.match(/(\d+(?:\.\d+)?)\s*s/);
+
+    if (hourMatch || minuteMatch || secondMatch) {
+        return Math.round(
+            (Number(hourMatch?.[1] || 0) * 3600) +
+            (Number(minuteMatch?.[1] || 0) * 60) +
+            Number(secondMatch?.[1] || 0)
+        );
+    }
+
+    const clockMatch = text.match(/^(\d{1,2}):(\d{2})(?::(\d{2}))?$/);
+    if (!clockMatch) return 0;
+
+    const first = Number(clockMatch[1]);
+    const second = Number(clockMatch[2]);
+    const third = clockMatch[3] ? Number(clockMatch[3]) : null;
+
+    return third === null ? (first * 60) + second : (first * 3600) + (second * 60) + third;
+};
+
+const toDateTimeLocalInput = (value?: string | null): string => {
+    if (!value) return '';
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return '';
+    const offsetMs = date.getTimezoneOffset() * 60 * 1000;
+    return new Date(date.getTime() - offsetMs).toISOString().slice(0, 16);
+};
+
+const fromDateTimeLocalInput = (value: string): string => {
+    const date = new Date(value);
+    return Number.isNaN(date.getTime()) ? '' : date.toISOString();
 };
 
 
@@ -176,7 +238,6 @@ const generateCalendarDays = (targetDate: Date) => {
 export const Interests: React.FC<{ isAuthorized: boolean }> = ({ isAuthorized }) => {
     const { submenu, subId } = useParams<{ submenu?: string; subId?: string }>();
     const navigate = useNavigate();
-    const adminOnlyAnalysisIds = new Set(['2', '3']);
 
     // Determine active tab from URL, default to 'travel'
     const activeTab = (submenu as 'travel' | 'workout' | 'art' | 'analysis' | 'data') || 'travel';
@@ -189,6 +250,10 @@ export const Interests: React.FC<{ isAuthorized: boolean }> = ({ isAuthorized })
         }
 
         if (activeTab === 'analysis' && !subId) {
+            navigate('/interests/analysis/1', { replace: true });
+        }
+
+        if (activeTab === 'analysis' && subId && hiddenAnalysisIds.has(subId)) {
             navigate('/interests/analysis/1', { replace: true });
         }
     }, [activeTab, subId, navigate]);
@@ -216,6 +281,11 @@ export const Interests: React.FC<{ isAuthorized: boolean }> = ({ isAuthorized })
     const [artMuseums, setArtMuseums] = useState<ArtMuseum[]>([]);
     const [loadingArtworks, setLoadingArtworks] = useState(false);
     const [isAdminUser, setIsAdminUser] = useState(false);
+    const [isWorkoutScreenshotDragging, setIsWorkoutScreenshotDragging] = useState(false);
+    const [workoutScreenshotDraft, setWorkoutScreenshotDraft] = useState<WorkoutScreenshotDraft | null>(null);
+    const [workoutScreenshotLoading, setWorkoutScreenshotLoading] = useState(false);
+    const [workoutScreenshotSaving, setWorkoutScreenshotSaving] = useState(false);
+    const [workoutScreenshotError, setWorkoutScreenshotError] = useState('');
 
     const [currentCalendarDate, setCurrentCalendarDate] = useState(() => {
         const d = new Date();
@@ -286,9 +356,6 @@ export const Interests: React.FC<{ isAuthorized: boolean }> = ({ isAuthorized })
         if (activeTab === 'travel' && !isAdminUser) {
             navigate('/interests/analysis/1', { replace: true });
         }
-        if (activeTab === 'analysis' && subId && adminOnlyAnalysisIds.has(subId) && !isAdminUser) {
-            navigate('/interests/analysis/1', { replace: true });
-        }
     }, [activeTab, adminCheckLoading, isAdminUser, navigate, subId]);
 
     useEffect(() => {
@@ -308,17 +375,119 @@ export const Interests: React.FC<{ isAuthorized: boolean }> = ({ isAuthorized })
         }
     }, [activeTab]);
 
+    const getAdminEmail = () => {
+        const stored = getStoredUserProfile<any>();
+        return String(stored?.email || '');
+    };
 
+    const handleWorkoutScreenshotFile = async (file: File) => {
+        if (!file.type.startsWith('image/')) {
+            setWorkoutScreenshotError('Please upload an image file.');
+            return;
+        }
 
-    const handleStravaAuth = async () => {
+        const adminEmail = getAdminEmail();
+        if (!adminEmail) {
+            setWorkoutScreenshotError('Admin login is required.');
+            return;
+        }
+
+        setWorkoutScreenshotLoading(true);
+        setWorkoutScreenshotError('');
+
         try {
-            const response = await fetch(`${API_URL}/api/strava/auth`);
+            const formData = new FormData();
+            formData.append('image', file);
+            formData.append('adminEmail', adminEmail);
+
+            const response = await fetch(`${API_URL}/api/workouts/screenshot/ocr`, {
+                method: 'POST',
+                body: formData
+            });
             const data = await response.json();
 
-            // Redirect to Strava authorization page
-            window.location.href = data.authUrl;
+            if (!response.ok) {
+                throw new Error(data.details || data.error || 'Failed to read screenshot');
+            }
+
+            const parsed = data.parsed || {};
+            setWorkoutScreenshotDraft({
+                name: parsed.name || 'Workout',
+                sport_type: parsed.sport_type || 'Run',
+                distanceKm: parsed.distance ? String((Number(parsed.distance) / 1000).toFixed(2)) : '',
+                movingTimeText: parsed.moving_time ? formatDurationText(Number(parsed.moving_time)) : '',
+                startDateLocal: toDateTimeLocalInput(parsed.start_date),
+                totalElevationGain: parsed.total_elevation_gain ? String(parsed.total_elevation_gain) : '0',
+                location_text: parsed.location_text || '',
+                device_text: parsed.device_text || '',
+                average_pace_text: parsed.average_pace_text || '',
+                ocr_text: data.ocrText || parsed.ocr_text || ''
+            });
         } catch (error) {
-            console.error('Failed to initiate Strava auth:', error);
+            setWorkoutScreenshotError(error instanceof Error ? error.message : 'Failed to read screenshot');
+        } finally {
+            setWorkoutScreenshotLoading(false);
+            setIsWorkoutScreenshotDragging(false);
+        }
+    };
+
+    const handleWorkoutScreenshotSave = async () => {
+        if (!workoutScreenshotDraft) return;
+
+        const adminEmail = getAdminEmail();
+        const distanceMeters = Math.round(Number(workoutScreenshotDraft.distanceKm) * 1000);
+        const movingTimeSeconds = parseDurationText(workoutScreenshotDraft.movingTimeText);
+        const startDate = fromDateTimeLocalInput(workoutScreenshotDraft.startDateLocal);
+
+        if (!distanceMeters || !movingTimeSeconds || !startDate) {
+            setWorkoutScreenshotError('Distance, time, and date are required.');
+            return;
+        }
+
+        setWorkoutScreenshotSaving(true);
+        setWorkoutScreenshotError('');
+
+        try {
+            const response = await fetch(`${API_URL}/api/workouts/screenshot`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    adminEmail,
+                    workout: {
+                        name: workoutScreenshotDraft.name,
+                        sport_type: workoutScreenshotDraft.sport_type,
+                        type: workoutScreenshotDraft.sport_type,
+                        distance: distanceMeters,
+                        moving_time: movingTimeSeconds,
+                        elapsed_time: movingTimeSeconds,
+                        total_elevation_gain: Number(workoutScreenshotDraft.totalElevationGain || 0),
+                        start_date: startDate,
+                        start_date_local: startDate,
+                        location_text: workoutScreenshotDraft.location_text,
+                        device_text: workoutScreenshotDraft.device_text,
+                        average_pace_text: workoutScreenshotDraft.average_pace_text,
+                        ocr_text: workoutScreenshotDraft.ocr_text
+                    }
+                })
+            });
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.details || data.error || 'Failed to save workout');
+            }
+
+            const savedActivity = {
+                ...data.workout,
+                id: data.workout.activity_id || data.workout.id
+            };
+
+            setStravaActivities(prev => [savedActivity, ...prev]
+                .sort((a: any, b: any) => new Date(b.start_date).getTime() - new Date(a.start_date).getTime()));
+            setWorkoutScreenshotDraft(null);
+        } catch (error) {
+            setWorkoutScreenshotError(error instanceof Error ? error.message : 'Failed to save workout');
+        } finally {
+            setWorkoutScreenshotSaving(false);
         }
     };
 
@@ -533,10 +702,6 @@ export const Interests: React.FC<{ isAuthorized: boolean }> = ({ isAuthorized })
         return null;
     }
 
-    if (activeTab === 'analysis' && subId && adminOnlyAnalysisIds.has(subId) && !isAdminUser) {
-        return null;
-    }
-
     return (
         <div className="flex flex-col h-screen bg-white overflow-hidden">
             {/* Fixed Header Section */}
@@ -658,18 +823,157 @@ export const Interests: React.FC<{ isAuthorized: boolean }> = ({ isAuthorized })
                             <div className="flex justify-between items-center">
                                 <div>
                                     <h3 className="text-2xl font-bold text-slate-900 mb-2">Workout Activities</h3>
-                                    <p className="text-slate-500 text-lg">My workout activities from Strava</p>
+                                    <p className="text-slate-500 text-lg">My workout activities</p>
                                 </div>
-                                {/* Show Strava sync button only for logged-in ADMIN users (including production) */}
-                                {isAuthorized && isAdminUser && (
-                                    <button
-                                        onClick={handleStravaAuth}
-                                        className="px-6 py-3 bg-gradient-to-r from-[#FFA300] to-[#FF8C00] text-white font-bold rounded-xl hover:from-[#FF8C00] hover:to-[#FF7700] transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
-                                    >
-                                        Sync from Strava
-                                    </button>
-                                )}
                             </div>
+
+                            {isAuthorized && isAdminUser && (
+                                <div className="space-y-4">
+                                    <label
+                                        htmlFor="workout-screenshot-upload"
+                                        onDragOver={(event) => {
+                                            event.preventDefault();
+                                            setIsWorkoutScreenshotDragging(true);
+                                        }}
+                                        onDragLeave={() => setIsWorkoutScreenshotDragging(false)}
+                                        onDrop={(event) => {
+                                            event.preventDefault();
+                                            const file = event.dataTransfer.files?.[0];
+                                            if (file) {
+                                                handleWorkoutScreenshotFile(file);
+                                            }
+                                        }}
+                                        className={`block cursor-pointer rounded-xl border border-dashed p-6 transition ${
+                                            isWorkoutScreenshotDragging
+                                                ? 'border-orange-400 bg-orange-50'
+                                                : 'border-slate-200 bg-white hover:border-orange-300 hover:bg-orange-50/50'
+                                        }`}
+                                    >
+                                        <input
+                                            id="workout-screenshot-upload"
+                                            type="file"
+                                            accept="image/*"
+                                            className="hidden"
+                                            onChange={(event) => {
+                                                const file = event.target.files?.[0];
+                                                if (file) {
+                                                    handleWorkoutScreenshotFile(file);
+                                                }
+                                                event.currentTarget.value = '';
+                                            }}
+                                        />
+                                        <div className="flex flex-col items-center justify-center gap-3 text-center">
+                                            {workoutScreenshotLoading ? (
+                                                <Loader2 size={32} className="animate-spin text-orange-500" />
+                                            ) : (
+                                                <UploadCloud size={32} className="text-orange-500" />
+                                            )}
+                                            <div>
+                                                <p className="font-bold text-slate-900">
+                                                    {workoutScreenshotLoading ? 'Reading screenshot...' : 'Drop workout screenshot'}
+                                                </p>
+                                                <p className="text-sm text-slate-500">PNG or JPG screenshot</p>
+                                            </div>
+                                        </div>
+                                    </label>
+
+                                    {workoutScreenshotError && (
+                                        <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
+                                            {workoutScreenshotError}
+                                        </div>
+                                    )}
+
+                                    {workoutScreenshotDraft && (
+                                        <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+                                            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
+                                                <label className="space-y-1">
+                                                    <span className="text-xs font-bold uppercase tracking-wide text-slate-500">Name</span>
+                                                    <input
+                                                        value={workoutScreenshotDraft.name}
+                                                        onChange={(event) => setWorkoutScreenshotDraft(prev => prev ? { ...prev, name: event.target.value } : prev)}
+                                                        className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-orange-400 focus:outline-none"
+                                                    />
+                                                </label>
+                                                <label className="space-y-1">
+                                                    <span className="text-xs font-bold uppercase tracking-wide text-slate-500">Type</span>
+                                                    <select
+                                                        value={workoutScreenshotDraft.sport_type}
+                                                        onChange={(event) => setWorkoutScreenshotDraft(prev => prev ? { ...prev, sport_type: event.target.value } : prev)}
+                                                        className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-orange-400 focus:outline-none"
+                                                    >
+                                                        <option value="Run">Run</option>
+                                                        <option value="Walk">Walk</option>
+                                                        <option value="Ride">Ride</option>
+                                                        <option value="Hike">Hike</option>
+                                                        <option value="Workout">Workout</option>
+                                                    </select>
+                                                </label>
+                                                <label className="space-y-1">
+                                                    <span className="text-xs font-bold uppercase tracking-wide text-slate-500">Distance km</span>
+                                                    <input
+                                                        value={workoutScreenshotDraft.distanceKm}
+                                                        onChange={(event) => setWorkoutScreenshotDraft(prev => prev ? { ...prev, distanceKm: event.target.value } : prev)}
+                                                        inputMode="decimal"
+                                                        className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-orange-400 focus:outline-none"
+                                                    />
+                                                </label>
+                                                <label className="space-y-1">
+                                                    <span className="text-xs font-bold uppercase tracking-wide text-slate-500">Time</span>
+                                                    <input
+                                                        value={workoutScreenshotDraft.movingTimeText}
+                                                        onChange={(event) => setWorkoutScreenshotDraft(prev => prev ? { ...prev, movingTimeText: event.target.value } : prev)}
+                                                        className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-orange-400 focus:outline-none"
+                                                    />
+                                                </label>
+                                                <label className="space-y-1 md:col-span-2">
+                                                    <span className="text-xs font-bold uppercase tracking-wide text-slate-500">Date</span>
+                                                    <input
+                                                        type="datetime-local"
+                                                        value={workoutScreenshotDraft.startDateLocal}
+                                                        onChange={(event) => setWorkoutScreenshotDraft(prev => prev ? { ...prev, startDateLocal: event.target.value } : prev)}
+                                                        className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-orange-400 focus:outline-none"
+                                                    />
+                                                </label>
+                                                <label className="space-y-1">
+                                                    <span className="text-xs font-bold uppercase tracking-wide text-slate-500">Elevation m</span>
+                                                    <input
+                                                        value={workoutScreenshotDraft.totalElevationGain}
+                                                        onChange={(event) => setWorkoutScreenshotDraft(prev => prev ? { ...prev, totalElevationGain: event.target.value } : prev)}
+                                                        inputMode="decimal"
+                                                        className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-orange-400 focus:outline-none"
+                                                    />
+                                                </label>
+                                                <label className="space-y-1">
+                                                    <span className="text-xs font-bold uppercase tracking-wide text-slate-500">Location</span>
+                                                    <input
+                                                        value={workoutScreenshotDraft.location_text}
+                                                        onChange={(event) => setWorkoutScreenshotDraft(prev => prev ? { ...prev, location_text: event.target.value } : prev)}
+                                                        className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-orange-400 focus:outline-none"
+                                                    />
+                                                </label>
+                                            </div>
+                                            <div className="mt-4 flex justify-end gap-3">
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setWorkoutScreenshotDraft(null)}
+                                                    className="rounded-lg border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-600 transition hover:bg-slate-50"
+                                                >
+                                                    Cancel
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    onClick={handleWorkoutScreenshotSave}
+                                                    disabled={workoutScreenshotSaving}
+                                                    className="inline-flex items-center gap-2 rounded-lg bg-orange-500 px-4 py-2 text-sm font-bold text-white transition hover:bg-orange-600 disabled:cursor-not-allowed disabled:opacity-60"
+                                                >
+                                                    {workoutScreenshotSaving ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
+                                                    Save
+                                                </button>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            )}
 
                             {loadingStrava ? (
                                 <div className="p-12 text-center text-slate-400 bg-slate-50 rounded-2xl border border-slate-100">
@@ -833,8 +1137,8 @@ export const Interests: React.FC<{ isAuthorized: boolean }> = ({ isAuthorized })
                                     <p className="mb-4">No activities found</p>
                                     <p className="text-sm">
                                         {isAuthorized && isAdminUser
-                                            ? 'Click "Sync from Strava" to authorize and load your activities'
-                                            : 'No synced Strava activities are available yet.'}
+                                            ? 'Drop a workout screenshot to add an activity.'
+                                            : 'No workout activities are available yet.'}
                                     </p>
                                 </div>
                             )}
@@ -1224,44 +1528,6 @@ export const Interests: React.FC<{ isAuthorized: boolean }> = ({ isAuthorized })
                                             1. Gold Timing Model
                                         </p>
                                     </div>
-                                    {isAdminUser && (
-                                        <div
-                                            onClick={() => navigate('/interests/analysis/2')}
-                                            className={`
-                                                group cursor-pointer transition-all duration-200
-                                                bg-slate-50 px-4 py-3 rounded-lg border border-slate-200
-                                                hover:bg-orange-50 hover:border-orange-200
-                                                ${subId === '2' ? 'bg-orange-50 border-orange-200' : ''}
-                                            `}
-                                        >
-                                            <p className={`
-                                                text-sm font-medium text-slate-600 truncate
-                                                group-hover:text-orange-600
-                                                ${subId === '2' ? 'text-orange-600' : ''}
-                                            `}>
-                                                2. Real Estate Time Series
-                                            </p>
-                                        </div>
-                                    )}
-                                    {isAdminUser && (
-                                        <div
-                                            onClick={() => navigate('/interests/analysis/3')}
-                                            className={`
-                                                group cursor-pointer transition-all duration-200
-                                                bg-slate-50 px-4 py-3 rounded-lg border border-slate-200
-                                                hover:bg-orange-50 hover:border-orange-200
-                                                ${subId === '3' ? 'bg-orange-50 border-orange-200' : ''}
-                                            `}
-                                        >
-                                            <p className={`
-                                                text-sm font-medium text-slate-600 truncate
-                                                group-hover:text-orange-600
-                                                ${subId === '3' ? 'text-orange-600' : ''}
-                                            `}>
-                                                3. FC Series Data Analytics
-                                            </p>
-                                        </div>
-                                    )}
                                 </div>
                             </div>
 
@@ -1271,86 +1537,6 @@ export const Interests: React.FC<{ isAuthorized: boolean }> = ({ isAuthorized })
                                     <GoldMarketWorkspace />
                                 )}
 
-                                {subId === '2' && (
-                                    <>
-                                        <div className="flex justify-between items-center">
-                                            <div>
-                                                <h3 className="text-2xl font-bold text-slate-900 mb-2">Real Estate Time Series</h3>
-                                                <p className="text-slate-500 text-lg">Detailed analysis and visualization</p>
-                                            </div>
-                                            <div className="flex gap-3">
-                                                <select className="bg-slate-50 text-slate-700 text-sm font-medium px-4 py-2 rounded-lg border border-slate-200 outline-none cursor-pointer hover:bg-slate-100 transition-colors">
-                                                    <option>Option A</option>
-                                                    <option>Option B</option>
-                                                    <option>Option C</option>
-                                                </select>
-                                            </div>
-                                        </div>
-
-                                        <div className="h-[400px] w-full bg-slate-50 rounded-2xl p-4 border border-slate-100">
-                                            <ResponsiveContainer width="100%" height="100%">
-                                                <ComposedChart data={mockInteractionData}>
-                                                    <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" vertical={false} />
-                                                    <XAxis dataKey="pos" stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} />
-                                                    <YAxis stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} />
-                                                    <Tooltip
-                                                        contentStyle={{ backgroundColor: 'rgba(255,255,255,0.95)', borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)' }}
-                                                    />
-                                                    <Legend wrapperStyle={{ paddingTop: '20px' }} />
-                                                    <Bar dataKey="enhancer" barSize={30} fill="#FFE0B2" name="Metric A" radius={[4, 4, 0, 0]} />
-                                                    <Line type="monotone" dataKey="interaction" stroke="#FFA300" strokeWidth={4} name="Metric B" dot={false} />
-                                                </ComposedChart>
-                                            </ResponsiveContainer>
-                                        </div>
-
-                                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                            <div className="p-6 bg-orange-50 rounded-2xl border border-orange-100">
-                                                <h4 className="font-bold text-orange-900 mb-2">Key Insight 1</h4>
-                                                <p className="text-sm text-orange-800/80">Description of the first key insight derived from the data analysis.</p>
-                                            </div>
-                                            <div className="p-6 bg-orange-50 rounded-2xl border border-orange-100">
-                                                <h4 className="font-bold text-orange-900 mb-2">Key Insight 2</h4>
-                                                <p className="text-sm text-orange-800/80">Description of the second key insight derived from the data analysis.</p>
-                                            </div>
-                                            <div className="p-6 bg-orange-50 rounded-2xl border border-orange-100">
-                                                <h4 className="font-bold text-orange-900 mb-2">Key Insight 3</h4>
-                                                <p className="text-sm text-orange-800/80">Description of the third key insight derived from the data analysis.</p>
-                                            </div>
-                                        </div>
-                                    </>
-                                )}
-
-
-
-                                {subId === '3' && (
-                                    <>
-                                        <div className="flex justify-between items-center">
-                                            <div>
-                                                <h3 className="text-2xl font-bold text-slate-900 mb-2">FC Series Data Analytics</h3>
-                                                <p className="text-slate-500 text-lg">Detailed analysis and visualization</p>
-                                            </div>
-                                        </div>
-
-                                        <div className="h-[400px] w-full bg-slate-50 rounded-2xl p-4 border border-slate-100 flex items-center justify-center">
-                                            <p className="text-slate-400 text-lg">FC Series Data Analytics content coming soon...</p>
-                                        </div>
-
-                                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                            <div className="p-6 bg-green-50 rounded-2xl border border-green-100">
-                                                <h4 className="font-bold text-green-900 mb-2">FC26 Metric 1</h4>
-                                                <p className="text-sm text-green-800/80">Key performance indicator analysis.</p>
-                                            </div>
-                                            <div className="p-6 bg-green-50 rounded-2xl border border-green-100">
-                                                <h4 className="font-bold text-green-900 mb-2">FC26 Metric 2</h4>
-                                                <p className="text-sm text-green-800/80">Trend analysis and forecasting.</p>
-                                            </div>
-                                            <div className="p-6 bg-green-50 rounded-2xl border border-green-100">
-                                                <h4 className="font-bold text-green-900 mb-2">FC26 Metric 3</h4>
-                                                <p className="text-sm text-green-800/80">Comparative analytics and insights.</p>
-                                            </div>
-                                        </div>
-                                    </>
-                                )}
                             </div>
                         </div>
                     )}

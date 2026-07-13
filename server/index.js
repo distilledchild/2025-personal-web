@@ -7,11 +7,13 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import multer from 'multer';
 import { spawn } from 'child_process';
+import crypto from 'crypto';
 import { PDFDocument } from 'pdf-lib';
 import { PDFParse } from 'pdf-parse';
 import { google } from 'googleapis';
 import { toZonedTime, fromZonedTime } from 'date-fns-tz';
 import { generateSignedUrl, generateSignedUrlsForPrefix, isValidFilePath } from './utils/gcsHelper.js';
+import { parseWorkoutScreenshotText } from './utils/workoutScreenshotParser.js';
 import billingRoutes from './routes/billing.js';
 import YahooFinance2 from 'yahoo-finance2';
 
@@ -1083,9 +1085,11 @@ const techBlogSchema = new mongoose.Schema({
 
 const TechBlog = mongoose.model('TechBlog', techBlogSchema);
 
-// Workout Schema for Strava activities
+// Workout Schema for Strava activities and manually ingested workout screenshots
 const workoutSchema = new mongoose.Schema({
     activity_id: { type: Number, unique: true, required: true },
+    source: { type: String, default: 'strava' },
+    external_activity_id: String,
     name: String,
     distance: Number,
     moving_time: Number,
@@ -1098,6 +1102,11 @@ const workoutSchema = new mongoose.Schema({
     average_speed: Number,
     max_speed: Number,
     athlete_id: Number,
+    source_athlete_id: String,
+    location_text: String,
+    device_text: String,
+    average_pace_text: String,
+    ocr_text: String,
     insertedAt: { type: Date, default: Date.now },
     createdAt: { type: Date, default: Date.now }
 }, { collection: 'INTERESTS_WORKOUT' });
@@ -3263,14 +3272,22 @@ function updateVisitorStatus(socketId) {
 
 // --- Strava API Endpoints ---
 
+const getStravaRedirectUri = () => (
+    isProduction
+        ? 'https://distilledchild.space/strava/callback'
+        : (process.env.STRAVA_REDIRECT_URI || 'http://localhost:3000/strava/callback')
+);
+
+const getMapMyRunRedirectUri = () => (
+    isProduction
+        ? 'https://distilledchild.space/mapmyrun/callback'
+        : (process.env.MAPMYRUN_REDIRECT_URI || 'http://localhost:3000/mapmyrun/callback')
+);
+
 // Strava OAuth - Initiate Authorization
 app.get('/api/strava/auth', (req, res) => {
     const clientId = process.env.STRAVA_CLIENT_ID;
-    // Use environment-based redirect URI (same as Google OAuth pattern)
-    const stravaRedirectUri = isProduction
-        ? 'https://distilledchild.space/strava/callback'
-        : (process.env.STRAVA_REDIRECT_URI || 'http://localhost:3000/strava/callback');
-    const redirectUri = encodeURIComponent(stravaRedirectUri);
+    const redirectUri = encodeURIComponent(getStravaRedirectUri());
     const scope = 'read,activity:read_all,profile:read_all,read_all';
 
     if (!clientId) {
@@ -3280,6 +3297,68 @@ app.get('/api/strava/auth', (req, res) => {
     const authUrl = `https://www.strava.com/oauth/authorize?client_id=${clientId}&response_type=code&redirect_uri=${redirectUri}&approval_prompt=force&scope=${scope}`;
 
     res.json({ authUrl });
+});
+
+// MapMyRun OAuth - Initiate Authorization
+app.get('/api/mapmyrun/auth', (req, res) => {
+    const clientId = process.env.MAPMYRUN_CLIENT_ID;
+    const redirectUri = encodeURIComponent(getMapMyRunRedirectUri());
+
+    if (!clientId) {
+        return res.status(500).json({ error: 'MapMyRun client ID not configured' });
+    }
+
+    const authUrl = `https://www.mapmyfitness.com/oauth2/authorize/?client_id=${clientId}&response_type=code&redirect_uri=${redirectUri}`;
+
+    res.json({ authUrl });
+});
+
+// MapMyRun OAuth - Exchange Code for Token
+app.post('/api/mapmyrun/exchange_token', async (req, res) => {
+    try {
+        const { code } = req.body;
+
+        if (!code) {
+            return res.status(400).json({ error: 'Authorization code is required' });
+        }
+
+        const clientId = process.env.MAPMYRUN_CLIENT_ID;
+        const clientSecret = process.env.MAPMYRUN_CLIENT_SECRET;
+
+        if (!clientId || !clientSecret) {
+            return res.status(500).json({ error: 'MapMyRun credentials not configured' });
+        }
+
+        const body = new URLSearchParams({
+            grant_type: 'authorization_code',
+            code,
+            client_id: clientId,
+            client_secret: clientSecret,
+            redirect_uri: getMapMyRunRedirectUri()
+        });
+
+        const response = await fetch('https://api.mapmyfitness.com/v7.1/oauth2/access_token/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'Api-Key': clientId
+            },
+            body: body.toString()
+        });
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error('MapMyRun token exchange failed:', response.status, errorText);
+            return res.status(response.status).json({ error: 'Failed to exchange MapMyRun token', details: errorText });
+        }
+
+        const data = await response.json();
+        console.log('Successfully exchanged MapMyRun code for token');
+        res.json(data);
+    } catch (err) {
+        console.error('MapMyRun token exchange error:', err);
+        res.status(500).json({ error: 'Failed to exchange MapMyRun token', details: err.message });
+    }
 });
 
 // Strava OAuth - Exchange Code for Token
@@ -3521,6 +3600,189 @@ app.get('/api/workouts', async (req, res) => {
     } catch (err) {
         console.error('Database fetch error:', err);
         res.status(500).json({ error: 'Failed to fetch workouts from database', details: err.message });
+    }
+});
+
+const getGoogleAuthOptions = () => {
+    const authOptions = {
+        scopes: ['https://www.googleapis.com/auth/cloud-platform']
+    };
+
+    if (storageConfig.credentials) {
+        authOptions.credentials = storageConfig.credentials;
+    }
+    if (storageConfig.keyFilename) {
+        authOptions.keyFilename = storageConfig.keyFilename;
+    }
+    if (storageConfig.projectId) {
+        authOptions.projectId = storageConfig.projectId;
+    }
+
+    return authOptions;
+};
+
+const extractWorkoutScreenshotText = async (imageBuffer) => {
+    const auth = new google.auth.GoogleAuth(getGoogleAuthOptions());
+    const client = await auth.getClient();
+    const tokenResponse = await client.getAccessToken();
+    const accessToken = typeof tokenResponse === 'string' ? tokenResponse : tokenResponse?.token;
+
+    if (!accessToken) {
+        throw new Error('Unable to get Google Vision access token');
+    }
+
+    const response = await fetch('https://vision.googleapis.com/v1/images:annotate', {
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${accessToken}`,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            requests: [
+                {
+                    image: {
+                        content: imageBuffer.toString('base64')
+                    },
+                    features: [
+                        {
+                            type: 'TEXT_DETECTION',
+                            maxResults: 1
+                        }
+                    ]
+                }
+            ]
+        })
+    });
+
+    const data = await response.json();
+    if (!response.ok) {
+        throw new Error(data?.error?.message || `Vision API failed with ${response.status}`);
+    }
+
+    const annotation = data?.responses?.[0];
+    if (annotation?.error) {
+        throw new Error(annotation.error.message || 'Vision API returned an image annotation error');
+    }
+
+    return annotation?.fullTextAnnotation?.text || annotation?.textAnnotations?.[0]?.description || '';
+};
+
+const getWorkoutScreenshotAdminEmail = (req) => (
+    req.body?.adminEmail ||
+    req.headers['x-user-email'] ||
+    ''
+);
+
+const requireWorkoutScreenshotAdmin = async (req, res) => {
+    const adminEmail = String(getWorkoutScreenshotAdminEmail(req)).trim();
+    const isAdmin = await isAdminMember(adminEmail);
+
+    if (!isAdmin) {
+        res.status(403).json({ error: 'Admin access is required' });
+        return null;
+    }
+
+    return adminEmail;
+};
+
+const buildScreenshotWorkoutIdentity = (workout) => {
+    const identity = [
+        'screenshot',
+        workout.start_date,
+        workout.sport_type,
+        workout.distance,
+        workout.moving_time,
+        workout.name
+    ].join('|');
+    const hash = crypto.createHash('sha1').update(identity).digest('hex');
+    const numericId = parseInt(hash.slice(0, 8), 16) || parseInt(hash.slice(8, 16), 16) || Date.now();
+
+    return {
+        externalActivityId: `screenshot:${hash}`,
+        activityId: -numericId
+    };
+};
+
+app.post('/api/workouts/screenshot/ocr', upload.single('image'), async (req, res) => {
+    try {
+        const adminEmail = await requireWorkoutScreenshotAdmin(req, res);
+        if (!adminEmail) return;
+
+        if (!req.file) {
+            return res.status(400).json({ error: 'Screenshot image is required' });
+        }
+
+        const ocrText = await extractWorkoutScreenshotText(req.file.buffer);
+        const parsed = parseWorkoutScreenshotText(ocrText, new Date());
+
+        res.json({
+            parsed,
+            ocrText
+        });
+    } catch (err) {
+        console.error('[WORKOUT-SCREENSHOT] OCR failed:', err);
+        res.status(500).json({ error: 'Failed to OCR workout screenshot', details: err.message });
+    }
+});
+
+app.post('/api/workouts/screenshot', async (req, res) => {
+    try {
+        const adminEmail = await requireWorkoutScreenshotAdmin(req, res);
+        if (!adminEmail) return;
+
+        const workout = req.body?.workout || {};
+        const distance = Number(workout.distance);
+        const movingTime = Number(workout.moving_time);
+        const startDate = workout.start_date ? new Date(workout.start_date) : null;
+
+        if (!distance || !movingTime || !startDate || Number.isNaN(startDate.getTime())) {
+            return res.status(400).json({ error: 'Workout distance, moving time, and start date are required' });
+        }
+
+        const normalizedWorkout = {
+            source: 'screenshot',
+            name: String(workout.name || 'Workout').trim() || 'Workout',
+            distance,
+            moving_time: movingTime,
+            elapsed_time: Number(workout.elapsed_time || movingTime),
+            total_elevation_gain: Number(workout.total_elevation_gain || 0),
+            type: String(workout.type || workout.sport_type || 'Workout'),
+            sport_type: String(workout.sport_type || workout.type || 'Workout'),
+            start_date: startDate,
+            start_date_local: workout.start_date_local ? new Date(workout.start_date_local) : startDate,
+            average_speed: distance / movingTime,
+            max_speed: Number(workout.max_speed || 0),
+            source_athlete_id: adminEmail,
+            location_text: String(workout.location_text || ''),
+            device_text: String(workout.device_text || ''),
+            average_pace_text: String(workout.average_pace_text || ''),
+            ocr_text: String(workout.ocr_text || '')
+        };
+
+        const { externalActivityId, activityId } = buildScreenshotWorkoutIdentity(normalizedWorkout);
+        normalizedWorkout.external_activity_id = externalActivityId;
+        normalizedWorkout.activity_id = activityId;
+
+        const savedWorkout = await Workout.findOneAndUpdate(
+            { source: 'screenshot', external_activity_id: externalActivityId },
+            {
+                $set: normalizedWorkout,
+                $setOnInsert: {
+                    insertedAt: new Date(),
+                    createdAt: new Date()
+                }
+            },
+            {
+                new: true,
+                upsert: true,
+                setDefaultsOnInsert: true
+            }
+        );
+
+        res.json({ success: true, workout: savedWorkout });
+    } catch (err) {
+        console.error('[WORKOUT-SCREENSHOT] Save failed:', err);
+        res.status(500).json({ error: 'Failed to save workout screenshot', details: err.message });
     }
 });
 

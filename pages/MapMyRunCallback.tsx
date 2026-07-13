@@ -1,25 +1,21 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import React, { useEffect, useRef, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { API_URL } from '../utils/apiConfig';
-import { formatStravaApiError } from '../utils/stravaError.js';
 
-export const StravaCallback: React.FC = () => {
+export const MapMyRunCallback: React.FC = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const [status, setStatus] = useState<'processing' | 'success' | 'error'>('processing');
     const [errorMessage, setErrorMessage] = useState('');
-    const hasProcessed = useRef(false); // Prevent duplicate execution in React Strict Mode
+    const hasProcessed = useRef(false);
 
     useEffect(() => {
-        // Prevent duplicate execution
         if (hasProcessed.current) {
-            console.log('Callback already processed, skipping...');
             return;
         }
         hasProcessed.current = true;
 
         const handleCallback = async () => {
-            // Parse URL parameters
             const params = new URLSearchParams(location.search);
             const code = params.get('code');
             const error = params.get('error');
@@ -37,10 +33,7 @@ export const StravaCallback: React.FC = () => {
             }
 
             try {
-                console.log('Exchanging Strava authorization code for token...');
-
-                // Exchange code for access token
-                const tokenResponse = await fetch(`${API_URL}/api/strava/exchange_token`, {
+                const tokenResponse = await fetch(`${API_URL}/api/mapmyrun/exchange_token`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ code })
@@ -48,55 +41,24 @@ export const StravaCallback: React.FC = () => {
 
                 if (!tokenResponse.ok) {
                     const errorData = await tokenResponse.json();
-                    console.error('Token exchange failed:', errorData);
-                    throw new Error(
-                        formatStravaApiError(errorData, 'Failed to exchange Strava token')
-                    );
+                    throw new Error(errorData.details || errorData.error || 'Failed to exchange MapMyRun token');
                 }
 
                 const tokenData = await tokenResponse.json();
-                const accessToken = tokenData.access_token;
-                console.log('Token exchange successful, syncing activities...');
-
-                // Sync activities to database
-                const syncResponse = await fetch(`${API_URL}/api/workouts/sync`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ accessToken })
-                });
-
-                if (!syncResponse.ok) {
-                    const syncError = await syncResponse.json();
-                    console.error('Sync failed:', syncError);
-                    throw new Error(
-                        formatStravaApiError(syncError, 'Failed to sync Strava activities')
-                    );
-                }
-
-                const syncData = await syncResponse.json();
-                console.log('Sync result:', syncData);
-
-                // Store access token and athlete info for future use
-                localStorage.setItem('strava_access_token', accessToken);
-                localStorage.setItem('strava_athlete', JSON.stringify(tokenData.athlete));
+                localStorage.setItem('mapmyrun_token', JSON.stringify(tokenData));
 
                 setStatus('success');
-
-                // Use React Router navigate to preserve Google session in both local and production
                 setTimeout(() => {
                     navigate('/interests/workout', { replace: true });
                 }, 1500);
-
             } catch (err) {
-                console.error('Error during Strava callback:', err);
                 setStatus('error');
                 setErrorMessage(err instanceof Error ? err.message : 'Failed to complete authorization');
             }
         };
 
         handleCallback();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []); // Only run once on mount
+    }, [location.search, navigate]);
 
     return (
         <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 to-slate-100">
@@ -105,7 +67,7 @@ export const StravaCallback: React.FC = () => {
                     <>
                         <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-6"></div>
                         <h2 className="text-2xl font-bold text-slate-900 mb-2">Processing...</h2>
-                        <p className="text-slate-600">Connecting to Strava and fetching your activities</p>
+                        <p className="text-slate-600">Connecting to MapMyRun</p>
                     </>
                 )}
 
@@ -117,7 +79,7 @@ export const StravaCallback: React.FC = () => {
                             </svg>
                         </div>
                         <h2 className="text-2xl font-bold text-slate-900 mb-2">Success!</h2>
-                        <p className="text-slate-600">Redirecting to your activities...</p>
+                        <p className="text-slate-600">MapMyRun is connected. Redirecting...</p>
                     </>
                 )}
 

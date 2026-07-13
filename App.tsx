@@ -9,6 +9,7 @@ import { Blog } from './pages/Blog';
 import { Interests } from './pages/Interests';
 import { Contact } from './pages/Contact';
 import { StravaCallback } from './pages/StravaCallback';
+import { MapMyRunCallback } from './pages/MapMyRunCallback';
 import { API_URL } from './utils/apiConfig';
 import {
   clearStoredUserProfile,
@@ -253,6 +254,7 @@ const Layout: React.FC = () => {
         <Route path="/contact" element={<Navigate to="/contact/contactinfo" replace />} />
         <Route path="/contact/:tab" element={<Contact />} />
         <Route path="/strava/callback" element={<StravaCallback />} />
+        <Route path="/mapmyrun/callback" element={<MapMyRunCallback />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
 
