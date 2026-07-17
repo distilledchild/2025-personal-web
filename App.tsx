@@ -245,7 +245,9 @@ const Layout: React.FC = () => {
         <Route path="/about" element={<Navigate to="/about/me" replace />} />
         <Route path="/about/:tab" element={<About />} />
         <Route path="/research" element={<Navigate to={researchDefaultPath} replace />} />
+        <Route path="/research/singlecellseq" element={<Navigate to="/research/sequencings/singlecellseq" replace />} />
         <Route path="/research/:submenu" element={<Research />} />
+        <Route path="/research/:submenu/:subId" element={<Research />} />
         <Route path="/blog" element={<Navigate to="/blog/tech-bio" replace />} />
         <Route path="/blog/:tab" element={<Blog />} />
         <Route path="/interests" element={<Navigate to="/interests/analysis/1" replace />} />

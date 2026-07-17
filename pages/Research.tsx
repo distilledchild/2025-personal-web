@@ -1,150 +1,15 @@
 
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip } from 'recharts';
-import { FileText, GitBranch, Database, Search, Cat } from 'lucide-react';
+import { GitBranch, Database, Search, Cat } from 'lucide-react';
 import { ResearchLoopBrowser } from './ResearchLoopBrowser';
 import { ResearchBreedchain } from './ResearchBreedchain';
 import { ResearchPEInteractions } from './ResearchPEInteractions';
 import { ResearchPaperFinder } from './ResearchPaperFinder';
+import { ResearchSequencings, type SequencingView } from './ResearchSequencings';
 import { PageHeader } from '../components/PageHeader';
 
-const singleCellQCMetrics = [
-  { label: 'Total Cells', value: '1,903', note: 'F344_SHR_M_E007_E118' },
-  { label: 'Median Genes / Cell', value: '560', note: 'split-pipe report' },
-  { label: 'Median TSCP / Cell', value: '770', note: 'cell_tscp_cutoff: 341' },
-  { label: 'Mean Reads / Cell', value: '3,647.76', note: '6,941,686 total reads' },
-  { label: 'Transcriptome Map Fraction', value: '64.13%', note: 'rn7-mod1-mclover3' },
-  { label: 'Reads in Cells', value: '55.67%', note: 'fraction_reads_in_cells' },
-];
-
-const clusterDistribution = [
-  { cluster: 'C1', cells: 561 },
-  { cluster: 'C2', cells: 332 },
-  { cluster: 'C3', cells: 240 },
-  { cluster: 'C4', cells: 197 },
-  { cluster: 'C5', cells: 170 },
-  { cluster: 'C6', cells: 159 },
-  { cluster: 'C7', cells: 139 },
-  { cluster: 'C8', cells: 105 },
-];
-
-const round1WellDistribution = [
-  { well: 'D10', cells: 697 },
-  { well: 'D11', cells: 600 },
-  { well: 'D12', cells: 606 },
-];
-
-const markerPanels = [
-  { label: 'Glutamatergic', genes: 'SATB2, LRRC7, GRIN2B' },
-  { label: 'GABAergic', genes: 'GAD1, GAD2, VIP/Lamp5/Sncg signatures' },
-  { label: 'Microglia', genes: 'AIF1, CX3CR1, P2RY12' },
-  { label: 'Endothelial', genes: 'CLDN5, FLT1, PECAM1' },
-  { label: 'Dopamine axis', genes: 'DRD1, DRD2, PDE4B' },
-];
-
-const SingleCell = () => (
-  <div className="space-y-8 animate-fadeIn">
-    <div className="space-y-3">
-      <h3 className="text-2xl font-bold text-slate-900">SUD-PFC-SC-SEQ (Rat PFC)</h3>
-      <p className="text-slate-600 text-base leading-relaxed">
-        Parse Biosciences Evercode WT (`split - pipe v1.1.2`) run audit for sample
-        <span className="font-semibold text-slate-800"> F344_SHR_M_E007_E118</span>.
-        This view summarizes verified metrics from the July 9, 2024 run and downstream Seurat interpretation.
-      </p>
-      <div className="flex flex-wrap gap-2 text-xs font-semibold">
-        {['Chemistry v2', 'Kit WT', 'Genome rn7-mod1-mclover3', 'Leiden clusters: 8'].map((tag) => (
-          <span key={tag} className="rounded-full border border-teal-200 bg-teal-50 px-3 py-1 text-teal-700">
-            {tag}
-          </span>
-        ))}
-      </div>
-    </div>
-
-    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-      {singleCellQCMetrics.map((metric) => (
-        <div key={metric.label} className="rounded-2xl border border-slate-200 bg-white p-4">
-          <p className="text-sm font-medium text-slate-500">{metric.label}</p>
-          <p className="mt-2 text-2xl font-bold text-slate-900">{metric.value}</p>
-          <p className="mt-1 text-xs text-slate-400">{metric.note}</p>
-        </div>
-      ))}
-    </div>
-
-    <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-      <div className="h-[360px] w-full bg-slate-50 rounded-2xl p-4 border border-slate-100">
-        <p className="mb-2 text-sm font-semibold text-slate-700">Cluster Distribution</p>
-        <ResponsiveContainer width="100%" height="92%">
-          <BarChart data={clusterDistribution}>
-            <defs>
-              <linearGradient id="singleCellClusterBarGradient" x1="0" y1="1" x2="0" y2="0">
-                <stop offset="0%" stopColor="#2dd4bf" />
-                <stop offset="100%" stopColor="#0d9488" />
-              </linearGradient>
-            </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-            <XAxis dataKey="cluster" stroke="#64748b" />
-            <YAxis stroke="#64748b" />
-            <Tooltip contentStyle={{ borderRadius: '12px' }} />
-            <Bar dataKey="cells" fill="url(#singleCellClusterBarGradient)" radius={[6, 6, 0, 0]} />
-          </BarChart>
-        </ResponsiveContainer>
-      </div>
-
-      <div className="h-[360px] w-full bg-slate-50 rounded-2xl p-4 border border-slate-100">
-        <p className="mb-2 text-sm font-semibold text-slate-700">Round-1 Well Cell Counts</p>
-        <ResponsiveContainer width="100%" height="92%">
-          <BarChart data={round1WellDistribution}>
-            <defs>
-              <linearGradient id="singleCellWellBarGradient" x1="0" y1="1" x2="0" y2="0">
-                <stop offset="0%" stopColor="#2dd4bf" />
-                <stop offset="100%" stopColor="#0d9488" />
-              </linearGradient>
-            </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-            <XAxis dataKey="well" stroke="#64748b" />
-            <YAxis stroke="#64748b" />
-            <Tooltip contentStyle={{ borderRadius: '12px' }} />
-            <Bar dataKey="cells" fill="url(#singleCellWellBarGradient)" radius={[6, 6, 0, 0]} />
-          </BarChart>
-        </ResponsiveContainer>
-      </div>
-    </div>
-
-    <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-      <div className="rounded-2xl border border-slate-200 p-5">
-        <h4 className="text-lg font-bold text-slate-900 mb-3">Processing & QC Rules</h4>
-        <ul className="text-sm text-slate-700 space-y-2">
-          <li><strong>Platform:</strong> Parse Evercode WT, split-pipe v1.1.2</li>
-          <li><strong>Sample wells:</strong> D10-D12 (3 wells)</li>
-          <li><strong>Seurat filter:</strong> nFeature_RNA &lt; 2000, nCount_RNA &lt; 3000, percent.mt &lt; 3</li>
-          <li><strong>Clustering:</strong> PCA dims 1:30, resolution 1.5 (Seurat), Leiden (split-pipe)</li>
-          <li><strong>Status:</strong> analysis_process.json = <span className="font-semibold">good</span></li>
-        </ul>
-      </div>
-
-      <div className="rounded-2xl border border-slate-200 p-5">
-        <h4 className="text-lg font-bold text-slate-900 mb-3">Marker Panels Used for Annotation</h4>
-        <ul className="text-sm text-slate-700 space-y-2">
-          {markerPanels.map((panel) => (
-            <li key={panel.label}>
-              <strong>{panel.label}:</strong> {panel.genes}
-            </li>
-          ))}
-        </ul>
-      </div>
-    </div>
-
-    <div className="rounded-2xl border border-amber-200 bg-amber-50 p-5">
-      <h4 className="text-lg font-bold text-amber-900 mb-2">Current Interpretation Boundary</h4>
-      <p className="text-sm text-amber-900/90 leading-relaxed">
-        This run robustly captures major PFC populations, but rare-cell claims remain provisional at the current depth
-        (`1, 903` cells). For SUD-specific contrasts, the next step is explicit group design integration
-        (strain/treatment/batch) and per-cluster differential testing with strict multiple-testing control.
-      </p>
-    </div>
-  </div>
-);
+const sequencingViews: SequencingView[] = ['singlecellseq', 'atacseq'];
 
 const EnhancerID = () => (
   <div className="space-y-8 animate-fadeIn">
@@ -303,7 +168,7 @@ const VariancePartitionReport = () => {
 };
 
 export const Research: React.FC = () => {
-  const { submenu } = useParams<{ submenu?: string }>();
+  const { submenu, subId } = useParams<{ submenu?: string; subId?: string }>();
   const navigate = useNavigate();
 
   const tabs = [
@@ -311,18 +176,31 @@ export const Research: React.FC = () => {
     { label: 'Loop Browser', icon: Search, color: 'text-teal-500 border-teal-500', activeBg: 'bg-teal-50 ring-teal-200', slug: 'loopbrowser' },
     { label: 'Breedchain', icon: Cat, color: 'text-teal-500 border-teal-500', activeBg: 'bg-teal-50 ring-teal-200', slug: 'breedchain' },
     { label: 'PE Interactions', icon: GitBranch, color: 'text-teal-500 border-teal-500', activeBg: 'bg-teal-50 ring-teal-200', slug: 'peinteractions' },
-    { label: 'Single-cell Seq', icon: Database, color: 'text-teal-500 border-teal-500', activeBg: 'bg-teal-50 ring-teal-200', slug: 'singlecellseq' },
+    { label: 'Sequencings', icon: Database, color: 'text-teal-500 border-teal-500', activeBg: 'bg-teal-50 ring-teal-200', slug: 'sequencings' },
   ];
 
   const defaultSlug = tabs[0]?.slug || 'paperfinder';
   const requestedSlug = submenu && tabs.some((t) => t.slug === submenu) ? submenu : defaultSlug;
+  const activeSequencingView: SequencingView = sequencingViews.includes(subId as SequencingView)
+    ? (subId as SequencingView)
+    : 'singlecellseq';
 
-  // Normalize URL if user hits an invalid (or dev-only) tab slug.
+  // Normalize top-level and sequencing URLs without leaving stale nested paths.
   React.useEffect(() => {
     if (submenu !== requestedSlug) {
       navigate(`/research/${requestedSlug}`, { replace: true });
+      return;
     }
-  }, [submenu, requestedSlug, navigate]);
+
+    if (requestedSlug === 'sequencings' && !sequencingViews.includes(subId as SequencingView)) {
+      navigate('/research/sequencings/singlecellseq', { replace: true });
+      return;
+    }
+
+    if (requestedSlug !== 'sequencings' && subId) {
+      navigate(`/research/${requestedSlug}`, { replace: true });
+    }
+  }, [submenu, requestedSlug, subId, navigate]);
 
   // Prefetch initial genome data (chr1) in background when Research page loads
   React.useEffect(() => {
@@ -357,7 +235,9 @@ export const Research: React.FC = () => {
           id: tab.slug // Use slug as id for PageHeader
         }))}
         activeTab={requestedSlug}
-        onTabChange={(id) => navigate(`/research/${id}`)}
+        onTabChange={(id) => {
+          navigate(id === 'sequencings' ? '/research/sequencings/singlecellseq' : `/research/${id}`);
+        }}
         activeColor="text-teal-500 border-teal-500"
       />
 
@@ -369,7 +249,7 @@ export const Research: React.FC = () => {
           {requestedSlug === 'peinteractions' && <ResearchPEInteractions />}
           {requestedSlug === 'paperfinder' && <ResearchPaperFinder />}
           {requestedSlug === 'variancepartition' && <VariancePartitionReport />}
-          {requestedSlug === 'singlecellseq' && <SingleCell />}
+          {requestedSlug === 'sequencings' && <ResearchSequencings activeView={activeSequencingView} />}
           {requestedSlug === 'deeplearningenhancer' && <EnhancerID />}
         </div>
       </div>
