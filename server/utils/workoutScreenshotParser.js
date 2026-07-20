@@ -131,7 +131,8 @@ export const parseWorkoutScreenshotText = (ocrText = '', referenceDate = new Dat
 
     const distanceValue = findMetricAfterLabel(compact, 'Distance', '(?:km|kilometers?|mi|miles?)') ||
         compact.match(/\b([0-9]+(?:[.,][0-9]+)?)\s*(km|kilometers?|mi|miles?)\b/i)?.[1];
-    const distanceUnit = compact.match(/\b[0-9]+(?:[.,][0-9]+)?\s*(km|kilometers?|mi|miles?)\b/i)?.[1]?.toLowerCase() || 'km';
+    const rawDistanceUnit = compact.match(/\b[0-9]+(?:[.,][0-9]+)?\s*(km|kilometers?|mi|miles?)\b/i)?.[1]?.toLowerCase() || 'km';
+    const distanceUnit = rawDistanceUnit.startsWith('mi') ? 'mi' : 'km';
     const distanceNumber = distanceValue ? Number(distanceValue.replace(',', '.')) : null;
     const distanceMeters = distanceNumber === null
         ? null
@@ -146,7 +147,7 @@ export const parseWorkoutScreenshotText = (ocrText = '', referenceDate = new Dat
         compact.match(/\b([0-9]+:[0-9]{2}\s*\/\s*(?:km|mi))\b/i)?.[1] ||
         null;
 
-    const dateText = compact.match(/\b((?:Yesterday|Today)\s+at\s+\d{1,2}(?::\d{2})?\s*(?:AM|PM))\b/i)?.[1] ||
+    const dateText = compact.match(/\b((?:Yesterday|Today)(?:\s+at\s+\d{1,2}(?::\d{2})?\s*(?:AM|PM))?)\b/i)?.[1] ||
         compact.match(/\b([A-Za-z]{3,9}\s+\d{1,2}(?:,\s*\d{4})?\s+at\s+\d{1,2}(?::\d{2})?\s*(?:AM|PM))\b/i)?.[1] ||
         null;
     const startDate = dateText ? parseWorkoutDate(dateText, referenceDate) : null;
@@ -163,6 +164,8 @@ export const parseWorkoutScreenshotText = (ocrText = '', referenceDate = new Dat
         sport_type: activityType,
         type: activityType,
         distance: distanceMeters || 0,
+        distance_value: distanceNumber || 0,
+        distance_unit: distanceUnit,
         moving_time: movingTimeSeconds || 0,
         elapsed_time: movingTimeSeconds || 0,
         total_elevation_gain: 0,

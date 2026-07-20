@@ -80,7 +80,8 @@ interface MonthlyStats {
 interface WorkoutScreenshotDraft {
     name: string;
     sport_type: string;
-    distanceKm: string;
+    distanceValue: string;
+    distanceUnit: 'km' | 'mi';
     movingTimeText: string;
     startDateLocal: string;
     totalElevationGain: string;
@@ -414,7 +415,12 @@ export const Interests: React.FC<{ isAuthorized: boolean }> = ({ isAuthorized })
             setWorkoutScreenshotDraft({
                 name: parsed.name || 'Workout',
                 sport_type: parsed.sport_type || 'Run',
-                distanceKm: parsed.distance ? String((Number(parsed.distance) / 1000).toFixed(2)) : '',
+                distanceValue: parsed.distance_value
+                    ? String(Number(parsed.distance_value).toFixed(2))
+                    : parsed.distance
+                        ? String((Number(parsed.distance) / (parsed.distance_unit === 'mi' ? 1609.344 : 1000)).toFixed(2))
+                        : '',
+                distanceUnit: parsed.distance_unit === 'mi' ? 'mi' : 'km',
                 movingTimeText: parsed.moving_time ? formatDurationText(Number(parsed.moving_time)) : '',
                 startDateLocal: toDateTimeLocalInput(parsed.start_date),
                 totalElevationGain: parsed.total_elevation_gain ? String(parsed.total_elevation_gain) : '0',
@@ -435,7 +441,8 @@ export const Interests: React.FC<{ isAuthorized: boolean }> = ({ isAuthorized })
         if (!workoutScreenshotDraft) return;
 
         const adminEmail = getAdminEmail();
-        const distanceMeters = Math.round(Number(workoutScreenshotDraft.distanceKm) * 1000);
+        const distanceUnit = workoutScreenshotDraft.distanceUnit;
+        const distanceMeters = Math.round(Number(workoutScreenshotDraft.distanceValue) * (distanceUnit === 'mi' ? 1609.344 : 1000));
         const movingTimeSeconds = parseDurationText(workoutScreenshotDraft.movingTimeText);
         const startDate = fromDateTimeLocalInput(workoutScreenshotDraft.startDateLocal);
 
@@ -458,6 +465,7 @@ export const Interests: React.FC<{ isAuthorized: boolean }> = ({ isAuthorized })
                         sport_type: workoutScreenshotDraft.sport_type,
                         type: workoutScreenshotDraft.sport_type,
                         distance: distanceMeters,
+                        distance_unit: distanceUnit,
                         moving_time: movingTimeSeconds,
                         elapsed_time: movingTimeSeconds,
                         total_elevation_gain: Number(workoutScreenshotDraft.totalElevationGain || 0),
@@ -909,10 +917,10 @@ export const Interests: React.FC<{ isAuthorized: boolean }> = ({ isAuthorized })
                                                     </select>
                                                 </label>
                                                 <label className="space-y-1">
-                                                    <span className="text-xs font-bold uppercase tracking-wide text-slate-500">Distance km</span>
+                                                    <span className="text-xs font-bold uppercase tracking-wide text-slate-500">Distance ({workoutScreenshotDraft.distanceUnit})</span>
                                                     <input
-                                                        value={workoutScreenshotDraft.distanceKm}
-                                                        onChange={(event) => setWorkoutScreenshotDraft(prev => prev ? { ...prev, distanceKm: event.target.value } : prev)}
+                                                        value={workoutScreenshotDraft.distanceValue}
+                                                        onChange={(event) => setWorkoutScreenshotDraft(prev => prev ? { ...prev, distanceValue: event.target.value } : prev)}
                                                         inputMode="decimal"
                                                         className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-orange-400 focus:outline-none"
                                                     />
