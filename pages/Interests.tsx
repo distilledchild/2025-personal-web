@@ -12,6 +12,7 @@ import {
     XAxis,
     YAxis,
     CartesianGrid,
+    LineChart,
     Tooltip,
     Legend,
     ResponsiveContainer,
@@ -616,6 +617,33 @@ export const Interests: React.FC<{ isAuthorized: boolean }> = ({ isAuthorized })
         { name: 'Bike', distance: monthlyStats.bike.distance, fill: 'url(#bikeGradient)' }
     ];
 
+    const monthlyDistanceData = useMemo(() => {
+        return Array.from({ length: 12 }, (_, index) => {
+            const monthDate = new Date(todayDate.getFullYear(), todayDate.getMonth() - (11 - index), 1);
+            const year = monthDate.getFullYear();
+            const month = monthDate.getMonth();
+            const totals = { walk: 0, run: 0 };
+
+            stravaActivities.forEach((activity) => {
+                const activityDate = new Date(activity.start_date);
+                if (activityDate.getFullYear() !== year || activityDate.getMonth() !== month) return;
+
+                const sportType = String(activity.sport_type || activity.type || '').toLowerCase();
+                if (sportType.includes('walk')) {
+                    totals.walk += Number(activity.distance || 0) / 1000;
+                } else if (sportType.includes('run')) {
+                    totals.run += Number(activity.distance || 0) / 1000;
+                }
+            });
+
+            return {
+                month: monthDate.toLocaleDateString('en-US', { month: 'short' }),
+                walk: Number(totals.walk.toFixed(2)),
+                run: Number(totals.run.toFixed(2))
+            };
+        });
+    }, [stravaActivities, todayDate]);
+
     // Pagination logic
     const totalPages = Math.ceil(stravaActivities.length / itemsPerPage);
     const startIndex = (currentPage - 1) * itemsPerPage;
@@ -982,6 +1010,29 @@ export const Interests: React.FC<{ isAuthorized: boolean }> = ({ isAuthorized })
                                     )}
                                 </div>
                             )}
+
+                            <div className="w-full rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+                                <div className="mb-4 flex items-center justify-between gap-4">
+                                    <div>
+                                        <h4 className="text-lg font-bold text-slate-900">Distance over the last 12 months</h4>
+                                        <p className="text-sm text-slate-500">Monthly walking and running distance (km)</p>
+                                    </div>
+                                    <div className="flex shrink-0 items-center gap-4 text-sm font-medium text-slate-600">
+                                        <span className="flex items-center gap-2"><span className="h-3 w-3 rounded-full bg-[#FFCC80]" />Walk</span>
+                                        <span className="flex items-center gap-2"><span className="h-3 w-3 rounded-full bg-[#FFA300]" />Run</span>
+                                    </div>
+                                </div>
+                                <ResponsiveContainer width="100%" height={234}>
+                                    <LineChart data={monthlyDistanceData} margin={{ top: 8, right: 12, left: 0, bottom: 0 }}>
+                                        <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                                        <XAxis dataKey="month" tick={{ fill: '#64748b', fontSize: 12 }} />
+                                        <YAxis tick={{ fill: '#64748b', fontSize: 12 }} width={42} />
+                                        <Tooltip formatter={(value: number) => [`${Number(value).toFixed(2)} km`, 'Distance']} />
+                                        <Line type="monotone" dataKey="walk" name="Walk" stroke="#FFCC80" strokeWidth={3} dot={{ r: 4, fill: '#FFCC80' }} activeDot={{ r: 6 }} />
+                                        <Line type="monotone" dataKey="run" name="Run" stroke="#FFA300" strokeWidth={3} dot={{ r: 4, fill: '#FFA300' }} activeDot={{ r: 6 }} />
+                                    </LineChart>
+                                </ResponsiveContainer>
+                            </div>
 
                             {loadingStrava ? (
                                 <div className="p-12 text-center text-slate-400 bg-slate-50 rounded-2xl border border-slate-100">
