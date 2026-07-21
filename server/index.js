@@ -14,7 +14,6 @@ import { google } from 'googleapis';
 import { toZonedTime, fromZonedTime } from 'date-fns-tz';
 import { generateSignedUrl, generateSignedUrlsForPrefix, isValidFilePath } from './utils/gcsHelper.js';
 import { parseWorkoutScreenshotText } from './utils/workoutScreenshotParser.js';
-import billingRoutes from './routes/billing.js';
 import YahooFinance2 from 'yahoo-finance2';
 
 const yf = new YahooFinance2({
@@ -53,8 +52,6 @@ app.get('/', (req, res) => {
     res.send('Hello from Cloud Run! 🚀 Server v2.1.0 - Contact Info Update');
 });
 
-// Register Billing Routes
-app.use('/api/billing', billingRoutes);
 
 // Load environment variables
 import dotenv from 'dotenv';
