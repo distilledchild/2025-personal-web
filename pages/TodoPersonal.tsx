@@ -20,10 +20,9 @@ interface TodoPersonalProps {
     user: any;
     isAuthorized: boolean;
     projects: any[];
-    securityAuditPanel?: React.ReactNode;
 }
 
-export const TodoPersonal: React.FC<TodoPersonalProps> = ({ user, isAuthorized, projects, securityAuditPanel }) => {
+export const TodoPersonal: React.FC<TodoPersonalProps> = ({ user, isAuthorized, projects }) => {
     // ============================================================================
     // CORE STATE - Todos
     // ============================================================================
@@ -433,7 +432,6 @@ export const TodoPersonal: React.FC<TodoPersonalProps> = ({ user, isAuthorized, 
                         </div>
                     </div>
 
-                    {securityAuditPanel}
                 </div>
 
                 {/* Right: TODO Table */}
