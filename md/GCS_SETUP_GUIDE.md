@@ -3,6 +3,8 @@
 ## 개요
 art-images 폴더(2GB+)를 Google Cloud Storage bucket에 업로드하고 웹사이트에서 서비스하는 방법입니다.
 
+> **CLI 안내 (2026-07-21 기록)**: Google Cloud CLI는 2027년 3월부터 `gsutil`을 기본 설치 패키지에서 제외합니다. 이 문서는 장기 지원되는 `gcloud storage` 명령을 사용하도록 작성되어 있습니다. Google은 `gcloud storage`로의 전환을 권장합니다.
+
 ## 1단계: Google Cloud SDK 설치 및 설정
 
 ```bash
@@ -24,14 +26,15 @@ gcloud config set project YOUR_PROJECT_ID
 ```bash
 # Bucket 생성 (전역적으로 고유한 이름 필요)
 # 예: distilledchild-art-images
-gsutil mb -l us-central1 gs://distilledchild-art-images
+gcloud storage buckets create gs://distilledchild-art-images --location=us-central1
 
 # Bucket을 공개 읽기로 설정 (모든 사용자가 이미지를 볼 수 있도록)
-gsutil iam ch allUsers:objectViewer gs://distilledchild-art-images
+gcloud storage buckets add-iam-policy-binding gs://distilledchild-art-images \
+  --member=allUsers --role=roles/storage.objectViewer
 
 # CORS 설정 (웹사이트에서 이미지를 로드할 수 있도록)
 echo '[{"origin": ["*"], "method": ["GET"], "maxAgeSeconds": 3600}]' > cors.json
-gsutil cors set cors.json gs://distilledchild-art-images
+gcloud storage buckets update gs://distilledchild-art-images --cors-file=cors.json
 rm cors.json
 ```
 
@@ -42,13 +45,13 @@ rm cors.json
 cd /Users/pete/Desktop/playground/personal-web-2025
 
 # 모든 art-images를 bucket에 업로드 (-m은 멀티스레드 업로드)
-gsutil -m cp -r public/art-images/* gs://distilledchild-art-images/
+gcloud storage cp --recursive public/art-images/* gs://distilledchild-art-images/
 
 # 업로드 확인
-gsutil ls -r gs://distilledchild-art-images/
+gcloud storage ls --recursive gs://distilledchild-art-images/
 
 # 특정 미술관 폴더 확인 (예: PhAM)
-gsutil ls gs://distilledchild-art-images/PhAM/
+gcloud storage ls gs://distilledchild-art-images/PhAM/
 ```
 
 ## 4단계: .env 파일에 Bucket URL 추가
@@ -120,17 +123,17 @@ Google Cloud Storage 요금:
 
 1. **Bucket 권한 확인**:
 ```bash
-gsutil iam get gs://distilledchild-art-images
+gcloud storage buckets get-iam-policy gs://distilledchild-art-images
 ```
 
 2. **CORS 설정 확인**:
 ```bash
-gsutil cors get gs://distilledchild-art-images
+gcloud storage buckets describe gs://distilledchild-art-images --format="default(cors_config)"
 ```
 
 3. **파일 존재 확인**:
 ```bash
-gsutil ls gs://distilledchild-art-images/PhAM/
+gcloud storage ls gs://distilledchild-art-images/PhAM/
 ```
 
 4. **.env 파일 확인**: GCS_BUCKET_URL이 올바르게 설정되었는지 확인
@@ -169,10 +172,10 @@ BUCKET="gs://distilledchild-art-images"
 SOURCE="public/art-images"
 
 echo "Uploading art-images to GCS bucket..."
-gsutil -m rsync -r -d $SOURCE $BUCKET
+gcloud storage rsync --recursive --delete-unmatched-destination "$SOURCE" "$BUCKET"
 
 echo "Upload complete!"
-gsutil du -sh $BUCKET
+gcloud storage du --summarize "$BUCKET"
 ```
 
 사용법:

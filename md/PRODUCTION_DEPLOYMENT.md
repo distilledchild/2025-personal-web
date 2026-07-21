@@ -150,7 +150,7 @@ module.exports = {
 ### ✅ Bucket 권한 확인
 ```bash
 # Bucket이 공개 읽기인지 확인
-gsutil iam get gs://distilledchild-art-images
+gcloud storage buckets get-iam-policy gs://distilledchild-art-images
 
 # allUsers에 objectViewer 권한이 있어야 함
 ```
@@ -158,7 +158,7 @@ gsutil iam get gs://distilledchild-art-images
 ### ✅ CORS 설정 확인
 ```bash
 # CORS 설정 확인
-gsutil cors get gs://distilledchild-art-images
+gcloud storage buckets describe gs://distilledchild-art-images --format="default(cors_config)"
 
 # 웹사이트에서 이미지 로드를 위한 CORS 필요
 ```
@@ -215,7 +215,7 @@ gcloud projects get-iam-policy YOUR_PROJECT_ID \
     --filter="bindings.members:serviceAccount:YOUR_SERVICE_ACCOUNT"
 
 # Bucket 권한 확인
-gsutil iam get gs://distilledchild-art-images
+gcloud storage buckets get-iam-policy gs://distilledchild-art-images
 ```
 
 ### "Could not load the default credentials" 에러
@@ -241,7 +241,7 @@ cat > cors.json << EOF
 }]
 EOF
 
-gsutil cors set cors.json gs://distilledchild-art-images
+gcloud storage buckets update gs://distilledchild-art-images --cors-file=cors.json
 ```
 
 ---
@@ -251,7 +251,7 @@ gsutil cors set cors.json gs://distilledchild-art-images
 ### 사용량 확인
 ```bash
 # Storage 사용량
-gsutil du -sh gs://distilledchild-art-images
+gcloud storage du --summarize gs://distilledchild-art-images
 
 # 네트워크 트래픽 (GCP Console)
 # Cloud Storage > Metrics > Network Egress
