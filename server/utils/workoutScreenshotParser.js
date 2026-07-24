@@ -1,3 +1,7 @@
+import { fromZonedTime, toZonedTime } from 'date-fns-tz';
+
+const DEFAULT_TIME_ZONE = 'America/Chicago';
+
 const MONTH_NAMES = {
     jan: 0,
     january: 0,
@@ -31,6 +35,36 @@ const ACTIVITY_TYPES = [
     { pattern: /\b(?:ride|bike|cycling)\b/i, value: 'Ride' },
     { pattern: /\bhike\b/i, value: 'Hike' }
 ];
+
+const normalizeTimeZone = (timeZone) => {
+    const candidate = String(timeZone || '').trim();
+    if (!candidate) return DEFAULT_TIME_ZONE;
+
+    try {
+        Intl.DateTimeFormat('en-US', { timeZone: candidate }).format(new Date());
+        return candidate;
+    } catch {
+        return DEFAULT_TIME_ZONE;
+    }
+};
+
+const getTimeParts = (text) => {
+    const timeMatch = text.match(/(?:at\s*)?(\d{1,2})(?::(\d{2}))?\s*(AM|PM)/i);
+    if (!timeMatch) return null;
+
+    let hours = Number(timeMatch[1]);
+    const minutes = Number(timeMatch[2] || 0);
+    const meridiem = timeMatch[3].toUpperCase();
+    if (meridiem === 'PM' && hours !== 12) hours += 12;
+    if (meridiem === 'AM' && hours === 12) hours = 0;
+
+    return { hours, minutes };
+};
+
+const zonedWallDateToUtc = (year, month, day, timeParts, timeZone) => {
+    const wallDate = new Date(year, month, day, timeParts?.hours || 0, timeParts?.minutes || 0, 0, 0);
+    return fromZonedTime(wallDate, timeZone);
+};
 
 export const parseWorkoutDurationSeconds = (value = '') => {
     const text = String(value).toLowerCase().replace(/\s+/g, ' ').trim();
@@ -72,41 +106,35 @@ export const formatWorkoutDuration = (seconds = 0) => {
     return `${minutes}m ${remainingSeconds}s`;
 };
 
-export const parseWorkoutDate = (value = '', referenceDate = new Date()) => {
+export const parseWorkoutDate = (value = '', referenceDate = new Date(), timeZone = DEFAULT_TIME_ZONE) => {
     const text = String(value).replace(/\s+/g, ' ').trim();
     if (!text) return null;
 
-    const timeMatch = text.match(/(?:at\s*)?(\d{1,2})(?::(\d{2}))?\s*(AM|PM)/i);
-    const setTime = (date) => {
-        if (!timeMatch) return date;
-        let hours = Number(timeMatch[1]);
-        const minutes = Number(timeMatch[2] || 0);
-        const meridiem = timeMatch[3].toUpperCase();
-        if (meridiem === 'PM' && hours !== 12) hours += 12;
-        if (meridiem === 'AM' && hours === 12) hours = 0;
-        date.setHours(hours, minutes, 0, 0);
-        return date;
-    };
+    const resolvedTimeZone = normalizeTimeZone(timeZone);
+    const referenceWallDate = toZonedTime(referenceDate, resolvedTimeZone);
+    const timeParts = getTimeParts(text);
 
     const lower = text.toLowerCase();
-    if (lower.includes('yesterday')) {
-        const date = new Date(referenceDate);
-        date.setDate(date.getDate() - 1);
-        return setTime(date);
-    }
-
-    if (lower.includes('today')) {
-        return setTime(new Date(referenceDate));
+    if (lower.includes('yesterday') || lower.includes('today')) {
+        const dayOffset = lower.includes('yesterday') ? -1 : 0;
+        const wallDate = new Date(
+            referenceWallDate.getFullYear(),
+            referenceWallDate.getMonth(),
+            referenceWallDate.getDate() + dayOffset,
+            timeParts?.hours || 0,
+            timeParts?.minutes || 0,
+            0,
+            0
+        );
+        return fromZonedTime(wallDate, resolvedTimeZone);
     }
 
     const absoluteMatch = text.match(/\b([A-Za-z]{3,9})\s+(\d{1,2})(?:,\s*(\d{4}))?/);
     if (absoluteMatch) {
         const month = MONTH_NAMES[absoluteMatch[1].toLowerCase()];
         if (month !== undefined) {
-            const year = absoluteMatch[3] ? Number(absoluteMatch[3]) : referenceDate.getFullYear();
-            const date = new Date(referenceDate);
-            date.setFullYear(year, month, Number(absoluteMatch[2]));
-            return setTime(date);
+            const year = absoluteMatch[3] ? Number(absoluteMatch[3]) : referenceWallDate.getFullYear();
+            return zonedWallDateToUtc(year, month, Number(absoluteMatch[2]), timeParts, resolvedTimeZone);
         }
     }
 
@@ -119,7 +147,8 @@ const findMetricAfterLabel = (text, label, unitPattern) => {
     return text.match(pattern)?.[1] || null;
 };
 
-export const parseWorkoutScreenshotText = (ocrText = '', referenceDate = new Date()) => {
+export const parseWorkoutScreenshotText = (ocrText = '', referenceDate = new Date(), timeZone = DEFAULT_TIME_ZONE) => {
+    const resolvedTimeZone = normalizeTimeZone(timeZone);
     const text = String(ocrText || '').replace(/\r/g, '\n');
     const lines = text.split('\n').map(line => line.trim()).filter(Boolean);
     const compact = text.replace(/\s+/g, ' ').trim();
@@ -150,7 +179,7 @@ export const parseWorkoutScreenshotText = (ocrText = '', referenceDate = new Dat
     const dateText = compact.match(/\b((?:Yesterday|Today)(?:\s+at\s+\d{1,2}(?::\d{2})?\s*(?:AM|PM))?)\b/i)?.[1] ||
         compact.match(/\b([A-Za-z]{3,9}\s+\d{1,2}(?:,\s*\d{4})?\s+at\s+\d{1,2}(?::\d{2})?\s*(?:AM|PM))\b/i)?.[1] ||
         null;
-    const startDate = dateText ? parseWorkoutDate(dateText, referenceDate) : null;
+    const startDate = dateText ? parseWorkoutDate(dateText, referenceDate, resolvedTimeZone) : null;
 
     const locationLine = lines.find(line => /^[A-Z][A-Za-z .'-]+,\s*[A-Z][A-Za-z .'-]+$/.test(line));
     const locationMatch = compact.match(/\b([A-Z][A-Za-z .'-]+,\s*[A-Z][A-Za-z .'-]+)\b/);
@@ -173,6 +202,7 @@ export const parseWorkoutScreenshotText = (ocrText = '', referenceDate = new Dat
         max_speed: 0,
         start_date: startDate ? startDate.toISOString() : null,
         start_date_local: startDate ? startDate.toISOString() : null,
+        source_timezone: resolvedTimeZone,
         source: 'screenshot',
         location_text: locationLine || locationMatch?.[1] || '',
         device_text: deviceLineMatch?.[1]?.trim() || deviceMatch?.[1]?.trim() || '',

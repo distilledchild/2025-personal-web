@@ -32,6 +32,7 @@ test('parses Strava screenshot OCR text into workout fields', () => {
     assert.equal(parsed.device_text, 'Apple Watch Series 10');
     assert.equal(parsed.average_pace_text, '6:27 /km');
     assert.equal(parsed.start_date, '2026-07-13T00:29:00.000Z');
+    assert.equal(parsed.source_timezone, 'America/Chicago');
 });
 
 test('parses common workout duration strings', () => {
@@ -65,6 +66,31 @@ test('resolves Today and Yesterday relative to the upload reference date', () =>
     assert.equal(yesterday.distance, 6560);
     assert.equal(today.distance_unit, 'km');
     assert.equal(yesterday.distance_unit, 'km');
+});
+
+test('resolves relative OCR dates in the selected browser timezone, not the server timezone', () => {
+    const referenceDate = new Date('2026-07-24T00:38:00.000Z');
+    const parsed = parseWorkoutScreenshotText(`
+        Today at 7:38 PM · Apple Watch Series 10
+        Memphis, Tennessee
+        Evening Run
+        Distance 5.42 km
+        Pace 6:37 /km
+        Time 35m 56s
+    `, referenceDate, 'America/Chicago');
+
+    assert.equal(parsed.start_date, '2026-07-24T00:38:00.000Z');
+    assert.equal(parsed.source_timezone, 'America/Chicago');
+});
+
+test('parses absolute screenshot dates in the selected browser timezone', () => {
+    const parsed = parseWorkoutDate(
+        'July 23, 2026 at 7:38 PM',
+        new Date('2026-07-24T12:00:00.000Z'),
+        'America/Chicago'
+    );
+
+    assert.equal(parsed.toISOString(), '2026-07-24T00:38:00.000Z');
 });
 
 test('normalizes mile distances while preserving the source unit', () => {

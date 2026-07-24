@@ -89,6 +89,7 @@ interface WorkoutScreenshotDraft {
     location_text: string;
     device_text: string;
     average_pace_text: string;
+    source_timezone: string;
     ocr_text: string;
 }
 
@@ -157,6 +158,14 @@ const toDateTimeLocalInput = (value?: string | null): string => {
 const fromDateTimeLocalInput = (value: string): string => {
     const date = new Date(value);
     return Number.isNaN(date.getTime()) ? '' : date.toISOString();
+};
+
+const getBrowserTimeZone = (): string => {
+    try {
+        return Intl.DateTimeFormat().resolvedOptions().timeZone || '';
+    } catch {
+        return '';
+    }
 };
 
 
@@ -401,6 +410,10 @@ export const Interests: React.FC<{ isAuthorized: boolean }> = ({ isAuthorized })
             const formData = new FormData();
             formData.append('image', file);
             formData.append('adminEmail', adminEmail);
+            const browserTimeZone = getBrowserTimeZone();
+            if (browserTimeZone) {
+                formData.append('timezone', browserTimeZone);
+            }
 
             const response = await fetch(`${API_URL}/api/workouts/screenshot/ocr`, {
                 method: 'POST',
@@ -428,6 +441,7 @@ export const Interests: React.FC<{ isAuthorized: boolean }> = ({ isAuthorized })
                 location_text: parsed.location_text || '',
                 device_text: parsed.device_text || '',
                 average_pace_text: parsed.average_pace_text || '',
+                source_timezone: parsed.source_timezone || data.sourceTimezone || browserTimeZone || '',
                 ocr_text: data.ocrText || parsed.ocr_text || ''
             });
         } catch (error) {
@@ -475,6 +489,7 @@ export const Interests: React.FC<{ isAuthorized: boolean }> = ({ isAuthorized })
                         location_text: workoutScreenshotDraft.location_text,
                         device_text: workoutScreenshotDraft.device_text,
                         average_pace_text: workoutScreenshotDraft.average_pace_text,
+                        source_timezone: workoutScreenshotDraft.source_timezone,
                         ocr_text: workoutScreenshotDraft.ocr_text
                     }
                 })

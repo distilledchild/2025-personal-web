@@ -1104,6 +1104,7 @@ const workoutSchema = new mongoose.Schema({
     location_text: String,
     device_text: String,
     average_pace_text: String,
+    source_timezone: String,
     ocr_text: String,
     insertedAt: { type: Date, default: Date.now },
     createdAt: { type: Date, default: Date.now }
@@ -1155,6 +1156,30 @@ const contactSchema = new mongoose.Schema({
 }, { collection: 'CONTACT_INFO' }); // Explicitly set collection name
 
 const Contact = mongoose.model('Contact', contactSchema);
+
+const fetchTimezoneForCoordinates = async (latitude, longitude) => {
+    if (!latitude || !longitude) return '';
+
+    try {
+        const tzResponse = await fetch(`https://timeapi.io/api/TimeZone/coordinate?latitude=${latitude}&longitude=${longitude}`);
+        if (!tzResponse.ok) return '';
+
+        const tzData = await tzResponse.json();
+        return tzData.timeZone || '';
+    } catch (tzErr) {
+        console.error('Failed to fetch timezone:', tzErr);
+        return '';
+    }
+};
+
+const ensureLocationTimezone = async (Location) => {
+    if (!Location?.latitude || !Location?.longitude || Location.timezone) return Location;
+
+    const timezone = await fetchTimezoneForCoordinates(Location.latitude, Location.longitude);
+    if (timezone) Location.timezone = timezone;
+
+    return Location;
+};
 
 // Guestbook Schema
 const guestbookSchema = new mongoose.Schema({
@@ -3671,9 +3696,17 @@ const getWorkoutScreenshotAdminEmail = (req) => (
     ''
 );
 
+const isWorkoutScreenshotAdmin = async (email) => {
+    const normalizedEmail = String(email || '').trim().toLowerCase();
+    if (!normalizedEmail) return false;
+
+    const member = await Member.findOne({ email: normalizedEmail }).lean();
+    return String(member?.role || '').toUpperCase() === 'ADMIN';
+};
+
 const requireWorkoutScreenshotAdmin = async (req, res) => {
     const adminEmail = String(getWorkoutScreenshotAdminEmail(req)).trim();
-    const isAdmin = await isAdminMember(adminEmail);
+    const isAdmin = await isWorkoutScreenshotAdmin(adminEmail);
 
     if (!isAdmin) {
         res.status(403).json({ error: 'Admin access is required' });
@@ -3701,6 +3734,44 @@ const buildScreenshotWorkoutIdentity = (workout) => {
     };
 };
 
+const DEFAULT_WORKOUT_SCREENSHOT_TIMEZONE = 'America/Chicago';
+
+const isSupportedTimeZone = (timeZone) => {
+    const candidate = String(timeZone || '').trim();
+    if (!candidate) return false;
+
+    try {
+        Intl.DateTimeFormat('en-US', { timeZone: candidate }).format(new Date());
+        return true;
+    } catch {
+        return false;
+    }
+};
+
+const getContactTimezone = async () => {
+    const contact = await Contact.findOne({
+        $or: [
+            { Email: { $exists: true, $ne: '' } },
+            { email: { $exists: true, $ne: '' } }
+        ]
+    }).lean();
+
+    return contact?.Location?.timezone || contact?.location?.timezone || '';
+};
+
+const resolveWorkoutScreenshotTimezone = async (browserTimezone) => {
+    if (isSupportedTimeZone(browserTimezone)) {
+        return String(browserTimezone).trim();
+    }
+
+    const contactTimezone = await getContactTimezone();
+    if (isSupportedTimeZone(contactTimezone)) {
+        return String(contactTimezone).trim();
+    }
+
+    return DEFAULT_WORKOUT_SCREENSHOT_TIMEZONE;
+};
+
 app.post('/api/workouts/screenshot/ocr', upload.single('image'), async (req, res) => {
     try {
         const adminEmail = await requireWorkoutScreenshotAdmin(req, res);
@@ -3711,11 +3782,13 @@ app.post('/api/workouts/screenshot/ocr', upload.single('image'), async (req, res
         }
 
         const ocrText = await extractWorkoutScreenshotText(req.file.buffer);
-        const parsed = parseWorkoutScreenshotText(ocrText, new Date());
+        const sourceTimezone = await resolveWorkoutScreenshotTimezone(req.body?.timezone);
+        const parsed = parseWorkoutScreenshotText(ocrText, new Date(), sourceTimezone);
 
         res.json({
             parsed,
-            ocrText
+            ocrText,
+            sourceTimezone
         });
     } catch (err) {
         console.error('[WORKOUT-SCREENSHOT] OCR failed:', err);
@@ -3755,6 +3828,7 @@ app.post('/api/workouts/screenshot', async (req, res) => {
             location_text: String(workout.location_text || ''),
             device_text: String(workout.device_text || ''),
             average_pace_text: String(workout.average_pace_text || ''),
+            source_timezone: String(workout.source_timezone || ''),
             ocr_text: String(workout.ocr_text || '')
         };
 
@@ -4041,21 +4115,15 @@ app.post('/api/contact', async (req, res) => {
                             console.log('Geocoding successful:', { latitude: newContact.Location.latitude, longitude: newContact.Location.longitude });
 
                             // Fetch timezone
-                            try {
-                                const tzResponse = await fetch(`https://timeapi.io/api/TimeZone/coordinate?latitude=${newContact.Location.latitude}&longitude=${newContact.Location.longitude}`);
-                                if (tzResponse.ok) {
-                                    const tzData = await tzResponse.json();
-                                    newContact.Location.timezone = tzData.timeZone;
-                                }
-                            } catch (tzErr) {
-                                console.error('Failed to fetch timezone:', tzErr);
-                            }
+                            await ensureLocationTimezone(newContact.Location);
                         }
                     }
                 } catch (geocodeErr) {
                     console.error('Failed to geocode address:', geocodeErr);
                 }
             }
+
+            await ensureLocationTimezone(newContact.Location);
         }
 
         await newContact.save();
@@ -4184,16 +4252,8 @@ app.put('/api/contact/:id', async (req, res) => {
                             console.log('Geocoding successful:', { latitude: Location.latitude, longitude: Location.longitude });
 
                             // Fetch timezone for coordinates
-                            try {
-                                const tzResponse = await fetch(`https://timeapi.io/api/TimeZone/coordinate?latitude=${Location.latitude}&longitude=${Location.longitude}`);
-                                if (tzResponse.ok) {
-                                    const tzData = await tzResponse.json();
-                                    Location.timezone = tzData.timeZone;
-                                    console.log('Timezone fetch successful:', Location.timezone);
-                                }
-                            } catch (tzErr) {
-                                console.error('Failed to fetch timezone:', tzErr);
-                            }
+                            await ensureLocationTimezone(Location);
+                            console.log('Timezone fetch successful:', Location.timezone);
                         } else {
                             console.log('No geocoding results found for address:', address);
                         }
@@ -4204,6 +4264,7 @@ app.put('/api/contact/:id', async (req, res) => {
                 }
             }
 
+            await ensureLocationTimezone(Location);
             contact.Location = Location;
         }
 
