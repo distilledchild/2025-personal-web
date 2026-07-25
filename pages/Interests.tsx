@@ -363,13 +363,6 @@ export const Interests: React.FC<{ isAuthorized: boolean }> = ({ isAuthorized })
     }, [isAuthorized]);
 
     useEffect(() => {
-        if (adminCheckLoading) return;
-        if (activeTab === 'travel' && !isAdminUser) {
-            navigate('/interests/analysis/1', { replace: true });
-        }
-    }, [activeTab, adminCheckLoading, isAdminUser, navigate, subId]);
-
-    useEffect(() => {
         if (activeTab === 'art') {
             // Reset expanded state when entering Art submenu
             setExpandedState(null);
@@ -738,7 +731,7 @@ export const Interests: React.FC<{ isAuthorized: boolean }> = ({ isAuthorized })
         { id: 'analysis', label: 'Analysis', icon: BarChart3 },
         { id: 'art', label: 'Art', icon: Palette },
         { id: 'workout', label: 'Workout', icon: Dumbbell },
-        ...(isAdminUser ? [{ id: 'travel', label: 'Travel', icon: Plane }] : [])
+        { id: 'travel', label: 'Travel', icon: Plane }
     ];
 
     if (adminCheckLoading) {
@@ -747,10 +740,6 @@ export const Interests: React.FC<{ isAuthorized: boolean }> = ({ isAuthorized })
                 <p className="text-slate-500">Loading...</p>
             </div>
         );
-    }
-
-    if (activeTab === 'travel' && !isAdminUser) {
-        return null;
     }
 
     return (
