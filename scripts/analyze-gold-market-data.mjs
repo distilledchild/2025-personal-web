@@ -7,6 +7,8 @@ const __dirname = path.dirname(__filename);
 const rootDir = path.resolve(__dirname, '..');
 const datasetDir = path.join(rootDir, 'data', 'gold-market');
 const featureTablePath = path.join(datasetDir, 'processed', 'gold_feature_table_daily.csv');
+const officialFomcCalendarPath = path.join(datasetDir, 'raw', 'fomc', 'official_fomc_meetings.json');
+const fedFundsPath = path.join(datasetDir, 'raw', 'fred', 'FEDFUNDS.json');
 const analysisDir = path.join(datasetDir, 'analysis');
 
 const targets = [
@@ -63,7 +65,10 @@ const stabilityWindows = [
   { label: '2022_present', start: '2022-01-01', end: '9999-12-31' },
 ];
 
+const exitThreshold = 50;
 const timingThreshold = 70;
+const entryScoreWeight = 0.7;
+const exitRiskScoreWeight = 0.3;
 const troyOunceToGrams = 31.1034768;
 
 const timingSignalConfigs = [
@@ -114,6 +119,81 @@ const timingSignalConfigs = [
     bullishWhen: 'high',
     weight: 0.14,
     detail: 'A smaller drawdown from the 52-week high keeps the trend-health signal constructive.',
+  },
+];
+
+const exitRiskSignalConfigs = [
+  {
+    feature: 'entry_score_fade_20d',
+    label: 'Entry score fade',
+    category: 'Model',
+    riskWhen: 'high',
+    weight: 0.22,
+    detail: 'A sharp drop from the recent entry-score peak warns that the macro setup is deteriorating.',
+    getValue: (scoredRows, position) => {
+      const window = scoredRows.slice(Math.max(0, position - 20), position + 1);
+      const peakScore = Math.max(...window.map((point) => point.entryScore).filter((value) => value !== null));
+      const currentScore = scoredRows[position]?.entryScore ?? null;
+      return Number.isFinite(peakScore) && currentScore !== null ? peakScore - currentScore : null;
+    },
+  },
+  {
+    feature: 'gold_drawdown_from_20d_high',
+    label: 'Gold drawdown from 20D high',
+    category: 'Price',
+    riskWhen: 'high',
+    weight: 0.22,
+    detail: 'A larger short-term drawdown means the price trend is already moving against the position.',
+    getValue: (scoredRows, position) => {
+      const window = scoredRows.slice(Math.max(0, position - 20), position + 1);
+      const peakPrice = Math.max(...window.map((point) => point.goldFuturesClose).filter((value) => value !== null));
+      const currentPrice = scoredRows[position]?.goldFuturesClose ?? null;
+      return Number.isFinite(peakPrice) && peakPrice > 0 && currentPrice !== null
+        ? (peakPrice - currentPrice) / peakPrice
+        : null;
+    },
+  },
+  {
+    feature: 'gold_futures_return_10d',
+    label: 'Gold 10D momentum',
+    category: 'Trend',
+    riskWhen: 'low',
+    weight: 0.16,
+    detail: 'Weak short-term gold momentum is treated as exit risk because it can confirm that buyers are stepping away.',
+    getValue: (scoredRows, position) => {
+      const currentPrice = scoredRows[position]?.goldFuturesClose ?? null;
+      const previousPrice = scoredRows[position - 10]?.goldFuturesClose ?? null;
+      return currentPrice !== null && previousPrice !== null && previousPrice > 0
+        ? currentPrice / previousPrice - 1
+        : null;
+    },
+  },
+  {
+    feature: 'dxy_return_1m',
+    label: 'Dollar rebound',
+    category: 'Dollar',
+    riskWhen: 'high',
+    weight: 0.14,
+    detail: 'A rising dollar can pressure gold because gold is priced globally in USD.',
+    getValue: (scoredRows, position) => toNumber(scoredRows[position]?.row.dxy_return_1m),
+  },
+  {
+    feature: 'tnx_return_1m',
+    label: '10Y yield rebound',
+    category: 'Rates',
+    riskWhen: 'high',
+    weight: 0.14,
+    detail: 'Rising long yields increase the opportunity-cost pressure on gold.',
+    getValue: (scoredRows, position) => toNumber(scoredRows[position]?.row.tnx_return_1m),
+  },
+  {
+    feature: 'vix_percentile_1y',
+    label: 'Volatility pressure',
+    category: 'Risk',
+    riskWhen: 'high',
+    weight: 0.12,
+    detail: 'Elevated volatility can mark unstable market conditions where gold timing signals become less reliable.',
+    getValue: (scoredRows, position) => toNumber(scoredRows[position]?.row.vix_percentile_1y),
   },
 ];
 
@@ -197,6 +277,8 @@ const round = (value, digits = 6) => {
   if (value === null || value === undefined || Number.isNaN(value)) return null;
   return Number(value.toFixed(digits));
 };
+
+const clamp = (value, min = 0, max = 100) => Math.min(max, Math.max(min, value));
 
 const csvEscape = (value) => {
   if (value === null || value === undefined || Number.isNaN(value)) return '';
@@ -423,40 +505,50 @@ const formatTimingValue = (feature, value) => {
   return Math.abs(value) >= 100 ? value.toLocaleString(undefined, { maximumFractionDigits: 0 }) : value.toFixed(2);
 };
 
+const formatExitRiskValue = (feature, value) => {
+  if (value === null) return 'n/a';
+
+  if (feature === 'entry_score_fade_20d') {
+    return `${value.toFixed(1)} pts`;
+  }
+
+  if (feature.includes('return') || feature.includes('drawdown')) {
+    return `${(value * 100).toFixed(1)}%`;
+  }
+
+  if (feature === 'vix_percentile_1y') {
+    return `${(value * 100).toFixed(0)} pctile`;
+  }
+
+  return Math.abs(value) >= 100 ? value.toLocaleString(undefined, { maximumFractionDigits: 0 }) : value.toFixed(2);
+};
+
 const getTimingZone = (score) => {
   if (score >= timingThreshold) {
     return {
       id: 'accumulation',
-      label: 'Accumulation zone',
-      action: 'Gold setup is favorable enough to consider accumulation.',
+      label: 'Buy / Accumulate',
+      action: 'Gold setup is favorable enough to consider a new or larger position.',
     };
   }
 
-  if (score >= 50) {
+  if (score >= exitThreshold) {
     return {
       id: 'watch',
-      label: 'Watch zone',
-      action: 'The setup has constructive pieces, but it is below the accumulation threshold.',
-    };
-  }
-
-  if (score >= 30) {
-    return {
-      id: 'caution',
-      label: 'Caution zone',
-      action: 'Macro and trend signals are mixed; avoid forcing a new entry.',
+      label: 'Hold / Watch',
+      action: 'The setup is not strong enough for a clean new entry, but it remains acceptable for monitoring or holding.',
     };
   }
 
   return {
     id: 'avoid',
-    label: 'Avoid zone',
-    action: 'The setup is unfavorable for a fresh gold entry.',
+    label: 'Exit / Avoid',
+    action: 'The setup no longer supports holding by this model; avoid new exposure and consider exiting existing exposure.',
   };
 };
 
-const buildTimingSignalsForRow = (row, historicalRows) => {
-  const availableConfigs = timingSignalConfigs.filter((config) => row && toNumber(row[config.feature]) !== null);
+const buildTimingSignalsForRow = (row, historicalRows, signalConfigs = timingSignalConfigs) => {
+  const availableConfigs = signalConfigs.filter((config) => row && toNumber(row[config.feature]) !== null);
   const totalWeight = availableConfigs.reduce((sum, config) => sum + config.weight, 0);
 
   return availableConfigs.map((config) => {
@@ -482,14 +574,108 @@ const buildTimingSignalsForRow = (row, historicalRows) => {
       signalScore: round(signalScore, 1),
       weight: round(normalizedWeight, 4),
       contributionPoints: round((signalScore - 50) * normalizedWeight, 1),
+      returnCorrelation: config.returnCorrelation,
+      badRiskCorrelation: config.badRiskCorrelation,
+      modelStrength: config.modelStrength,
     };
   });
 };
 
 const scoreTimingSignals = (signals) => round(
-  signals.reduce((sum, signal) => sum + signal.signalScore * signal.weight, 0),
+  signals.length ? signals.reduce((sum, signal) => sum + signal.signalScore * signal.weight, 0) : 50,
   1,
 );
+
+const buildEntryScoredRows = (indexedRows, rows, signalConfigs) => indexedRows
+  .filter(({ row }) => toNumber(row.gold_futures_close) !== null)
+  .map(({ row, index }) => {
+    const entrySignals = buildTimingSignalsForRow(row, rows.slice(0, index + 1), signalConfigs);
+    const entryScore = scoreTimingSignals(entrySignals);
+    const goldFuturesClose = toNumber(row.gold_futures_close);
+
+    return {
+      row,
+      index,
+      date: row.date,
+      entrySignals,
+      entryScore,
+      goldFuturesClose,
+    };
+  });
+
+const buildExitRiskSignalsForPoint = (scoredRows, position) => {
+  const availableConfigs = exitRiskSignalConfigs.filter((config) => (
+    config.getValue(scoredRows, position) !== null
+  ));
+  const totalWeight = availableConfigs.reduce((sum, config) => sum + config.weight, 0);
+
+  return availableConfigs.map((config) => {
+    const currentValue = config.getValue(scoredRows, position);
+    const historicalValues = scoredRows
+      .slice(0, position + 1)
+      .map((_, historicalPosition) => config.getValue(scoredRows, historicalPosition));
+    const rawPercentile = percentileRank(historicalValues, currentValue);
+    const riskScore = rawPercentile === null
+      ? 50
+      : config.riskWhen === 'high'
+        ? rawPercentile * 100
+        : (1 - rawPercentile) * 100;
+    const normalizedWeight = totalWeight ? config.weight / totalWeight : 0;
+
+    return {
+      feature: config.feature,
+      label: config.label,
+      category: config.category,
+      detail: config.detail,
+      direction: config.riskWhen === 'high' ? 'Higher is riskier' : 'Lower is riskier',
+      currentValue: round(currentValue),
+      formattedValue: formatExitRiskValue(config.feature, currentValue),
+      percentile: round(rawPercentile),
+      signalScore: round(riskScore, 1),
+      weight: round(normalizedWeight, 4),
+      contributionPoints: round((riskScore - 50) * normalizedWeight, 1),
+    };
+  });
+};
+
+const combineActionScore = (entryScore, exitRiskScore) => round(
+  clamp((entryScore * entryScoreWeight) + ((100 - exitRiskScore) * exitRiskScoreWeight)),
+  1,
+);
+
+const getCorrelation = (correlations, feature, target) => (
+  correlations.find((row) => row.feature === feature && row.target === target)?.spearman ?? 0
+);
+
+const getDirectionalStrength = (config, returnCorrelation, badRiskCorrelation) => {
+  if (config.bullishWhen === 'high') {
+    return Math.max(0, returnCorrelation) + Math.max(0, -badRiskCorrelation);
+  }
+
+  return Math.max(0, -returnCorrelation) + Math.max(0, badRiskCorrelation);
+};
+
+const calibrateTimingSignalConfigs = (correlations) => {
+  const baseStrength = 0.05;
+  const weightedConfigs = timingSignalConfigs.map((config) => {
+    const returnCorrelation = getCorrelation(correlations, config.feature, 'target_gold_return_next_3m');
+    const badRiskCorrelation = getCorrelation(correlations, config.feature, 'target_bad_entry_3m');
+    const modelStrength = baseStrength + getDirectionalStrength(config, returnCorrelation, badRiskCorrelation);
+
+    return {
+      ...config,
+      returnCorrelation: round(returnCorrelation),
+      badRiskCorrelation: round(badRiskCorrelation),
+      modelStrength: round(modelStrength),
+    };
+  });
+  const totalStrength = weightedConfigs.reduce((sum, config) => sum + config.modelStrength, 0);
+
+  return weightedConfigs.map((config) => ({
+    ...config,
+    weight: totalStrength ? round(config.modelStrength / totalStrength, 4) : config.weight,
+  }));
+};
 
 const getIsoDateOneYearBefore = (dateString) => {
   const date = new Date(`${dateString}T00:00:00Z`);
@@ -505,37 +691,41 @@ const getNextBusinessDate = (dateString) => {
   return date.toISOString().slice(0, 10);
 };
 
-const buildGoldTimingSnapshot = (rows) => {
+const buildGoldTimingSnapshot = (rows, signalConfigs, officialFomcMeetings = [], fedFundsObservations = []) => {
   const indexedRows = rows.map((row, index) => ({ row, index }));
-  const latestItem = [...indexedRows]
-    .reverse()
-    .find(({ row }) => toNumber(row.gold_futures_close) !== null);
+  const scoredRows = buildEntryScoredRows(indexedRows, rows, signalConfigs);
+  const latestPosition = scoredRows.length - 1;
+  const latestItem = scoredRows[latestPosition];
   const latest = latestItem?.row;
-  const signals = latestItem
-    ? buildTimingSignalsForRow(latest, rows.slice(0, latestItem.index + 1))
+  const entrySignals = latestItem?.entrySignals ?? [];
+  const entryScore = latestItem?.entryScore ?? 50;
+  const exitSignals = latestItem
+    ? buildExitRiskSignalsForPoint(scoredRows, latestPosition)
     : [];
-
-  const score = scoreTimingSignals(signals);
+  const exitRiskScore = scoreTimingSignals(exitSignals);
+  const score = combineActionScore(entryScore, exitRiskScore);
   const zone = getTimingZone(score);
   const historyStartDate = latest ? getIsoDateOneYearBefore(latest.date) : null;
   const rawHistory = latest
-    ? indexedRows
-      .filter(({ row }) => (
-        row.date >= historyStartDate
-        && row.date <= latest.date
-        && toNumber(row.gold_futures_close) !== null
+    ? scoredRows
+      .map((point, position) => ({ point, position }))
+      .filter(({ point }) => (
+        point.date >= historyStartDate
+        && point.date <= latest.date
       ))
-      .map(({ row, index }) => {
-        const rowSignals = buildTimingSignalsForRow(row, rows.slice(0, index + 1));
-        const rowScore = scoreTimingSignals(rowSignals);
-        const goldFuturesClose = toNumber(row.gold_futures_close);
+      .map(({ point, position }) => {
+        const pointExitSignals = buildExitRiskSignalsForPoint(scoredRows, position);
+        const pointExitRiskScore = scoreTimingSignals(pointExitSignals);
+        const pointScore = combineActionScore(point.entryScore, pointExitRiskScore);
         return {
-          date: row.date,
-          score: rowScore,
-          zoneId: getTimingZone(rowScore).id,
-          goldFuturesClose: round(goldFuturesClose, 2),
-          goldPricePerGram: goldFuturesClose === null ? null : round(goldFuturesClose / troyOunceToGrams, 2),
-          fedFundsRate: round(toNumber(row.fedfunds_value), 2),
+          date: point.date,
+          score: pointScore,
+          entryScore: point.entryScore,
+          exitRiskScore: pointExitRiskScore,
+          zoneId: getTimingZone(pointScore).id,
+          goldFuturesClose: round(point.goldFuturesClose, 2),
+          goldPricePerGram: point.goldFuturesClose === null ? null : round(point.goldFuturesClose / troyOunceToGrams, 2),
+          fedFundsRate: round(toNumber(point.row.fedfunds_value), 2),
         };
       })
     : [];
@@ -552,6 +742,13 @@ const buildGoldTimingSnapshot = (rows) => {
   });
 
   const latestHistoryPoint = history.at(-1);
+  const today = new Date().toISOString().slice(0, 10);
+  const nextFomcMeeting = officialFomcMeetings
+    .filter((meeting) => meeting.date >= today)
+    .sort((a, b) => a.date.localeCompare(b.date))[0] ?? null;
+  const latestFedFundsObservation = fedFundsObservations
+    .filter((observation) => observation.date <= today && Number.isFinite(toNumber(observation.value)))
+    .sort((a, b) => b.date.localeCompare(a.date))[0] ?? null;
   const nextForecast = latestHistoryPoint
     ? {
       basisDate: latestHistoryPoint.date,
@@ -565,18 +762,33 @@ const buildGoldTimingSnapshot = (rows) => {
     generatedAt: new Date().toISOString(),
     asOfDate: latest?.date ?? null,
     historyStartDate,
+    exitThreshold,
     threshold: timingThreshold,
     score,
+    entryScore,
+    exitRiskScore,
     zone,
-    signals,
+    signals: entrySignals,
+    entrySignals,
+    exitSignals,
     history,
+    fedFunds: {
+      effectiveRate: toNumber(latestFedFundsObservation?.value) ?? latestHistoryPoint?.fedFundsRate ?? null,
+      dataAsOfDate: latestFedFundsObservation?.date ?? null,
+      nextMeetingStartDate: nextFomcMeeting?.start_date ?? null,
+      nextDecisionDate: nextFomcMeeting?.date ?? null,
+      decisionTime: nextFomcMeeting ? '2:00 PM ET' : null,
+      hasSummaryOfEconomicProjections: nextFomcMeeting?.has_summary_of_economic_projections ?? false,
+      rateSourceUrl: 'https://fred.stlouisfed.org/series/FEDFUNDS',
+      calendarSourceUrl: 'https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm',
+    },
     nextForecast,
     methodology: [
-      'Use a compact set of six interpretable signals instead of the full feature table.',
-      'Convert the latest value of each signal into its historical percentile.',
-      'Flip the percentile when lower values are historically more bullish for gold.',
-      'Weight the signals into a 0-100 Gold Timing Score.',
-      `Treat ${timingThreshold}+ as the accumulation threshold; below that, keep the page in watch or caution mode.`,
+      'Build a 0-100 Entry Strength model from interpretable macro, dollar, rate, and trend signals.',
+      'Build a separate 0-100 Exit Risk model from deterioration, drawdown, short-term momentum, dollar, rate, and volatility signals.',
+      'Convert each factor into a historical percentile so the two models stay comparable through time.',
+      'Combine the models into one final action score: 70% Entry Strength plus 30% inverse Exit Risk.',
+      `Treat final action score ${timingThreshold}+ as Buy / Accumulate, ${exitThreshold}-${timingThreshold - 1} as Hold / Watch, and below ${exitThreshold} as Exit / Avoid.`,
     ],
   };
 };
@@ -659,6 +871,8 @@ const buildMarkdownSummary = ({ rows, correlations, bucketSpreads, qualitySummar
 const main = async () => {
   await fs.mkdir(analysisDir, { recursive: true });
   const csvText = await fs.readFile(featureTablePath, 'utf8');
+  const officialFomcCalendar = JSON.parse(await fs.readFile(officialFomcCalendarPath, 'utf8'));
+  const fedFundsData = JSON.parse(await fs.readFile(fedFundsPath, 'utf8'));
   const rows = addDerivedFeatures(parseCsv(csvText));
   const headers = Object.keys(rows[0] || {});
   const allFeatures = getFeatureColumns(headers);
@@ -669,10 +883,16 @@ const main = async () => {
 
   const qualitySummary = buildQualitySummary(rows, features);
   const correlations = buildCorrelations(rows, features);
+  const timingSignalConfigs = calibrateTimingSignalConfigs(correlations);
   const bucketBacktest = buildBucketBacktest(rows, features);
   const bucketSpreads = buildBucketSpreads(bucketBacktest);
   const stability = buildStability(rows, features);
-  const timingSnapshot = buildGoldTimingSnapshot(rows);
+  const timingSnapshot = buildGoldTimingSnapshot(
+    rows,
+    timingSignalConfigs,
+    officialFomcCalendar.observations || [],
+    fedFundsData.observations || [],
+  );
   const summary = buildMarkdownSummary({ rows, correlations, bucketSpreads, qualitySummary, stability, features });
 
   await writeCsv(path.join(analysisDir, 'data_quality_summary.csv'), qualitySummary);

@@ -461,7 +461,7 @@
       "date": "2026-04-29",
       "has_summary_of_economic_projections": false,
       "is_notation_vote": false,
-      "status": "upcoming",
+      "status": "past",
       "source": "Federal Reserve"
     },
     {
@@ -472,7 +472,7 @@
       "date": "2026-06-17",
       "has_summary_of_economic_projections": true,
       "is_notation_vote": false,
-      "status": "upcoming",
+      "status": "past",
       "source": "Federal Reserve"
     },
     {
@@ -483,7 +483,7 @@
       "date": "2026-07-29",
       "has_summary_of_economic_projections": false,
       "is_notation_vote": false,
-      "status": "upcoming",
+      "status": "past",
       "source": "Federal Reserve"
     },
     {

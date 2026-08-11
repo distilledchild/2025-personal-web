@@ -1,105 +1,105 @@
 {
-  "generatedAt": "2026-04-18T06:52:58.161Z",
+  "generatedAt": "2026-08-11T06:16:27.336Z",
   "startDate": "2004-01-01",
-  "endDate": "2026-04-18",
-  "datasetDir": "/Users/pete/Desktop/playground/personal-web-2025/data/gold-market",
+  "endDate": "2026-08-11",
+  "datasetDir": "/Users/pete/Desktop/playground/2025-personal-web/data/gold-market",
   "yahoo": [
     {
       "id": "sp500",
       "symbol": "^GSPC",
-      "rows": 5608
+      "rows": 5686
     },
     {
       "id": "nasdaq",
       "symbol": "^IXIC",
-      "rows": 5608
+      "rows": 5686
     },
     {
       "id": "vix",
       "symbol": "^VIX",
-      "rows": 5608
+      "rows": 5687
     },
     {
       "id": "gold_futures",
       "symbol": "GC=F",
-      "rows": 5600
+      "rows": 5678
     },
     {
       "id": "wti_crude_oil",
       "symbol": "CL=F",
-      "rows": 5604
+      "rows": 5682
     },
     {
       "id": "silver_futures",
       "symbol": "SI=F",
-      "rows": 5601
+      "rows": 5679
     },
     {
       "id": "copper_futures",
       "symbol": "HG=F",
-      "rows": 5604
+      "rows": 5682
     },
     {
       "id": "dxy",
       "symbol": "DX-Y.NYB",
-      "rows": 5621
+      "rows": 5699
     },
     {
       "id": "tnx",
       "symbol": "^TNX",
-      "rows": 5603
+      "rows": 5681
     },
     {
       "id": "gld",
       "symbol": "GLD",
-      "rows": 5386
+      "rows": 5464
     },
     {
       "id": "iau",
       "symbol": "IAU",
-      "rows": 5338
+      "rows": 5416
     }
   ],
   "fred": [
     {
       "id": "GDPC1",
-      "rows": 88
+      "rows": 90
     },
     {
       "id": "CPIAUCSL",
-      "rows": 266
+      "rows": 269
     },
     {
       "id": "PCEPI",
-      "rows": 266
+      "rows": 270
     },
     {
       "id": "FEDFUNDS",
-      "rows": 267
+      "rows": 271
     },
     {
       "id": "DFII10",
-      "rows": 5576
+      "rows": 5654
     },
     {
       "id": "RRPONTSYD",
-      "rows": 3213
+      "rows": 3291
     },
     {
       "id": "PAYEMS",
-      "rows": 267
+      "rows": 271
     },
     {
       "id": "M2SL",
-      "rows": 266
+      "rows": 270
     },
     {
       "id": "T10Y2Y",
-      "rows": 5577
+      "rows": 5655
     },
     {
       "id": "T10YIE",
-      "rows": 5577
+      "rows": 5655
     }
   ],
   "dbnomicsGoldReserves": [
@@ -180,7 +180,7 @@
     }
   ],
   "fomc": {
-    "rows": 94
+    "rows": 95
   },
   "officialFomc": {
     "rows": 55
@@ -188,7 +188,7 @@
   "warnings": [],
   "processed": {
     "featureTable": "processed/gold_feature_table_daily.csv",
-    "rows": 5600,
+    "rows": 5678,
     "columns": 55
   }
 }

@@ -1,7 +1,7 @@
 # Gold Market Correlation Analysis
 
-Generated: 2026-04-18T06:58:12.837Z
-Rows: 5600
+Generated: 2026-08-11T06:30:01.677Z
+Rows: 5678
 Features tested: 64
 
 ## How To Read This
@@ -15,69 +15,69 @@ Features tested: 64
 
 | Feature | n | Spearman | Pearson |
 |---|---:|---:|---:|
-| dfii10_value | 5537 | 0.391 | 0.389 |
-| payems_value_change_3m | 5474 | -0.335 | -0.175 |
-| fedfunds_value | 5537 | 0.278 | 0.307 |
-| payems_value_change_1m | 5516 | -0.229 | -0.059 |
-| rrpontsyd_value_change_3m | 5473 | -0.176 | -0.162 |
-| fedfunds_value_change_3m | 5474 | -0.163 | -0.127 |
-| t10y2y_value | 5537 | -0.162 | -0.136 |
-| gold_drawdown_from_252d_high | 5537 | 0.140 | 0.091 |
-| t10yie_value_change_3m | 5474 | -0.135 | -0.174 |
-| fedfunds_value_change_1m | 5516 | -0.125 | -0.118 |
-| rrpontsyd_value_change_1m | 5515 | -0.124 | -0.123 |
-| t10y2y_value_change_3m | 5474 | 0.123 | 0.129 |
+| dfii10_value | 5615 | 0.361 | 0.356 |
+| payems_value_change_3m | 5552 | -0.304 | -0.169 |
+| fedfunds_value | 5615 | 0.256 | 0.277 |
+| payems_value_change_1m | 5594 | -0.214 | -0.057 |
+| rrpontsyd_value_change_3m | 5551 | -0.157 | -0.158 |
+| t10y2y_value | 5615 | -0.153 | -0.122 |
+| gold_drawdown_from_252d_high | 5615 | 0.141 | 0.090 |
+| t10yie_value_change_3m | 5552 | -0.140 | -0.176 |
+| fedfunds_value_change_3m | 5552 | -0.139 | -0.116 |
+| wti_crude_oil_return_3m | 5552 | -0.125 | -0.154 |
+| t10yie_value_change_1m | 5594 | -0.123 | -0.134 |
+| t10y2y_value_change_3m | 5552 | 0.121 | 0.129 |
 
 ## Top Correlations With Bad Entry Risk
 
 | Feature | n | Spearman | Pearson |
 |---|---:|---:|---:|
-| dfii10_value | 5599 | -0.204 | -0.192 |
-| fedfunds_value | 5599 | -0.197 | -0.198 |
-| t10y2y_value | 5599 | 0.171 | 0.156 |
-| rrpontsyd_value_change_3m | 5535 | 0.153 | 0.090 |
-| gold_drawdown_from_252d_high | 5599 | -0.124 | -0.105 |
-| central_bank_gold_reserves_top15_tonnes | 5599 | -0.117 | -0.137 |
-| days_since_last_fomc | 5591 | 0.098 | 0.106 |
-| payems_value_change_3m | 5536 | 0.097 | 0.050 |
-| payems_value | 5599 | -0.095 | -0.128 |
-| rrpontsyd_value_change_1m | 5577 | 0.094 | 0.095 |
-| sp500_return_3m | 5536 | -0.093 | -0.096 |
-| vix_percentile_1y | 5348 | 0.091 | 0.090 |
+| dfii10_value | 5677 | -0.178 | -0.169 |
+| fedfunds_value | 5677 | -0.178 | -0.177 |
+| t10y2y_value | 5677 | 0.160 | 0.144 |
+| rrpontsyd_value_change_3m | 5613 | 0.141 | 0.088 |
+| gold_drawdown_from_252d_high | 5677 | -0.137 | -0.111 |
+| vix_percentile_1y | 5426 | 0.101 | 0.099 |
+| wti_crude_oil_return_3m | 5614 | 0.099 | 0.094 |
+| rrpontsyd_value | 5676 | -0.094 | -0.060 |
+| rrpontsyd_value_change_1m | 5655 | 0.093 | 0.093 |
+| sp500_return_3m | 5614 | -0.092 | -0.095 |
+| iau_return_3m | 5347 | -0.087 | -0.050 |
+| gld_return_3m | 5393 | -0.085 | -0.047 |
 
 ## Strongest 5-Bucket Spreads
 
 | Feature | Low Bucket 3M Return | High Bucket 3M Return | High-Low Spread | Bad Risk Spread |
 |---|---:|---:|---:|---:|
-| dfii10_value | -1.03% | 7.94% | 8.97% | -26.60% |
-| payems_value_change_3m | 7.55% | 0.67% | -6.88% | 3.57% |
-| fedfunds_value | 0.81% | 6.90% | 6.09% | -23.13% |
-| payems_value_change_1m | 5.67% | 0.94% | -4.73% | 1.74% |
-| fedfunds_value_change_3m | 7.60% | 3.07% | -4.53% | -2.10% |
-| tnx_close_change_3m | 6.20% | 2.60% | -3.59% | 8.47% |
-| rrpontsyd_value_change_3m | 5.12% | 1.59% | -3.54% | 16.78% |
-| fedfunds_value_change_1m | 6.76% | 3.33% | -3.43% | -3.51% |
-| rrpontsyd_value_change_1m | 4.62% | 1.55% | -3.07% | 11.55% |
-| t10yie_value | 4.12% | 1.30% | -2.82% | 13.13% |
-| gld_return_3m | 1.75% | 4.54% | 2.79% | -6.33% |
-| iau_return_3m | 1.72% | 4.49% | 2.77% | -6.45% |
+| dfii10_value | -1.10% | 7.44% | 8.54% | -23.70% |
+| payems_value_change_3m | 6.75% | 0.55% | -6.19% | 3.90% |
+| fedfunds_value | 0.80% | 6.94% | 6.14% | -23.80% |
+| payems_value_change_1m | 5.55% | 1.00% | -4.55% | 1.72% |
+| fedfunds_value_change_3m | 6.81% | 3.11% | -3.71% | -3.03% |
+| tnx_close_change_3m | 6.17% | 2.57% | -3.60% | 9.55% |
+| rrpontsyd_value_change_3m | 5.08% | 1.58% | -3.49% | 16.46% |
+| fedfunds_value_change_1m | 6.56% | 3.29% | -3.27% | -5.14% |
+| t10yie_value | 4.09% | 1.05% | -3.03% | 14.86% |
+| wti_crude_oil_return_3m | 4.87% | 1.85% | -3.03% | 10.14% |
+| rrpontsyd_value_change_1m | 4.51% | 1.51% | -3.00% | 11.83% |
+| tnx_return_3m | 4.26% | 1.46% | -2.80% | 10.86% |
 
 ## Stability Across Market Regimes
 
 | Feature | Sign Stability | Avg Spearman | Avg Abs Spearman |
 |---|---:|---:|---:|
-| payems_value_change_3m | 100.00% | -0.322 | 0.322 |
-| dfii10_value | 100.00% | 0.316 | 0.316 |
-| fedfunds_value_change_3m | 100.00% | -0.224 | 0.224 |
-| rrpontsyd_value | 100.00% | -0.201 | 0.201 |
-| t10yie_value | 100.00% | -0.190 | 0.190 |
-| tnx_return_3m | 100.00% | -0.171 | 0.171 |
-| fedfunds_value_change_1m | 100.00% | -0.168 | 0.168 |
-| tnx_close_change_3m | 100.00% | -0.163 | 0.163 |
-| wti_crude_oil_return_3m | 100.00% | -0.117 | 0.117 |
-| tnx_return_1m | 100.00% | -0.112 | 0.112 |
-| t10yie_value_change_1m | 100.00% | -0.105 | 0.105 |
-| tnx_close_change_1m | 100.00% | -0.100 | 0.100 |
+| dfii10_value | 100.00% | 0.290 | 0.290 |
+| payems_value_change_3m | 100.00% | -0.278 | 0.278 |
+| t10yie_value | 100.00% | -0.196 | 0.196 |
+| fedfunds_value_change_3m | 100.00% | -0.188 | 0.188 |
+| tnx_return_3m | 100.00% | -0.162 | 0.162 |
+| tnx_close_change_3m | 100.00% | -0.157 | 0.157 |
+| wti_crude_oil_return_3m | 100.00% | -0.153 | 0.153 |
+| fedfunds_value_change_1m | 100.00% | -0.144 | 0.144 |
+| t10yie_value_change_3m | 100.00% | -0.138 | 0.138 |
+| rrpontsyd_value | 100.00% | -0.129 | 0.129 |
+| t10yie_value_change_1m | 100.00% | -0.118 | 0.118 |
+| wti_crude_oil_return_1m | 100.00% | -0.113 | 0.113 |
 
 ## Data Quality Notes
 

@@ -66,11 +66,16 @@ interface TimingSignal {
     signalScore: number;
     weight: number;
     contributionPoints: number;
+    returnCorrelation?: number;
+    badRiskCorrelation?: number;
+    modelStrength?: number;
 }
 
 interface TimingHistoryPoint {
     date: string;
     score: number;
+    entryScore: number;
+    exitRiskScore: number;
     zoneId: 'accumulation' | 'watch' | 'caution' | 'avoid';
     goldFuturesClose: number | null;
     goldPricePerGram: number | null;
@@ -86,19 +91,36 @@ interface TimingNextForecast {
     model: string;
 }
 
+interface TimingFedFunds {
+    effectiveRate: number | null;
+    dataAsOfDate: string | null;
+    nextMeetingStartDate: string | null;
+    nextDecisionDate: string | null;
+    decisionTime: string | null;
+    hasSummaryOfEconomicProjections: boolean;
+    rateSourceUrl: string;
+    calendarSourceUrl: string;
+}
+
 interface TimingSnapshot {
     generatedAt: string;
     asOfDate: string;
     historyStartDate: string | null;
+    exitThreshold: number;
     threshold: number;
     score: number;
+    entryScore: number;
+    exitRiskScore: number;
     zone: {
         id: 'accumulation' | 'watch' | 'caution' | 'avoid';
         label: string;
         action: string;
     };
     signals: TimingSignal[];
+    entrySignals: TimingSignal[];
+    exitSignals: TimingSignal[];
     history: TimingHistoryPoint[];
+    fedFunds: TimingFedFunds;
     nextForecast: TimingNextForecast | null;
     methodology: string[];
 }
@@ -156,8 +178,20 @@ const formatShortDate = (date: string) => {
     return parsed.toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' });
 };
 
+const formatLongDate = (date: string | null) => {
+    if (!date) return 'Not available';
+    const parsed = new Date(`${date}T00:00:00Z`);
+    return parsed.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
+};
+
+const formatMonthYear = (date: string | null) => {
+    if (!date) return 'not available';
+    const parsed = new Date(`${date}T00:00:00Z`);
+    return parsed.toLocaleDateString('en-US', { month: 'short', year: 'numeric', timeZone: 'UTC' });
+};
+
 const formatChartValue = (value: number, label: string) => {
-    if (label === 'Actual score' || label === 'Predicted score') return `${value.toFixed(1)} / 100`;
+    if (label === 'Final action score' || label === 'Predicted score' || label === 'Entry strength' || label === 'Exit risk') return `${value.toFixed(1)} / 100`;
     if (label === 'Gold price') return `$${value.toLocaleString(undefined, { maximumFractionDigits: 2 })}/g`;
     if (label === 'Fed funds rate') return `${value.toFixed(2)}%`;
     if (label === 'Forecast error') return `${value > 0 ? '+' : ''}${value.toFixed(1)} pts`;
@@ -171,11 +205,12 @@ const SectionHeader = ({ title, subtitle }: { title: string; subtitle: string })
     </div>
 );
 
-const MetricTile = ({ label, value, tone = 'slate' }: { label: string; value: string; tone?: 'slate' | 'orange' | 'green' }) => {
+const MetricTile = ({ label, value, tone = 'slate' }: { label: string; value: string; tone?: 'slate' | 'orange' | 'green' | 'rose' }) => {
     const toneClass = {
         slate: 'border-slate-200 bg-slate-50 text-slate-900',
         orange: 'border-orange-200 bg-orange-50 text-orange-900',
         green: 'border-emerald-200 bg-emerald-50 text-emerald-900',
+        rose: 'border-rose-200 bg-rose-50 text-rose-600',
     }[tone];
 
     return (
@@ -239,42 +274,68 @@ const getSignalTone = (score: number) => {
     };
 };
 
+const getExitSignalTone = (score: number) => {
+    if (score >= 60) {
+        return {
+            label: 'Risky',
+            border: 'border-rose-200',
+            soft: 'bg-rose-50 text-rose-800',
+            badge: 'bg-rose-100 text-rose-700',
+            bar: '#ef4444',
+        };
+    }
+
+    if (score >= 40) {
+        return {
+            label: 'Elevated',
+            border: 'border-amber-200',
+            soft: 'bg-amber-50 text-amber-800',
+            badge: 'bg-amber-100 text-amber-700',
+            bar: '#FFA300',
+        };
+    }
+
+    return {
+        label: 'Calm',
+        border: 'border-emerald-200',
+        soft: 'bg-emerald-50 text-emerald-800',
+        badge: 'bg-emerald-100 text-emerald-700',
+        bar: '#16a34a',
+    };
+};
+
 const DashboardTab = () => {
     const tone = zoneTone[timingSnapshot.zone.id];
-    const contributionData = timingSnapshot.signals.map(signal => ({
+    const [activeSignalModel, setActiveSignalModel] = useState<'entry' | 'exit'>('entry');
+    const [showEntryScore, setShowEntryScore] = useState(false);
+    const [showExitRisk, setShowExitRisk] = useState(false);
+    const entrySignals = timingSnapshot.entrySignals ?? timingSnapshot.signals;
+    const exitSignals = timingSnapshot.exitSignals ?? [];
+    const activeSignals = activeSignalModel === 'entry' ? entrySignals : exitSignals;
+    const entryContributionData = entrySignals.map(signal => ({
         name: signal.label,
         category: signal.category,
         contribution: signal.contributionPoints,
         score: signal.signalScore,
     }));
-    const topBoost = [...contributionData].sort((a, b) => b.contribution - a.contribution)[0];
-    const topDrag = [...contributionData].sort((a, b) => a.contribution - b.contribution)[0];
+    const exitContributionData = exitSignals.map(signal => ({
+        name: signal.label,
+        category: signal.category,
+        contribution: signal.contributionPoints,
+        score: signal.signalScore,
+    }));
+    const topBoost = [...entryContributionData].sort((a, b) => b.contribution - a.contribution)[0];
+    const topExitRisk = [...exitContributionData].sort((a, b) => b.contribution - a.contribution)[0];
     const netContribution = timingSnapshot.score - 50;
     const scoreHistoryData = timingSnapshot.history.map(point => ({
         ...point,
         label: formatShortDate(point.date),
     }));
-    const scoreForecastData = timingSnapshot.nextForecast
-        ? [
-            ...scoreHistoryData,
-            {
-                date: timingSnapshot.nextForecast.forecastDate,
-                label: formatShortDate(timingSnapshot.nextForecast.forecastDate),
-                score: null,
-                zoneId: 'watch' as const,
-                goldFuturesClose: null,
-                goldPricePerGram: null,
-                fedFundsRate: null,
-                predictedScore: timingSnapshot.nextForecast.predictedScore,
-                forecastError: null,
-            },
-        ]
-        : scoreHistoryData;
     return (
         <div className="space-y-8">
             <SectionHeader
                 title="Gold Timing Dashboard"
-                subtitle="A simple decision layer: compress the most interpretable gold macro signals into one 0-100 timing score, then compare it with a fixed accumulation threshold."
+                subtitle="Two separate 0-100 models feed one final action score: 70+ Buy / Accumulate, 50-69 Hold / Watch, below 50 Exit / Avoid."
             />
 
             <div className="grid grid-cols-1 gap-6">
@@ -287,6 +348,11 @@ const DashboardTab = () => {
                                 <span className="pb-2 text-xl font-black opacity-60">/ 100</span>
                             </div>
                             <p className="mt-4 max-w-none whitespace-nowrap text-base font-semibold leading-relaxed">{timingSnapshot.zone.action}</p>
+                            <div className="mt-5 grid max-w-xl grid-cols-1 gap-3 sm:grid-cols-3">
+                                <MetricTile label="Final action" value={timingSnapshot.score.toFixed(1)} tone="orange" />
+                                <MetricTile label="Entry strength" value={timingSnapshot.entryScore.toFixed(1)} tone="green" />
+                                <MetricTile label="Exit risk" value={timingSnapshot.exitRiskScore.toFixed(1)} tone="rose" />
+                            </div>
                         </div>
                         <span className={`w-fit whitespace-nowrap rounded-full px-4 py-2 text-xs font-black uppercase tracking-wider ${tone.badge}`}>
                             {timingSnapshot.zone.label}
@@ -303,17 +369,29 @@ const DashboardTab = () => {
                                 style={{ left: `${Math.min(100, Math.max(0, timingSnapshot.score))}%` }}
                             />
                             <div
-                                className="absolute -bottom-8 -translate-x-1/2 text-center text-[11px] font-black uppercase tracking-wider text-orange-900"
+                                className="absolute -top-7 -translate-x-1/2 text-center text-[11px] font-black uppercase tracking-wider text-slate-950"
                                 style={{ left: `${Math.min(100, Math.max(0, timingSnapshot.score))}%` }}
                             >
                                 Current
                             </div>
                             <div
-                                className="absolute -top-2 h-9 w-1 rounded-full bg-slate-950"
+                                className="absolute -top-2 h-9 w-1 rounded-full bg-rose-600"
+                                style={{ left: `${timingSnapshot.exitThreshold}%` }}
+                            />
+                            <div
+                                className="absolute top-8 -translate-x-1/2 text-center text-[11px] font-black uppercase tracking-wider text-rose-700"
+                                style={{ left: `${timingSnapshot.exitThreshold}%` }}
+                            >
+                                Exit
+                                <br />
+                                &lt;{timingSnapshot.exitThreshold}
+                            </div>
+                            <div
+                                className="absolute -top-2 h-9 w-1 rounded-full bg-emerald-600"
                                 style={{ left: `${timingSnapshot.threshold}%` }}
                             />
                             <div
-                                className="absolute top-8 -translate-x-1/2 text-center text-[11px] font-black uppercase tracking-wider text-slate-700"
+                                className="absolute top-8 -translate-x-1/2 text-center text-[11px] font-black uppercase tracking-wider text-emerald-700"
                                 style={{ left: `${timingSnapshot.threshold}%` }}
                             >
                                 Accumulate
@@ -321,39 +399,64 @@ const DashboardTab = () => {
                                 {timingSnapshot.threshold}+
                             </div>
                         </div>
-                        <div className="mt-10 flex justify-between font-mono text-xs font-black text-slate-500">
-                            <span>0 Avoid</span>
-                            <span>50 Watch</span>
-                            <span>100 Strong</span>
-                        </div>
                     </div>
 
                     <div className="mt-8 border-t border-orange-200/70 pt-5">
                         <h4 className="text-sm font-black uppercase tracking-[0.18em] text-slate-800">How to read it</h4>
                         <div className="mt-3 grid gap-3 text-sm font-semibold leading-relaxed text-slate-700">
-                            <p><strong style={{ color: '#f97316' }}>70+</strong> means the macro/trend setup is favorable enough to consider accumulation.</p>
-                            <p><strong style={{ color: '#FFA300' }}>50-69</strong> means watch: some signals are constructive, but not enough for a clean entry.</p>
-                            <p><strong style={{ color: '#FFB84D' }}>Below 50</strong> means avoid forcing a new gold position until the score improves.</p>
+                            <p><strong style={{ color: '#f97316' }}>70+</strong> means buy / accumulate: the macro and trend setup is strong enough to consider a new or larger position.</p>
+                            <p><strong style={{ color: '#FFA300' }}>50-69</strong> means hold / watch: the setup is not a clean new entry, but it is still acceptable for monitoring or holding.</p>
+                            <p><strong className="text-rose-600">Below 50</strong> means exit / avoid: entry strength is weak and/or exit risk is high enough to reduce the final action score.</p>
                         </div>
                         <p className="mt-4 rounded-lg bg-white/60 p-3 text-xs font-semibold leading-relaxed text-slate-600">
-                            This is an entry-timing aid, not a sell model or financial advice. The point is to make the macro environment visible, not to guarantee returns.
+                            Disclaimer: This page is for personal research only and does not provide financial advice. I am not responsible for any investment decisions, losses, or outcomes based on this model.
                         </p>
                     </div>
                 </div>
             </div>
 
             <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-                <div className="flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
-                    <div>
+                <div className="flex flex-col gap-3 xl:flex-row xl:items-start xl:justify-between">
+                    <div className="min-w-0">
                         <h4 className="text-lg font-black text-slate-950">Score trend with gold price</h4>
-                        <p className="mt-1 whitespace-nowrap text-sm font-medium text-slate-500">
-                            Left axis shows Gold Timing Score; right axis shows gold price in $/g. The dotted score line is the next-day baseline forecast.
+                        <p className="mt-1 max-w-3xl text-sm font-medium text-slate-500">
+                            Default view shows only gold price and the final action score. Toggle model internals when you want to inspect the two sub-models.
                         </p>
                     </div>
+                    <div className="grid w-full grid-cols-2 gap-2 sm:w-[270px] sm:shrink-0">
+                        <button
+                            type="button"
+                            onClick={() => setShowEntryScore(value => !value)}
+                            className={`whitespace-nowrap rounded-full border px-3 py-1.5 text-center text-xs font-black transition ${
+                                showEntryScore
+                                    ? 'border-emerald-300 bg-emerald-500 text-white'
+                                    : 'border-slate-200 bg-white text-slate-500 hover:border-emerald-200 hover:text-emerald-700'
+                            }`}
+                        >
+                            Entry strength
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => setShowExitRisk(value => !value)}
+                            className={`whitespace-nowrap rounded-full border px-3 py-1.5 text-center text-xs font-black transition ${
+                                showExitRisk
+                                    ? 'border-rose-300 bg-rose-500 text-white'
+                                    : 'border-slate-200 bg-white text-slate-500 hover:border-rose-200 hover:text-rose-700'
+                            }`}
+                        >
+                            Exit risk
+                        </button>
+                    </div>
                 </div>
-                <div className="mt-5 h-[320px]">
+                <div className="relative mt-5 h-[320px]">
+                    <span className="pointer-events-none absolute left-6 top-1 z-10 text-[11px] font-black uppercase tracking-wider text-orange-500">
+                        Score
+                    </span>
+                    <span className="pointer-events-none absolute right-6 top-1 z-10 text-[11px] font-black uppercase tracking-wider text-amber-400">
+                        Gold $/g
+                    </span>
                     <ResponsiveContainer width="100%" height="100%">
-                        <ComposedChart data={scoreForecastData} margin={{ top: 16, right: 24, left: 0, bottom: 0 }}>
+                        <ComposedChart data={scoreHistoryData} margin={{ top: 30, right: 18, left: 18, bottom: 0 }}>
                             <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
                             <XAxis
                                 dataKey="date"
@@ -367,8 +470,7 @@ const DashboardTab = () => {
                                 ticks={[0, 25, 50, 70, 100]}
                                 tick={{ fontSize: 11, fill: '#f97316', fontWeight: 700 }}
                                 tickMargin={6}
-                                width={36}
-                                mirror
+                                width={46}
                                 axisLine={{ stroke: '#f97316' }}
                                 tickLine={{ stroke: '#f97316' }}
                             />
@@ -378,12 +480,11 @@ const DashboardTab = () => {
                                 domain={['dataMin - 5', 'dataMax + 5']}
                                 tickFormatter={(value) => `$${Number(value).toFixed(0)}`}
                                 tick={{ fontSize: 11, fill: '#fbbf24' }}
-                                width={76}
+                                tickMargin={6}
+                                width={46}
                                 axisLine={{ stroke: '#fbbf24' }}
                                 tickLine={{ stroke: '#fbbf24' }}
-                                label={{ value: 'Gold $/g', angle: 90, position: 'insideRight', fill: '#fbbf24', fontSize: 11, fontWeight: 800 }}
                             />
-                            <YAxis yAxisId="error" domain={[-20, 20]} hide />
                             <Tooltip
                                 formatter={(value: number, name: string) => [formatChartValue(value, name), name]}
                                 labelFormatter={(label, payload) => {
@@ -391,24 +492,22 @@ const DashboardTab = () => {
                                     if (!point) return `${label}`;
                                     const parts = [`${point.date}`];
                                     if (point.goldPricePerGram !== null) parts.push(`Gold $${point.goldPricePerGram.toFixed(2)}/g`);
-                                    if (point.forecastError !== null) parts.push(`Error ${point.forecastError > 0 ? '+' : ''}${point.forecastError.toFixed(1)}pt`);
                                     return parts.join(' | ');
                                 }}
                             />
                             <ReferenceLine
                                 yAxisId="score"
                                 y={timingSnapshot.threshold}
-                                stroke="#0f172a"
+                                stroke="#16a34a"
                                 strokeDasharray="4 4"
-                                label={{ value: 'Accumulation threshold', position: 'insideTopRight', fill: '#0f172a', fontSize: 11, fontWeight: 800 }}
+                                label={{ value: 'Buy threshold', position: 'insideTopRight', fill: '#16a34a', fontSize: 11, fontWeight: 800 }}
                             />
-                            <Bar
-                                yAxisId="error"
-                                dataKey="forecastError"
-                                name="Forecast error"
-                                fill="#cbd5e1"
-                                radius={[4, 4, 0, 0]}
-                                opacity={0.55}
+                            <ReferenceLine
+                                yAxisId="score"
+                                y={timingSnapshot.exitThreshold}
+                                stroke="#e11d48"
+                                strokeDasharray="4 4"
+                                label={{ value: 'Exit threshold', position: 'insideBottomRight', fill: '#e11d48', fontSize: 11, fontWeight: 800 }}
                             />
                             <Line
                                 yAxisId="gold"
@@ -419,24 +518,35 @@ const DashboardTab = () => {
                                 strokeWidth={1.5}
                                 dot={false}
                             />
-                            <Line
-                                yAxisId="score"
-                                type="monotone"
-                                dataKey="predictedScore"
-                                name="Predicted score"
-                                stroke="#475569"
-                                strokeWidth={1.25}
-                                strokeDasharray="6 6"
-                                dot={false}
-                                connectNulls
-                            />
+                            {showEntryScore && (
+                                <Line
+                                    yAxisId="score"
+                                    type="monotone"
+                                    dataKey="entryScore"
+                                    name="Entry strength"
+                                    stroke="#16a34a"
+                                    strokeWidth={1}
+                                    dot={false}
+                                />
+                            )}
+                            {showExitRisk && (
+                                <Line
+                                    yAxisId="score"
+                                    type="monotone"
+                                    dataKey="exitRiskScore"
+                                    name="Exit risk"
+                                    stroke="#e11d48"
+                                    strokeWidth={1}
+                                    dot={false}
+                                />
+                            )}
                             <Line
                                 yAxisId="score"
                                 type="monotone"
                                 dataKey="score"
-                                name="Actual score"
+                                name="Final action score"
                                 stroke="#f97316"
-                                strokeWidth={1.5}
+                                strokeWidth={1.75}
                                 dot={false}
                                 activeDot={{ r: 5, fill: '#f97316', stroke: '#fff', strokeWidth: 2 }}
                             />
@@ -444,12 +554,43 @@ const DashboardTab = () => {
                     </ResponsiveContainer>
                 </div>
                 <div className="mt-4 border-t border-slate-100 pt-4">
-                    <div className="flex items-center justify-between gap-3">
-                        <p className="whitespace-nowrap text-sm font-black text-slate-900">Fed funds rate</p>
+                    <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                        <div>
+                            <p className="whitespace-nowrap text-sm font-black text-slate-900">Fed funds rate</p>
+                            <p className="mt-1 text-sm font-semibold text-teal-700">
+                                Current effective rate {timingSnapshot.fedFunds.effectiveRate === null
+                                    ? 'not available'
+                                    : `${timingSnapshot.fedFunds.effectiveRate.toFixed(2)}%`}
+                                <span className="font-medium text-slate-500"> · Latest observation {formatMonthYear(timingSnapshot.fedFunds.dataAsOfDate)}</span>
+                            </p>
+                            <a
+                                href={timingSnapshot.fedFunds.rateSourceUrl}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="mt-1 inline-block text-xs font-bold text-slate-400 underline decoration-slate-300 underline-offset-2 hover:text-teal-700"
+                            >
+                                Source: FRED FEDFUNDS
+                            </a>
+                        </div>
+                        <div className="text-left sm:text-right">
+                            <p className="text-[10px] font-black uppercase tracking-[0.16em] text-slate-400">Next FOMC decision</p>
+                            <p className="mt-1 text-sm font-black text-slate-900">
+                                {formatLongDate(timingSnapshot.fedFunds.nextDecisionDate)}
+                                {timingSnapshot.fedFunds.decisionTime ? ` · ${timingSnapshot.fedFunds.decisionTime}` : ''}
+                            </p>
+                            <a
+                                href={timingSnapshot.fedFunds.calendarSourceUrl}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="mt-1 inline-block text-xs font-bold text-slate-400 underline decoration-slate-300 underline-offset-2 hover:text-teal-700"
+                            >
+                                Source: Federal Reserve calendar
+                            </a>
+                        </div>
                     </div>
                     <div className="mt-2 h-[120px]">
                         <ResponsiveContainer width="100%" height="100%">
-                            <ComposedChart data={scoreHistoryData} margin={{ top: 8, right: 24, left: 0, bottom: 0 }}>
+                            <ComposedChart data={scoreHistoryData} margin={{ top: 8, right: 18, left: 0, bottom: 0 }}>
                                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
                                 <XAxis dataKey="date" minTickGap={24} tickFormatter={formatShortDate} tick={{ fontSize: 10, fill: '#64748b' }} />
                                 <YAxis
@@ -457,7 +598,10 @@ const DashboardTab = () => {
                                     domain={['dataMin - 0.1', 'dataMax + 0.1']}
                                     tickFormatter={(value) => `${Number(value).toFixed(1)}%`}
                                     tick={{ fontSize: 10, fill: '#0f766e' }}
-                                    width={48}
+                                    tickMargin={6}
+                                    width={46}
+                                    axisLine={{ stroke: '#0f766e' }}
+                                    tickLine={{ stroke: '#0f766e' }}
                                 />
                                 <Tooltip
                                     formatter={(value: number, name: string) => [formatChartValue(value, name), name]}
@@ -482,9 +626,9 @@ const DashboardTab = () => {
 
             <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
                 <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-                    <h4 className="text-lg font-black text-slate-950">What pushed the score?</h4>
+                    <h4 className="text-lg font-black text-slate-950">What pushed the final score?</h4>
                     <p className="mt-1 text-sm font-medium text-slate-500">
-                        A compact summary of which factors moved the final score away from the neutral 50-point baseline. The detailed signal cards below explain every factor.
+                        Entry factors push the action score up; exit-risk factors pull it down after being inverted into the final decision layer.
                     </p>
                     <div className="mt-5 grid gap-3">
                         <div className="rounded-xl border border-emerald-100 bg-emerald-50 p-4">
@@ -495,10 +639,10 @@ const DashboardTab = () => {
                             </div>
                         </div>
                         <div className="rounded-xl border border-rose-100 bg-rose-50 p-4">
-                            <p className="text-[11px] font-black uppercase tracking-[0.16em] text-rose-700">Top drag</p>
+                            <p className="text-[11px] font-black uppercase tracking-[0.16em] text-rose-700">Top exit risk</p>
                             <div className="mt-2 flex items-center justify-between gap-3">
-                                <span className="text-sm font-black text-slate-950">{topDrag.name}</span>
-                                <span className="font-mono text-sm font-black text-rose-700">{topDrag.contribution.toFixed(1)} pts</span>
+                                <span className="text-sm font-black text-slate-950">{topExitRisk.name}</span>
+                                <span className="font-mono text-sm font-black text-rose-700">Risk {topExitRisk.score.toFixed(1)}</span>
                             </div>
                         </div>
                         <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
@@ -515,7 +659,7 @@ const DashboardTab = () => {
 
                 <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
                     <h4 className="text-lg font-black text-slate-950">Method</h4>
-                    <p className="mt-1 text-sm font-medium text-slate-500">The model is intentionally small so the score remains explainable.</p>
+                    <p className="mt-1 text-sm font-medium text-slate-500">The page uses two transparent models, then resolves them into one buy / hold / exit action score.</p>
                     <ol className="mt-5 space-y-3">
                         {timingSnapshot.methodology.map((step, index) => (
                             <li key={step} className="flex gap-3 rounded-lg bg-slate-50 p-3 text-sm font-semibold leading-relaxed text-slate-600">
@@ -527,53 +671,80 @@ const DashboardTab = () => {
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
-                {timingSnapshot.signals.map(signal => {
-                    const signalTone = getSignalTone(signal.signalScore);
+            <div>
+                <div className="mb-4 flex flex-wrap gap-2">
+                    {[
+                        { id: 'entry' as const, label: 'Entry factors', score: timingSnapshot.entryScore },
+                        { id: 'exit' as const, label: 'Exit-risk factors', score: timingSnapshot.exitRiskScore },
+                    ].map(tab => (
+                        <button
+                            key={tab.id}
+                            type="button"
+                            onClick={() => setActiveSignalModel(tab.id)}
+                            className={`rounded-full border px-4 py-2 text-sm font-black transition ${
+                                activeSignalModel === tab.id
+                                    ? 'border-orange-300 bg-orange-500 text-white shadow-sm'
+                                    : 'border-slate-200 bg-white text-slate-600 hover:border-orange-200 hover:text-orange-600'
+                            }`}
+                        >
+                            {tab.label}
+                            <span className="ml-2 font-mono opacity-80">{tab.score.toFixed(1)}</span>
+                        </button>
+                    ))}
+                </div>
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+                    {activeSignals.map(signal => {
+                        const signalTone = activeSignalModel === 'entry'
+                            ? getSignalTone(signal.signalScore)
+                            : getExitSignalTone(signal.signalScore);
+                        const scoreLabel = activeSignalModel === 'entry' ? 'Signal' : 'Risk';
+                        const nowLabel = activeSignalModel === 'entry' ? 'Now' : 'Risk now';
+                        const explainer = activeSignalModel === 'entry'
+                            ? 'Signal shows the current condition; impact is the calibrated entry-model weight.'
+                            : 'Risk shows the current exit pressure; impact is this factor’s exit-risk model weight.';
 
-                    return (
-                        <div key={signal.feature} className={`rounded-2xl border bg-white p-5 shadow-sm ${signalTone.border}`}>
-                            <div>
-                                <p className="text-[11px] font-black uppercase tracking-[0.18em] text-slate-500">{signal.category}</p>
-                                <h4 className="mt-1 text-lg font-black text-slate-950">{signal.label}</h4>
+                        return (
+                            <div key={signal.feature} className={`rounded-2xl border bg-white p-5 shadow-sm ${signalTone.border}`}>
+                                <div>
+                                    <p className="text-[11px] font-black uppercase tracking-[0.18em] text-slate-500">{signal.category}</p>
+                                    <h4 className="mt-1 text-lg font-black text-slate-950">{signal.label}</h4>
+                                </div>
+                                <div className="mt-4 grid grid-cols-2 gap-2">
+                                    <div className={`rounded-xl px-3 py-2 text-center ${signalTone.badge}`}>
+                                        <p className="text-[10px] font-black uppercase tracking-wider opacity-70">{scoreLabel}</p>
+                                        <p className="mt-1 font-mono text-sm font-black">{signal.signalScore.toFixed(1)}/100</p>
+                                    </div>
+                                    <div className="rounded-xl bg-slate-100 px-3 py-2 text-center text-slate-600">
+                                        <p className="text-[10px] font-black uppercase tracking-wider opacity-70">Impact</p>
+                                        <p className="mt-1 font-mono text-sm font-black">{(signal.weight * 100).toFixed(1)}/100</p>
+                                    </div>
+                                </div>
+                                <p className="mt-3 text-xs font-semibold leading-relaxed text-slate-500">{explainer}</p>
+                                <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-3">
+                                    <div className="flex min-h-[84px] flex-col items-center justify-center rounded-lg bg-slate-50 p-3 text-center">
+                                        <p className="text-[10px] font-black uppercase tracking-wider text-slate-400">Current</p>
+                                        <p className="mt-1 font-mono text-sm font-black text-slate-900">{signal.formattedValue}</p>
+                                    </div>
+                                    <div className="flex min-h-[84px] flex-col items-center justify-center rounded-lg bg-slate-50 p-3 text-center">
+                                        <p className="text-[10px] font-black uppercase tracking-wider text-slate-400">Rule</p>
+                                        <p className="mt-1 text-sm font-black text-slate-900">{signal.direction}</p>
+                                    </div>
+                                    <div className={`flex min-h-[84px] flex-col items-center justify-center rounded-lg p-3 text-center ${signalTone.soft}`}>
+                                        <p className="text-[10px] font-black uppercase tracking-wider opacity-70">{nowLabel}</p>
+                                        <p className="mt-1 text-sm font-black">{signalTone.label}</p>
+                                    </div>
+                                </div>
+                                <div className="mt-4 h-2 rounded-full bg-slate-100">
+                                    <div
+                                        className="h-2 rounded-full"
+                                        style={{ width: `${Math.min(100, Math.max(0, signal.signalScore))}%`, backgroundColor: signalTone.bar }}
+                                    />
+                                </div>
+                                <p className="mt-4 text-sm font-medium leading-relaxed text-slate-500">{signal.detail}</p>
                             </div>
-                            <div className="mt-4 grid grid-cols-2 gap-2">
-                                <div className={`rounded-xl px-3 py-2 text-center ${signalTone.badge}`}>
-                                    <p className="text-[10px] font-black uppercase tracking-wider opacity-70">Signal</p>
-                                    <p className="mt-1 font-mono text-sm font-black">{signal.signalScore.toFixed(1)}/100</p>
-                                </div>
-                                <div className="rounded-xl bg-slate-100 px-3 py-2 text-center text-slate-600">
-                                    <p className="text-[10px] font-black uppercase tracking-wider opacity-70">Impact</p>
-                                    <p className="mt-1 font-mono text-sm font-black">{(signal.weight * 100).toFixed(1)}/100</p>
-                                </div>
-                            </div>
-                            <p className="mt-3 text-xs font-semibold leading-relaxed text-slate-500">
-                                Signal score shows current condition; impact shows this signal's model weight out of 100.
-                            </p>
-                            <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-3">
-                                <div className="flex min-h-[84px] flex-col items-center justify-center rounded-lg bg-slate-50 p-3 text-center">
-                                    <p className="text-[10px] font-black uppercase tracking-wider text-slate-400">Current</p>
-                                    <p className="mt-1 font-mono text-sm font-black text-slate-900">{signal.formattedValue}</p>
-                                </div>
-                                <div className="flex min-h-[84px] flex-col items-center justify-center rounded-lg bg-slate-50 p-3 text-center">
-                                    <p className="text-[10px] font-black uppercase tracking-wider text-slate-400">Rule</p>
-                                    <p className="mt-1 text-sm font-black text-slate-900">{signal.direction}</p>
-                                </div>
-                                <div className={`flex min-h-[84px] flex-col items-center justify-center rounded-lg p-3 text-center ${signalTone.soft}`}>
-                                    <p className="text-[10px] font-black uppercase tracking-wider opacity-70">Now</p>
-                                    <p className="mt-1 text-sm font-black">{signalTone.label}</p>
-                                </div>
-                            </div>
-                            <div className="mt-4 h-2 rounded-full bg-slate-100">
-                                <div
-                                    className="h-2 rounded-full"
-                                    style={{ width: `${Math.min(100, Math.max(0, signal.signalScore))}%`, backgroundColor: signalTone.bar }}
-                                />
-                            </div>
-                            <p className="mt-4 text-sm font-medium leading-relaxed text-slate-500">{signal.detail}</p>
-                        </div>
-                    );
-                })}
+                        );
+                    })}
+                </div>
             </div>
         </div>
     );

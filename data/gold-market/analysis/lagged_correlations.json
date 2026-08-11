@@ -2,2881 +2,2881 @@
   {
     "feature": "dfii10_value",
     "target": "target_gold_return_next_3m",
-    "n": 5537,
-    "pearson": 0.389084,
-    "spearman": 0.391382,
-    "abs_pearson": 0.389084,
-    "abs_spearman": 0.391382
+    "n": 5615,
+    "pearson": 0.355676,
+    "spearman": 0.361093,
+    "abs_pearson": 0.355676,
+    "abs_spearman": 0.361093
   },
   {
     "feature": "payems_value_change_3m",
     "target": "target_gold_return_next_3m",
-    "n": 5474,
-    "pearson": -0.174645,
-    "spearman": -0.335045,
-    "abs_pearson": 0.174645,
-    "abs_spearman": 0.335045
+    "n": 5552,
+    "pearson": -0.169296,
+    "spearman": -0.303872,
+    "abs_pearson": 0.169296,
+    "abs_spearman": 0.303872
   },
   {
     "feature": "dfii10_value",
     "target": "target_good_entry_3m",
-    "n": 5537,
-    "pearson": 0.287116,
-    "spearman": 0.298356,
-    "abs_pearson": 0.287116,
-    "abs_spearman": 0.298356
+    "n": 5615,
+    "pearson": 0.273425,
+    "spearman": 0.28399,
+    "abs_pearson": 0.273425,
+    "abs_spearman": 0.28399
   },
   {
     "feature": "payems_value_change_3m",
     "target": "target_good_entry_3m",
-    "n": 5474,
-    "pearson": -0.167112,
-    "spearman": -0.282473,
-    "abs_pearson": 0.167112,
-    "abs_spearman": 0.282473
+    "n": 5552,
+    "pearson": -0.165643,
+    "spearman": -0.267355,
+    "abs_pearson": 0.165643,
+    "abs_spearman": 0.267355
   },
   {
     "feature": "fedfunds_value",
     "target": "target_gold_return_next_3m",
-    "n": 5537,
-    "pearson": 0.307454,
-    "spearman": 0.277984,
-    "abs_pearson": 0.307454,
-    "abs_spearman": 0.277984
-  },
-  {
-    "feature": "dfii10_value",
-    "target": "target_gold_max_drawdown_next_3m",
-    "n": 5599,
-    "pearson": 0.189571,
-    "spearman": 0.236235,
-    "abs_pearson": 0.189571,
-    "abs_spearman": 0.236235
+    "n": 5615,
+    "pearson": 0.276622,
+    "spearman": 0.256273,
+    "abs_pearson": 0.276622,
+    "abs_spearman": 0.256273
   },
   {
     "feature": "payems_value_change_1m",
     "target": "target_gold_return_next_3m",
-    "n": 5516,
-    "pearson": -0.05885,
-    "spearman": -0.228659,
-    "abs_pearson": 0.05885,
-    "abs_spearman": 0.228659
+    "n": 5594,
+    "pearson": -0.057385,
+    "spearman": -0.214294,
+    "abs_pearson": 0.057385,
+    "abs_spearman": 0.214294
+  },
+  {
+    "feature": "dfii10_value",
+    "target": "target_gold_max_drawdown_next_3m",
+    "n": 5677,
+    "pearson": 0.162927,
+    "spearman": 0.213704,
+    "abs_pearson": 0.162927,
+    "abs_spearman": 0.213704
   },
   {
     "feature": "fedfunds_value",
     "target": "target_good_entry_3m",
-    "n": 5537,
-    "pearson": 0.236786,
-    "spearman": 0.220819,
-    "abs_pearson": 0.236786,
-    "abs_spearman": 0.220819
+    "n": 5615,
+    "pearson": 0.223843,
+    "spearman": 0.211316,
+    "abs_pearson": 0.223843,
+    "abs_spearman": 0.211316
   },
   {
     "feature": "dfii10_value",
     "target": "target_gold_return_next_1m",
-    "n": 5579,
-    "pearson": 0.20009,
-    "spearman": 0.220294,
-    "abs_pearson": 0.20009,
-    "abs_spearman": 0.220294
-  },
-  {
-    "feature": "fedfunds_value",
-    "target": "target_gold_max_drawdown_next_3m",
-    "n": 5599,
-    "pearson": 0.189587,
-    "spearman": 0.204107,
-    "abs_pearson": 0.189587,
-    "abs_spearman": 0.204107
-  },
-  {
-    "feature": "dfii10_value",
-    "target": "target_bad_entry_3m",
-    "n": 5599,
-    "pearson": -0.191789,
-    "spearman": -0.204035,
-    "abs_pearson": 0.191789,
-    "abs_spearman": 0.204035
+    "n": 5657,
+    "pearson": 0.183097,
+    "spearman": 0.201396,
+    "abs_pearson": 0.183097,
+    "abs_spearman": 0.201396
   },
   {
     "feature": "payems_value_change_1m",
     "target": "target_good_entry_3m",
-    "n": 5516,
-    "pearson": -0.05765,
-    "spearman": -0.199813,
-    "abs_pearson": 0.05765,
-    "abs_spearman": 0.199813
+    "n": 5594,
+    "pearson": -0.057208,
+    "spearman": -0.192955,
+    "abs_pearson": 0.057208,
+    "abs_spearman": 0.192955
+  },
+  {
+    "feature": "fedfunds_value",
+    "target": "target_gold_max_drawdown_next_3m",
+    "n": 5677,
+    "pearson": 0.164132,
+    "spearman": 0.188292,
+    "abs_pearson": 0.164132,
+    "abs_spearman": 0.188292
   },
   {
     "feature": "payems_value_change_3m",
     "target": "target_gold_return_next_1m",
-    "n": 5516,
-    "pearson": -0.057181,
-    "spearman": -0.199231,
-    "abs_pearson": 0.057181,
-    "abs_spearman": 0.199231
+    "n": 5594,
+    "pearson": -0.056627,
+    "spearman": -0.187856,
+    "abs_pearson": 0.056627,
+    "abs_spearman": 0.187856
+  },
+  {
+    "feature": "dfii10_value",
+    "target": "target_bad_entry_3m",
+    "n": 5677,
+    "pearson": -0.169253,
+    "spearman": -0.178175,
+    "abs_pearson": 0.169253,
+    "abs_spearman": 0.178175
   },
   {
     "feature": "fedfunds_value",
     "target": "target_bad_entry_3m",
-    "n": 5599,
-    "pearson": -0.19753,
-    "spearman": -0.196546,
-    "abs_pearson": 0.19753,
-    "abs_spearman": 0.196546
+    "n": 5677,
+    "pearson": -0.176665,
+    "spearman": -0.177965,
+    "abs_pearson": 0.176665,
+    "abs_spearman": 0.177965
   },
   {
-    "feature": "rrpontsyd_value_change_3m",
-    "target": "target_gold_return_next_3m",
-    "n": 5473,
-    "pearson": -0.161854,
-    "spearman": -0.175982,
-    "abs_pearson": 0.161854,
-    "abs_spearman": 0.175982
+    "feature": "t10y2y_value",
+    "target": "target_bad_entry_3m",
+    "n": 5677,
+    "pearson": 0.144051,
+    "spearman": 0.159888,
+    "abs_pearson": 0.144051,
+    "abs_spearman": 0.159888
   },
   {
     "feature": "payems_value_change_3m",
     "target": "target_gold_max_drawdown_next_3m",
-    "n": 5536,
-    "pearson": -0.053331,
-    "spearman": -0.175041,
-    "abs_pearson": 0.053331,
-    "abs_spearman": 0.175041
+    "n": 5614,
+    "pearson": -0.051749,
+    "spearman": -0.158437,
+    "abs_pearson": 0.051749,
+    "abs_spearman": 0.158437
   },
   {
-    "feature": "t10y2y_value",
-    "target": "target_bad_entry_3m",
-    "n": 5599,
-    "pearson": 0.156187,
-    "spearman": 0.170824,
-    "abs_pearson": 0.156187,
-    "abs_spearman": 0.170824
-  },
-  {
-    "feature": "fedfunds_value_change_3m",
+    "feature": "rrpontsyd_value_change_3m",
     "target": "target_gold_return_next_3m",
-    "n": 5474,
-    "pearson": -0.126676,
-    "spearman": -0.16265,
-    "abs_pearson": 0.126676,
-    "abs_spearman": 0.16265
+    "n": 5551,
+    "pearson": -0.157527,
+    "spearman": -0.156805,
+    "abs_pearson": 0.157527,
+    "abs_spearman": 0.156805
   },
   {
     "feature": "t10y2y_value",
     "target": "target_gold_return_next_3m",
-    "n": 5537,
-    "pearson": -0.13633,
-    "spearman": -0.161576,
-    "abs_pearson": 0.13633,
-    "abs_spearman": 0.161576
+    "n": 5615,
+    "pearson": -0.122075,
+    "spearman": -0.152891,
+    "abs_pearson": 0.122075,
+    "abs_spearman": 0.152891
   },
   {
     "feature": "t10y2y_value",
     "target": "target_gold_max_drawdown_next_3m",
-    "n": 5599,
-    "pearson": -0.158042,
-    "spearman": -0.161099,
-    "abs_pearson": 0.158042,
-    "abs_spearman": 0.161099
+    "n": 5677,
+    "pearson": -0.14299,
+    "spearman": -0.152771,
+    "abs_pearson": 0.14299,
+    "abs_spearman": 0.152771
   },
   {
     "feature": "rrpontsyd_value_change_3m",
     "target": "target_gold_max_drawdown_next_3m",
-    "n": 5535,
-    "pearson": -0.090222,
-    "spearman": -0.159205,
-    "abs_pearson": 0.090222,
-    "abs_spearman": 0.159205
+    "n": 5613,
+    "pearson": -0.087168,
+    "spearman": -0.147515,
+    "abs_pearson": 0.087168,
+    "abs_spearman": 0.147515
   },
   {
     "feature": "fedfunds_value_change_3m",
     "target": "target_good_entry_3m",
-    "n": 5474,
-    "pearson": -0.094933,
-    "spearman": -0.152895,
-    "abs_pearson": 0.094933,
-    "abs_spearman": 0.152895
+    "n": 5552,
+    "pearson": -0.089767,
+    "spearman": -0.141204,
+    "abs_pearson": 0.089767,
+    "abs_spearman": 0.141204
   },
   {
     "feature": "rrpontsyd_value_change_3m",
     "target": "target_bad_entry_3m",
-    "n": 5535,
-    "pearson": 0.09013,
-    "spearman": 0.152525,
-    "abs_pearson": 0.09013,
-    "abs_spearman": 0.152525
+    "n": 5613,
+    "pearson": 0.088032,
+    "spearman": 0.140658,
+    "abs_pearson": 0.088032,
+    "abs_spearman": 0.140658
   },
   {
     "feature": "gold_drawdown_from_252d_high",
     "target": "target_gold_return_next_3m",
-    "n": 5537,
-    "pearson": 0.090622,
-    "spearman": 0.13959,
-    "abs_pearson": 0.090622,
-    "abs_spearman": 0.13959
+    "n": 5615,
+    "pearson": 0.089931,
+    "spearman": 0.14052,
+    "abs_pearson": 0.089931,
+    "abs_spearman": 0.14052
   },
   {
     "feature": "t10yie_value_change_3m",
     "target": "target_gold_return_next_3m",
-    "n": 5474,
-    "pearson": -0.174343,
-    "spearman": -0.134519,
-    "abs_pearson": 0.174343,
-    "abs_spearman": 0.134519
+    "n": 5552,
+    "pearson": -0.176316,
+    "spearman": -0.139574,
+    "abs_pearson": 0.176316,
+    "abs_spearman": 0.139574
   },
   {
-    "feature": "fedfunds_value",
-    "target": "target_gold_return_next_1m",
-    "n": 5579,
-    "pearson": 0.155192,
-    "spearman": 0.134424,
-    "abs_pearson": 0.155192,
-    "abs_spearman": 0.134424
+    "feature": "fedfunds_value_change_3m",
+    "target": "target_gold_return_next_3m",
+    "n": 5552,
+    "pearson": -0.115528,
+    "spearman": -0.139203,
+    "abs_pearson": 0.115528,
+    "abs_spearman": 0.139203
   },
   {
-    "feature": "rrpontsyd_value_change_3m",
+    "feature": "gold_drawdown_from_252d_high",
+    "target": "target_bad_entry_3m",
+    "n": 5677,
+    "pearson": -0.111112,
+    "spearman": -0.136718,
+    "abs_pearson": 0.111112,
+    "abs_spearman": 0.136718
+  },
+  {
+    "feature": "gold_drawdown_from_252d_high",
     "target": "target_good_entry_3m",
-    "n": 5473,
-    "pearson": -0.144936,
-    "spearman": -0.134255,
-    "abs_pearson": 0.144936,
-    "abs_spearman": 0.134255
+    "n": 5615,
+    "pearson": 0.08383,
+    "spearman": 0.133285,
+    "abs_pearson": 0.08383,
+    "abs_spearman": 0.133285
   },
   {
     "feature": "t10y2y_value",
     "target": "target_good_entry_3m",
-    "n": 5537,
-    "pearson": -0.117936,
-    "spearman": -0.133672,
-    "abs_pearson": 0.117936,
-    "abs_spearman": 0.133672
-  },
-  {
-    "feature": "gold_drawdown_from_252d_high",
-    "target": "target_good_entry_3m",
-    "n": 5537,
-    "pearson": 0.083722,
-    "spearman": 0.133151,
-    "abs_pearson": 0.083722,
-    "abs_spearman": 0.133151
-  },
-  {
-    "feature": "payems_value_change_1m",
-    "target": "target_gold_return_next_1m",
-    "n": 5558,
-    "pearson": -0.012269,
-    "spearman": -0.126625,
-    "abs_pearson": 0.012269,
-    "abs_spearman": 0.126625
-  },
-  {
-    "feature": "fedfunds_value_change_1m",
-    "target": "target_gold_return_next_3m",
-    "n": 5516,
-    "pearson": -0.118039,
-    "spearman": -0.12511,
-    "abs_pearson": 0.118039,
-    "abs_spearman": 0.12511
-  },
-  {
-    "feature": "gold_drawdown_from_252d_high",
-    "target": "target_bad_entry_3m",
-    "n": 5599,
-    "pearson": -0.105126,
-    "spearman": -0.12395,
-    "abs_pearson": 0.105126,
-    "abs_spearman": 0.12395
-  },
-  {
-    "feature": "rrpontsyd_value_change_1m",
-    "target": "target_gold_return_next_3m",
-    "n": 5515,
-    "pearson": -0.122911,
-    "spearman": -0.123583,
-    "abs_pearson": 0.122911,
-    "abs_spearman": 0.123583
-  },
-  {
-    "feature": "t10y2y_value_change_3m",
-    "target": "target_gold_return_next_3m",
-    "n": 5474,
-    "pearson": 0.128843,
-    "spearman": 0.122657,
-    "abs_pearson": 0.128843,
-    "abs_spearman": 0.122657
-  },
-  {
-    "feature": "t10y2y_value_change_3m",
-    "target": "target_good_entry_3m",
-    "n": 5474,
-    "pearson": 0.105073,
-    "spearman": 0.122352,
-    "abs_pearson": 0.105073,
-    "abs_spearman": 0.122352
-  },
-  {
-    "feature": "central_bank_gold_reserves_top15_tonnes",
-    "target": "target_gold_max_drawdown_next_3m",
-    "n": 5599,
-    "pearson": 0.178236,
-    "spearman": 0.119597,
-    "abs_pearson": 0.178236,
-    "abs_spearman": 0.119597
-  },
-  {
-    "feature": "days_since_last_fomc",
-    "target": "target_gold_return_next_1m",
-    "n": 5571,
-    "pearson": -0.107349,
-    "spearman": -0.118909,
-    "abs_pearson": 0.107349,
-    "abs_spearman": 0.118909
-  },
-  {
-    "feature": "t10yie_value_change_1m",
-    "target": "target_gold_return_next_3m",
-    "n": 5516,
-    "pearson": -0.132348,
-    "spearman": -0.118641,
-    "abs_pearson": 0.132348,
-    "abs_spearman": 0.118641
-  },
-  {
-    "feature": "t10yie_value_change_3m",
-    "target": "target_gold_return_next_1m",
-    "n": 5516,
-    "pearson": -0.118523,
-    "spearman": -0.1184,
-    "abs_pearson": 0.118523,
-    "abs_spearman": 0.1184
-  },
-  {
-    "feature": "rrpontsyd_value_change_3m",
-    "target": "target_gold_return_next_1m",
-    "n": 5515,
-    "pearson": -0.093405,
-    "spearman": -0.118315,
-    "abs_pearson": 0.093405,
-    "abs_spearman": 0.118315
-  },
-  {
-    "feature": "fedfunds_value_change_3m",
-    "target": "target_gold_return_next_1m",
-    "n": 5516,
-    "pearson": -0.07337,
-    "spearman": -0.116681,
-    "abs_pearson": 0.07337,
-    "abs_spearman": 0.116681
-  },
-  {
-    "feature": "central_bank_gold_reserves_top15_tonnes",
-    "target": "target_bad_entry_3m",
-    "n": 5599,
-    "pearson": -0.136782,
-    "spearman": -0.116502,
-    "abs_pearson": 0.136782,
-    "abs_spearman": 0.116502
-  },
-  {
-    "feature": "t10yie_value_change_1m",
-    "target": "target_good_entry_3m",
-    "n": 5516,
-    "pearson": -0.123833,
-    "spearman": -0.11546,
-    "abs_pearson": 0.123833,
-    "abs_spearman": 0.11546
-  },
-  {
-    "feature": "tnx_close_change_3m",
-    "target": "target_gold_return_next_3m",
-    "n": 5474,
-    "pearson": -0.117162,
-    "spearman": -0.109705,
-    "abs_pearson": 0.117162,
-    "abs_spearman": 0.109705
-  },
-  {
-    "feature": "tnx_return_3m",
-    "target": "target_gold_return_next_3m",
-    "n": 5474,
-    "pearson": -0.133515,
-    "spearman": -0.10818,
-    "abs_pearson": 0.133515,
-    "abs_spearman": 0.10818
-  },
-  {
-    "feature": "days_since_last_fomc",
-    "target": "target_gold_max_drawdown_next_3m",
-    "n": 5591,
-    "pearson": -0.109314,
-    "spearman": -0.105061,
-    "abs_pearson": 0.109314,
-    "abs_spearman": 0.105061
-  },
-  {
-    "feature": "payems_value",
-    "target": "target_gold_max_drawdown_next_3m",
-    "n": 5599,
-    "pearson": 0.152033,
-    "spearman": 0.104963,
-    "abs_pearson": 0.152033,
-    "abs_spearman": 0.104963
-  },
-  {
-    "feature": "fedfunds_value_change_1m",
-    "target": "target_good_entry_3m",
-    "n": 5516,
-    "pearson": -0.069992,
-    "spearman": -0.103753,
-    "abs_pearson": 0.069992,
-    "abs_spearman": 0.103753
+    "n": 5615,
+    "pearson": -0.112197,
+    "spearman": -0.130925,
+    "abs_pearson": 0.112197,
+    "abs_spearman": 0.130925
   },
   {
     "feature": "wti_crude_oil_return_3m",
     "target": "target_gold_return_next_3m",
-    "n": 5474,
-    "pearson": -0.114868,
-    "spearman": -0.101553,
-    "abs_pearson": 0.114868,
-    "abs_spearman": 0.101553
+    "n": 5552,
+    "pearson": -0.15404,
+    "spearman": -0.12531,
+    "abs_pearson": 0.15404,
+    "abs_spearman": 0.12531
+  },
+  {
+    "feature": "fedfunds_value",
+    "target": "target_gold_return_next_1m",
+    "n": 5657,
+    "pearson": 0.141392,
+    "spearman": 0.124838,
+    "abs_pearson": 0.141392,
+    "abs_spearman": 0.124838
+  },
+  {
+    "feature": "rrpontsyd_value_change_3m",
+    "target": "target_good_entry_3m",
+    "n": 5551,
+    "pearson": -0.143908,
+    "spearman": -0.124308,
+    "abs_pearson": 0.143908,
+    "abs_spearman": 0.124308
+  },
+  {
+    "feature": "t10yie_value_change_1m",
+    "target": "target_gold_return_next_3m",
+    "n": 5594,
+    "pearson": -0.13435,
+    "spearman": -0.122825,
+    "abs_pearson": 0.13435,
+    "abs_spearman": 0.122825
+  },
+  {
+    "feature": "t10y2y_value_change_3m",
+    "target": "target_good_entry_3m",
+    "n": 5552,
+    "pearson": 0.105151,
+    "spearman": 0.121634,
+    "abs_pearson": 0.105151,
+    "abs_spearman": 0.121634
+  },
+  {
+    "feature": "t10y2y_value_change_3m",
+    "target": "target_gold_return_next_3m",
+    "n": 5552,
+    "pearson": 0.128721,
+    "spearman": 0.121327,
+    "abs_pearson": 0.128721,
+    "abs_spearman": 0.121327
+  },
+  {
+    "feature": "t10yie_value_change_3m",
+    "target": "target_gold_return_next_1m",
+    "n": 5594,
+    "pearson": -0.120536,
+    "spearman": -0.121275,
+    "abs_pearson": 0.120536,
+    "abs_spearman": 0.121275
+  },
+  {
+    "feature": "t10yie_value_change_1m",
+    "target": "target_good_entry_3m",
+    "n": 5594,
+    "pearson": -0.126023,
+    "spearman": -0.118725,
+    "abs_pearson": 0.126023,
+    "abs_spearman": 0.118725
+  },
+  {
+    "feature": "rrpontsyd_value_change_3m",
+    "target": "target_gold_return_next_1m",
+    "n": 5593,
+    "pearson": -0.09229,
+    "spearman": -0.116054,
+    "abs_pearson": 0.09229,
+    "abs_spearman": 0.116054
+  },
+  {
+    "feature": "payems_value_change_1m",
+    "target": "target_gold_return_next_1m",
+    "n": 5636,
+    "pearson": -0.011782,
+    "spearman": -0.115322,
+    "abs_pearson": 0.011782,
+    "abs_spearman": 0.115322
+  },
+  {
+    "feature": "tnx_close_change_3m",
+    "target": "target_gold_return_next_3m",
+    "n": 5552,
+    "pearson": -0.119743,
+    "spearman": -0.114622,
+    "abs_pearson": 0.119743,
+    "abs_spearman": 0.114622
+  },
+  {
+    "feature": "fedfunds_value_change_1m",
+    "target": "target_gold_return_next_3m",
+    "n": 5594,
+    "pearson": -0.113042,
+    "spearman": -0.113298,
+    "abs_pearson": 0.113042,
+    "abs_spearman": 0.113298
+  },
+  {
+    "feature": "tnx_return_3m",
+    "target": "target_gold_return_next_3m",
+    "n": 5552,
+    "pearson": -0.13126,
+    "spearman": -0.11167,
+    "abs_pearson": 0.13126,
+    "abs_spearman": 0.11167
+  },
+  {
+    "feature": "days_since_last_fomc",
+    "target": "target_gold_return_next_1m",
+    "n": 5649,
+    "pearson": -0.098065,
+    "spearman": -0.110633,
+    "abs_pearson": 0.098065,
+    "abs_spearman": 0.110633
+  },
+  {
+    "feature": "rrpontsyd_value_change_1m",
+    "target": "target_gold_return_next_3m",
+    "n": 5593,
+    "pearson": -0.119645,
+    "spearman": -0.110143,
+    "abs_pearson": 0.119645,
+    "abs_spearman": 0.110143
+  },
+  {
+    "feature": "fedfunds_value_change_3m",
+    "target": "target_gold_return_next_1m",
+    "n": 5594,
+    "pearson": -0.071592,
+    "spearman": -0.109205,
+    "abs_pearson": 0.071592,
+    "abs_spearman": 0.109205
+  },
+  {
+    "feature": "t10yie_value_change_3m",
+    "target": "target_gold_max_drawdown_next_3m",
+    "n": 5614,
+    "pearson": -0.031026,
+    "spearman": -0.103496,
+    "abs_pearson": 0.031026,
+    "abs_spearman": 0.103496
   },
   {
     "feature": "t10yie_value_change_3m",
     "target": "target_good_entry_3m",
-    "n": 5474,
-    "pearson": -0.12719,
-    "spearman": -0.097684,
-    "abs_pearson": 0.12719,
-    "abs_spearman": 0.097684
-  },
-  {
-    "feature": "days_since_last_fomc",
-    "target": "target_bad_entry_3m",
-    "n": 5591,
-    "pearson": 0.105825,
-    "spearman": 0.09758,
-    "abs_pearson": 0.105825,
-    "abs_spearman": 0.09758
-  },
-  {
-    "feature": "payems_value_change_3m",
-    "target": "target_bad_entry_3m",
-    "n": 5536,
-    "pearson": 0.050004,
-    "spearman": 0.097043,
-    "abs_pearson": 0.050004,
-    "abs_spearman": 0.097043
-  },
-  {
-    "feature": "payems_value",
-    "target": "target_bad_entry_3m",
-    "n": 5599,
-    "pearson": -0.127922,
-    "spearman": -0.094626,
-    "abs_pearson": 0.127922,
-    "abs_spearman": 0.094626
-  },
-  {
-    "feature": "days_since_last_fomc",
-    "target": "target_gold_return_next_3m",
-    "n": 5529,
-    "pearson": -0.079465,
-    "spearman": -0.093869,
-    "abs_pearson": 0.079465,
-    "abs_spearman": 0.093869
-  },
-  {
-    "feature": "rrpontsyd_value_change_1m",
-    "target": "target_bad_entry_3m",
-    "n": 5577,
-    "pearson": 0.094847,
-    "spearman": 0.093724,
-    "abs_pearson": 0.094847,
-    "abs_spearman": 0.093724
-  },
-  {
-    "feature": "days_since_last_fomc",
-    "target": "target_good_entry_3m",
-    "n": 5529,
-    "pearson": -0.097585,
-    "spearman": -0.092663,
-    "abs_pearson": 0.097585,
-    "abs_spearman": 0.092663
-  },
-  {
-    "feature": "sp500_return_3m",
-    "target": "target_bad_entry_3m",
-    "n": 5536,
-    "pearson": -0.096012,
-    "spearman": -0.092563,
-    "abs_pearson": 0.096012,
-    "abs_spearman": 0.092563
+    "n": 5552,
+    "pearson": -0.129246,
+    "spearman": -0.100721,
+    "abs_pearson": 0.129246,
+    "abs_spearman": 0.100721
   },
   {
     "feature": "vix_percentile_1y",
     "target": "target_bad_entry_3m",
-    "n": 5348,
-    "pearson": 0.090092,
-    "spearman": 0.091377,
-    "abs_pearson": 0.090092,
-    "abs_spearman": 0.091377
-  },
-  {
-    "feature": "t10yie_value_change_3m",
-    "target": "target_gold_max_drawdown_next_3m",
-    "n": 5536,
-    "pearson": -0.02114,
-    "spearman": -0.09085,
-    "abs_pearson": 0.02114,
-    "abs_spearman": 0.09085
-  },
-  {
-    "feature": "gdpc1_value",
-    "target": "target_gold_max_drawdown_next_3m",
-    "n": 5599,
-    "pearson": 0.146137,
-    "spearman": 0.090156,
-    "abs_pearson": 0.146137,
-    "abs_spearman": 0.090156
+    "n": 5426,
+    "pearson": 0.099336,
+    "spearman": 0.100559,
+    "abs_pearson": 0.099336,
+    "abs_spearman": 0.100559
   },
   {
     "feature": "gold_drawdown_from_252d_high",
     "target": "target_gold_max_drawdown_next_3m",
-    "n": 5599,
-    "pearson": 0.087903,
-    "spearman": 0.089691,
-    "abs_pearson": 0.087903,
-    "abs_spearman": 0.089691
+    "n": 5677,
+    "pearson": 0.091126,
+    "spearman": 0.100364,
+    "abs_pearson": 0.091126,
+    "abs_spearman": 0.100364
   },
   {
-    "feature": "pcepi_value",
-    "target": "target_gold_max_drawdown_next_3m",
-    "n": 5599,
-    "pearson": 0.119943,
-    "spearman": 0.088011,
-    "abs_pearson": 0.119943,
-    "abs_spearman": 0.088011
-  },
-  {
-    "feature": "m2sl_value",
-    "target": "target_gold_max_drawdown_next_3m",
-    "n": 5599,
-    "pearson": 0.126966,
-    "spearman": 0.085369,
-    "abs_pearson": 0.126966,
-    "abs_spearman": 0.085369
-  },
-  {
-    "feature": "tnx_close_change_3m",
-    "target": "target_good_entry_3m",
-    "n": 5474,
-    "pearson": -0.084085,
-    "spearman": -0.085035,
-    "abs_pearson": 0.084085,
-    "abs_spearman": 0.085035
-  },
-  {
-    "feature": "cpiaucsl_value",
-    "target": "target_gold_max_drawdown_next_3m",
-    "n": 5599,
-    "pearson": 0.120056,
-    "spearman": 0.08406,
-    "abs_pearson": 0.120056,
-    "abs_spearman": 0.08406
-  },
-  {
-    "feature": "tnx_return_1m",
-    "target": "target_good_entry_3m",
-    "n": 5516,
-    "pearson": -0.087625,
-    "spearman": -0.083659,
-    "abs_pearson": 0.087625,
-    "abs_spearman": 0.083659
-  },
-  {
-    "feature": "tnx_return_1m",
-    "target": "target_gold_return_next_3m",
-    "n": 5516,
-    "pearson": -0.093132,
-    "spearman": -0.083527,
-    "abs_pearson": 0.093132,
-    "abs_spearman": 0.083527
-  },
-  {
-    "feature": "gld_return_3m",
-    "target": "target_gold_return_next_3m",
-    "n": 5253,
-    "pearson": 0.083681,
-    "spearman": 0.083233,
-    "abs_pearson": 0.083681,
-    "abs_spearman": 0.083233
-  },
-  {
-    "feature": "iau_return_3m",
+    "feature": "wti_crude_oil_return_3m",
     "target": "target_bad_entry_3m",
-    "n": 5269,
-    "pearson": -0.041479,
-    "spearman": -0.081236,
-    "abs_pearson": 0.041479,
-    "abs_spearman": 0.081236
+    "n": 5614,
+    "pearson": 0.093654,
+    "spearman": 0.098929,
+    "abs_pearson": 0.093654,
+    "abs_spearman": 0.098929
   },
   {
-    "feature": "iau_return_3m",
-    "target": "target_gold_return_next_3m",
-    "n": 5207,
-    "pearson": 0.081821,
-    "spearman": 0.080002,
-    "abs_pearson": 0.081821,
-    "abs_spearman": 0.080002
-  },
-  {
-    "feature": "tnx_close_change_1m",
+    "feature": "fedfunds_value_change_1m",
     "target": "target_good_entry_3m",
-    "n": 5516,
-    "pearson": -0.082126,
-    "spearman": -0.079683,
-    "abs_pearson": 0.082126,
-    "abs_spearman": 0.079683
+    "n": 5594,
+    "pearson": -0.068259,
+    "spearman": -0.098001,
+    "abs_pearson": 0.068259,
+    "abs_spearman": 0.098001
   },
   {
     "feature": "rrpontsyd_value",
     "target": "target_bad_entry_3m",
-    "n": 5598,
-    "pearson": -0.05342,
-    "spearman": -0.079383,
-    "abs_pearson": 0.05342,
-    "abs_spearman": 0.079383
+    "n": 5676,
+    "pearson": -0.059798,
+    "spearman": -0.093584,
+    "abs_pearson": 0.059798,
+    "abs_spearman": 0.093584
   },
   {
-    "feature": "gld_return_3m",
+    "feature": "rrpontsyd_value_change_1m",
     "target": "target_bad_entry_3m",
-    "n": 5315,
-    "pearson": -0.038663,
-    "spearman": -0.078791,
-    "abs_pearson": 0.038663,
-    "abs_spearman": 0.078791
+    "n": 5655,
+    "pearson": 0.093475,
+    "spearman": 0.093294,
+    "abs_pearson": 0.093475,
+    "abs_spearman": 0.093294
   },
   {
-    "feature": "gdpc1_value",
+    "feature": "sp500_return_3m",
     "target": "target_bad_entry_3m",
-    "n": 5599,
-    "pearson": -0.1131,
-    "spearman": -0.078442,
-    "abs_pearson": 0.1131,
-    "abs_spearman": 0.078442
-  },
-  {
-    "feature": "tnx_close_change_1m",
-    "target": "target_gold_return_next_3m",
-    "n": 5516,
-    "pearson": -0.088913,
-    "spearman": -0.078344,
-    "abs_pearson": 0.088913,
-    "abs_spearman": 0.078344
-  },
-  {
-    "feature": "tnx_return_3m",
-    "target": "target_good_entry_3m",
-    "n": 5474,
-    "pearson": -0.096831,
-    "spearman": -0.077963,
-    "abs_pearson": 0.096831,
-    "abs_spearman": 0.077963
+    "n": 5614,
+    "pearson": -0.09536,
+    "spearman": -0.092367,
+    "abs_pearson": 0.09536,
+    "abs_spearman": 0.092367
   },
   {
     "feature": "wti_crude_oil_return_1m",
     "target": "target_gold_return_next_3m",
-    "n": 5516,
-    "pearson": -0.079475,
-    "spearman": -0.076703,
-    "abs_pearson": 0.079475,
-    "abs_spearman": 0.076703
+    "n": 5594,
+    "pearson": -0.104964,
+    "spearman": -0.092039,
+    "abs_pearson": 0.104964,
+    "abs_spearman": 0.092039
   },
   {
-    "feature": "rrpontsyd_value_change_1m",
-    "target": "target_good_entry_3m",
-    "n": 5515,
-    "pearson": -0.07789,
-    "spearman": -0.076672,
-    "abs_pearson": 0.07789,
-    "abs_spearman": 0.076672
-  },
-  {
-    "feature": "pcepi_value",
-    "target": "target_bad_entry_3m",
-    "n": 5599,
-    "pearson": -0.091507,
-    "spearman": -0.075944,
-    "abs_pearson": 0.091507,
-    "abs_spearman": 0.075944
-  },
-  {
-    "feature": "gold_futures_return_3m",
-    "target": "target_gold_return_next_3m",
-    "n": 5474,
-    "pearson": 0.077687,
-    "spearman": 0.074164,
-    "abs_pearson": 0.077687,
-    "abs_spearman": 0.074164
-  },
-  {
-    "feature": "rrpontsyd_value_change_1m",
+    "feature": "days_since_last_fomc",
     "target": "target_gold_max_drawdown_next_3m",
-    "n": 5577,
-    "pearson": -0.06776,
-    "spearman": -0.074114,
-    "abs_pearson": 0.06776,
-    "abs_spearman": 0.074114
+    "n": 5669,
+    "pearson": -0.091896,
+    "spearman": -0.091862,
+    "abs_pearson": 0.091896,
+    "abs_spearman": 0.091862
+  },
+  {
+    "feature": "central_bank_gold_reserves_top15_tonnes",
+    "target": "target_gold_max_drawdown_next_3m",
+    "n": 5677,
+    "pearson": 0.138052,
+    "spearman": 0.091793,
+    "abs_pearson": 0.138052,
+    "abs_spearman": 0.091793
+  },
+  {
+    "feature": "tnx_close_change_3m",
+    "target": "target_good_entry_3m",
+    "n": 5552,
+    "pearson": -0.086458,
+    "spearman": -0.087903,
+    "abs_pearson": 0.086458,
+    "abs_spearman": 0.087903
+  },
+  {
+    "feature": "wti_crude_oil_return_3m",
+    "target": "target_gold_max_drawdown_next_3m",
+    "n": 5614,
+    "pearson": -0.105992,
+    "spearman": -0.087581,
+    "abs_pearson": 0.105992,
+    "abs_spearman": 0.087581
+  },
+  {
+    "feature": "iau_return_3m",
+    "target": "target_bad_entry_3m",
+    "n": 5347,
+    "pearson": -0.049503,
+    "spearman": -0.087267,
+    "abs_pearson": 0.049503,
+    "abs_spearman": 0.087267
+  },
+  {
+    "feature": "tnx_return_1m",
+    "target": "target_gold_return_next_3m",
+    "n": 5594,
+    "pearson": -0.09199,
+    "spearman": -0.085131,
+    "abs_pearson": 0.09199,
+    "abs_spearman": 0.085131
+  },
+  {
+    "feature": "tnx_return_1m",
+    "target": "target_good_entry_3m",
+    "n": 5594,
+    "pearson": -0.087905,
+    "spearman": -0.085087,
+    "abs_pearson": 0.087905,
+    "abs_spearman": 0.085087
+  },
+  {
+    "feature": "gld_return_3m",
+    "target": "target_bad_entry_3m",
+    "n": 5393,
+    "pearson": -0.046848,
+    "spearman": -0.08492,
+    "abs_pearson": 0.046848,
+    "abs_spearman": 0.08492
   },
   {
     "feature": "wti_crude_oil_return_3m",
     "target": "target_gold_return_next_1m",
-    "n": 5516,
-    "pearson": -0.0837,
-    "spearman": -0.073603,
-    "abs_pearson": 0.0837,
-    "abs_spearman": 0.073603
+    "n": 5594,
+    "pearson": -0.098981,
+    "spearman": -0.084458,
+    "abs_pearson": 0.098981,
+    "abs_spearman": 0.084458
   },
   {
-    "feature": "m2sl_value",
+    "feature": "central_bank_gold_reserves_top15_tonnes",
     "target": "target_bad_entry_3m",
-    "n": 5599,
-    "pearson": -0.092839,
-    "spearman": -0.073556,
-    "abs_pearson": 0.092839,
-    "abs_spearman": 0.073556
+    "n": 5677,
+    "pearson": -0.104825,
+    "spearman": -0.083698,
+    "abs_pearson": 0.104825,
+    "abs_spearman": 0.083698
   },
   {
-    "feature": "silver_futures_return_3m",
-    "target": "target_gold_return_next_1m",
-    "n": 5516,
-    "pearson": -0.041602,
-    "spearman": -0.072033,
-    "abs_pearson": 0.041602,
-    "abs_spearman": 0.072033
-  },
-  {
-    "feature": "tnx_return_3m",
-    "target": "target_bad_entry_3m",
-    "n": 5536,
-    "pearson": 0.07253,
-    "spearman": 0.071939,
-    "abs_pearson": 0.07253,
-    "abs_spearman": 0.071939
-  },
-  {
-    "feature": "cpiaucsl_value",
-    "target": "target_bad_entry_3m",
-    "n": 5599,
-    "pearson": -0.092127,
-    "spearman": -0.071789,
-    "abs_pearson": 0.092127,
-    "abs_spearman": 0.071789
-  },
-  {
-    "feature": "payems_value_change_1m",
-    "target": "target_gold_max_drawdown_next_3m",
-    "n": 5578,
-    "pearson": -0.011891,
-    "spearman": -0.071352,
-    "abs_pearson": 0.011891,
-    "abs_spearman": 0.071352
-  },
-  {
-    "feature": "sp500_return_3m",
+    "feature": "days_since_last_fomc",
     "target": "target_good_entry_3m",
-    "n": 5474,
-    "pearson": 0.034971,
-    "spearman": 0.070792,
-    "abs_pearson": 0.034971,
-    "abs_spearman": 0.070792
+    "n": 5607,
+    "pearson": -0.088472,
+    "spearman": -0.083304,
+    "abs_pearson": 0.088472,
+    "abs_spearman": 0.083304
+  },
+  {
+    "feature": "days_since_last_fomc",
+    "target": "target_bad_entry_3m",
+    "n": 5669,
+    "pearson": 0.0902,
+    "spearman": 0.081664,
+    "abs_pearson": 0.0902,
+    "abs_spearman": 0.081664
+  },
+  {
+    "feature": "tnx_close_change_1m",
+    "target": "target_good_entry_3m",
+    "n": 5594,
+    "pearson": -0.083624,
+    "spearman": -0.081484,
+    "abs_pearson": 0.083624,
+    "abs_spearman": 0.081484
   },
   {
     "feature": "vix_percentile_1y",
     "target": "target_gold_max_drawdown_next_3m",
-    "n": 5348,
-    "pearson": -0.076174,
-    "spearman": -0.070406,
-    "abs_pearson": 0.076174,
-    "abs_spearman": 0.070406
+    "n": 5426,
+    "pearson": -0.088934,
+    "spearman": -0.080878,
+    "abs_pearson": 0.088934,
+    "abs_spearman": 0.080878
   },
   {
-    "feature": "nasdaq_return_3m",
-    "target": "target_good_entry_3m",
-    "n": 5474,
-    "pearson": 0.045561,
-    "spearman": 0.068513,
-    "abs_pearson": 0.045561,
-    "abs_spearman": 0.068513
-  },
-  {
-    "feature": "tnx_return_1m",
-    "target": "target_gold_return_next_1m",
-    "n": 5558,
-    "pearson": -0.088699,
-    "spearman": -0.068049,
-    "abs_pearson": 0.088699,
-    "abs_spearman": 0.068049
-  },
-  {
-    "feature": "payems_value",
+    "feature": "tnx_close_change_1m",
     "target": "target_gold_return_next_3m",
-    "n": 5537,
-    "pearson": 0.122963,
-    "spearman": 0.067867,
-    "abs_pearson": 0.122963,
-    "abs_spearman": 0.067867
+    "n": 5594,
+    "pearson": -0.09016,
+    "spearman": -0.080753,
+    "abs_pearson": 0.09016,
+    "abs_spearman": 0.080753
+  },
+  {
+    "feature": "tnx_return_3m",
+    "target": "target_good_entry_3m",
+    "n": 5552,
+    "pearson": -0.096926,
+    "spearman": -0.080094,
+    "abs_pearson": 0.096926,
+    "abs_spearman": 0.080094
+  },
+  {
+    "feature": "tnx_return_3m",
+    "target": "target_bad_entry_3m",
+    "n": 5614,
+    "pearson": 0.074925,
+    "spearman": 0.080091,
+    "abs_pearson": 0.074925,
+    "abs_spearman": 0.080091
+  },
+  {
+    "feature": "payems_value_change_3m",
+    "target": "target_bad_entry_3m",
+    "n": 5614,
+    "pearson": 0.049017,
+    "spearman": 0.079948,
+    "abs_pearson": 0.049017,
+    "abs_spearman": 0.079948
   },
   {
     "feature": "t10yie_value_change_3m",
     "target": "target_bad_entry_3m",
-    "n": 5536,
-    "pearson": 0.031114,
-    "spearman": 0.067503,
-    "abs_pearson": 0.031114,
-    "abs_spearman": 0.067503
+    "n": 5614,
+    "pearson": 0.038909,
+    "spearman": 0.079653,
+    "abs_pearson": 0.038909,
+    "abs_spearman": 0.079653
   },
   {
-    "feature": "t10y2y_value",
-    "target": "target_gold_return_next_1m",
-    "n": 5579,
-    "pearson": -0.070896,
-    "spearman": -0.067202,
-    "abs_pearson": 0.070896,
-    "abs_spearman": 0.067202
+    "feature": "wti_crude_oil_return_3m",
+    "target": "target_good_entry_3m",
+    "n": 5552,
+    "pearson": -0.085974,
+    "spearman": -0.078739,
+    "abs_pearson": 0.085974,
+    "abs_spearman": 0.078739
   },
   {
-    "feature": "gold_futures_return_3m",
+    "feature": "days_since_last_fomc",
+    "target": "target_gold_return_next_3m",
+    "n": 5607,
+    "pearson": -0.062461,
+    "spearman": -0.077227,
+    "abs_pearson": 0.062461,
+    "abs_spearman": 0.077227
+  },
+  {
+    "feature": "t10yie_value",
     "target": "target_bad_entry_3m",
-    "n": 5536,
-    "pearson": -0.02842,
-    "spearman": -0.067192,
-    "abs_pearson": 0.02842,
-    "abs_spearman": 0.067192
+    "n": 5677,
+    "pearson": 0.066553,
+    "spearman": 0.076861,
+    "abs_pearson": 0.066553,
+    "abs_spearman": 0.076861
+  },
+  {
+    "feature": "payems_value",
+    "target": "target_gold_max_drawdown_next_3m",
+    "n": 5677,
+    "pearson": 0.108357,
+    "spearman": 0.076432,
+    "abs_pearson": 0.108357,
+    "abs_spearman": 0.076432
   },
   {
     "feature": "days_to_next_fomc",
     "target": "target_gold_return_next_1m",
-    "n": 5579,
-    "pearson": 0.060743,
-    "spearman": 0.066912,
-    "abs_pearson": 0.060743,
-    "abs_spearman": 0.066912
+    "n": 5657,
+    "pearson": 0.06933,
+    "spearman": 0.075268,
+    "abs_pearson": 0.06933,
+    "abs_spearman": 0.075268
   },
   {
-    "feature": "wti_crude_oil_return_3m",
+    "feature": "sp500_return_3m",
     "target": "target_good_entry_3m",
-    "n": 5474,
-    "pearson": -0.069419,
-    "spearman": -0.06689,
-    "abs_pearson": 0.069419,
-    "abs_spearman": 0.06689
+    "n": 5552,
+    "pearson": 0.037367,
+    "spearman": 0.075076,
+    "abs_pearson": 0.037367,
+    "abs_spearman": 0.075076
+  },
+  {
+    "feature": "rrpontsyd_value_change_1m",
+    "target": "target_gold_max_drawdown_next_3m",
+    "n": 5655,
+    "pearson": -0.066238,
+    "spearman": -0.074291,
+    "abs_pearson": 0.066238,
+    "abs_spearman": 0.074291
+  },
+  {
+    "feature": "nasdaq_return_3m",
+    "target": "target_good_entry_3m",
+    "n": 5552,
+    "pearson": 0.049711,
+    "spearman": 0.074189,
+    "abs_pearson": 0.049711,
+    "abs_spearman": 0.074189
   },
   {
     "feature": "tnx_close_change_3m",
     "target": "target_gold_return_next_1m",
-    "n": 5516,
-    "pearson": -0.080297,
-    "spearman": -0.066166,
-    "abs_pearson": 0.080297,
-    "abs_spearman": 0.066166
+    "n": 5594,
+    "pearson": -0.087124,
+    "spearman": -0.073641,
+    "abs_pearson": 0.087124,
+    "abs_spearman": 0.073641
   },
   {
-    "feature": "wti_crude_oil_return_3m",
+    "feature": "gold_futures_return_3m",
     "target": "target_bad_entry_3m",
-    "n": 5536,
-    "pearson": 0.042542,
-    "spearman": 0.065811,
-    "abs_pearson": 0.042542,
-    "abs_spearman": 0.065811
+    "n": 5614,
+    "pearson": -0.036446,
+    "spearman": -0.073502,
+    "abs_pearson": 0.036446,
+    "abs_spearman": 0.073502
   },
   {
-    "feature": "sp500_return_1m",
-    "target": "target_gold_max_drawdown_next_3m",
-    "n": 5578,
-    "pearson": 0.101825,
-    "spearman": 0.065647,
-    "abs_pearson": 0.101825,
-    "abs_spearman": 0.065647
+    "feature": "tnx_close_change_3m",
+    "target": "target_bad_entry_3m",
+    "n": 5614,
+    "pearson": 0.057953,
+    "spearman": 0.072194,
+    "abs_pearson": 0.057953,
+    "abs_spearman": 0.072194
   },
   {
     "feature": "t10y2y_value_change_3m",
     "target": "target_gold_return_next_1m",
-    "n": 5516,
-    "pearson": 0.045661,
-    "spearman": 0.065402,
-    "abs_pearson": 0.045661,
-    "abs_spearman": 0.065402
+    "n": 5594,
+    "pearson": 0.05034,
+    "spearman": 0.070702,
+    "abs_pearson": 0.05034,
+    "abs_spearman": 0.070702
   },
   {
     "feature": "tnx_return_3m",
     "target": "target_gold_return_next_1m",
-    "n": 5516,
-    "pearson": -0.074937,
-    "spearman": -0.064512,
-    "abs_pearson": 0.074937,
-    "abs_spearman": 0.064512
-  },
-  {
-    "feature": "sp500_return_3m",
-    "target": "target_gold_max_drawdown_next_3m",
-    "n": 5536,
-    "pearson": 0.104245,
-    "spearman": 0.064123,
-    "abs_pearson": 0.104245,
-    "abs_spearman": 0.064123
-  },
-  {
-    "feature": "tnx_return_3m",
-    "target": "target_gold_max_drawdown_next_3m",
-    "n": 5536,
-    "pearson": -0.064276,
-    "spearman": -0.0623,
-    "abs_pearson": 0.064276,
-    "abs_spearman": 0.0623
-  },
-  {
-    "feature": "nasdaq_return_3m",
-    "target": "target_bad_entry_3m",
-    "n": 5536,
-    "pearson": -0.070841,
-    "spearman": -0.06172,
-    "abs_pearson": 0.070841,
-    "abs_spearman": 0.06172
-  },
-  {
-    "feature": "tnx_close_change_3m",
-    "target": "target_bad_entry_3m",
-    "n": 5536,
-    "pearson": 0.049535,
-    "spearman": 0.061372,
-    "abs_pearson": 0.049535,
-    "abs_spearman": 0.061372
-  },
-  {
-    "feature": "sp500_return_1m",
-    "target": "target_bad_entry_3m",
-    "n": 5578,
-    "pearson": -0.068244,
-    "spearman": -0.061185,
-    "abs_pearson": 0.068244,
-    "abs_spearman": 0.061185
+    "n": 5594,
+    "pearson": -0.077434,
+    "spearman": -0.070373,
+    "abs_pearson": 0.077434,
+    "abs_spearman": 0.070373
   },
   {
     "feature": "tnx_return_1m",
-    "target": "target_gold_max_drawdown_next_3m",
-    "n": 5578,
-    "pearson": -0.042755,
-    "spearman": -0.059933,
-    "abs_pearson": 0.042755,
-    "abs_spearman": 0.059933
+    "target": "target_gold_return_next_1m",
+    "n": 5636,
+    "pearson": -0.089172,
+    "spearman": -0.069912,
+    "abs_pearson": 0.089172,
+    "abs_spearman": 0.069912
   },
   {
-    "feature": "t10yie_value",
-    "target": "target_bad_entry_3m",
-    "n": 5599,
-    "pearson": 0.0545,
-    "spearman": 0.059609,
-    "abs_pearson": 0.0545,
-    "abs_spearman": 0.059609
+    "feature": "rrpontsyd_value_change_1m",
+    "target": "target_good_entry_3m",
+    "n": 5593,
+    "pearson": -0.077156,
+    "spearman": -0.06965,
+    "abs_pearson": 0.077156,
+    "abs_spearman": 0.06965
   },
   {
-    "feature": "tnx_close_change_3m",
+    "feature": "tnx_return_3m",
     "target": "target_gold_max_drawdown_next_3m",
-    "n": 5536,
-    "pearson": -0.054466,
-    "spearman": -0.059388,
-    "abs_pearson": 0.054466,
-    "abs_spearman": 0.059388
+    "n": 5614,
+    "pearson": -0.065834,
+    "spearman": -0.069289,
+    "abs_pearson": 0.065834,
+    "abs_spearman": 0.069289
   },
   {
     "feature": "sp500_return_3m",
     "target": "target_gold_return_next_3m",
-    "n": 5474,
-    "pearson": -0.003291,
-    "spearman": 0.059258,
-    "abs_pearson": 0.003291,
-    "abs_spearman": 0.059258
+    "n": 5552,
+    "pearson": 0.003083,
+    "spearman": 0.068391,
+    "abs_pearson": 0.003083,
+    "abs_spearman": 0.068391
   },
   {
-    "feature": "fedfunds_value_change_1m",
-    "target": "target_gold_return_next_1m",
-    "n": 5558,
-    "pearson": -0.059004,
-    "spearman": -0.059243,
-    "abs_pearson": 0.059004,
-    "abs_spearman": 0.059243
-  },
-  {
-    "feature": "tnx_close_change_1m",
-    "target": "target_gold_return_next_1m",
-    "n": 5558,
-    "pearson": -0.071845,
-    "spearman": -0.058399,
-    "abs_pearson": 0.071845,
-    "abs_spearman": 0.058399
-  },
-  {
-    "feature": "m2sl_value_change_1m",
-    "target": "target_gold_return_next_1m",
-    "n": 5558,
-    "pearson": 0.030722,
-    "spearman": 0.057679,
-    "abs_pearson": 0.030722,
-    "abs_spearman": 0.057679
-  },
-  {
-    "feature": "gld_return_3m",
-    "target": "target_good_entry_3m",
-    "n": 5253,
-    "pearson": 0.040951,
-    "spearman": 0.057627,
-    "abs_pearson": 0.040951,
-    "abs_spearman": 0.057627
-  },
-  {
-    "feature": "t10y2y_value_change_1m",
-    "target": "target_gold_return_next_3m",
-    "n": 5516,
-    "pearson": 0.049035,
-    "spearman": 0.057225,
-    "abs_pearson": 0.049035,
-    "abs_spearman": 0.057225
-  },
-  {
-    "feature": "vix_return_3m",
-    "target": "target_gold_return_next_1m",
-    "n": 5516,
-    "pearson": 0.090049,
-    "spearman": 0.057037,
-    "abs_pearson": 0.090049,
-    "abs_spearman": 0.057037
-  },
-  {
-    "feature": "wti_crude_oil_return_1m",
-    "target": "target_good_entry_3m",
-    "n": 5516,
-    "pearson": -0.050435,
-    "spearman": -0.056272,
-    "abs_pearson": 0.050435,
-    "abs_spearman": 0.056272
-  },
-  {
-    "feature": "central_bank_gold_reserves_top15_tonnes_change_1m",
-    "target": "target_gold_return_next_1m",
-    "n": 5558,
-    "pearson": -0.049267,
-    "spearman": -0.056045,
-    "abs_pearson": 0.049267,
-    "abs_spearman": 0.056045
+    "feature": "tnx_close_change_3m",
+    "target": "target_gold_max_drawdown_next_3m",
+    "n": 5614,
+    "pearson": -0.062057,
+    "spearman": -0.068113,
+    "abs_pearson": 0.062057,
+    "abs_spearman": 0.068113
   },
   {
     "feature": "rrpontsyd_value",
     "target": "target_gold_max_drawdown_next_3m",
-    "n": 5598,
-    "pearson": 0.043372,
-    "spearman": 0.053743,
-    "abs_pearson": 0.043372,
-    "abs_spearman": 0.053743
+    "n": 5676,
+    "pearson": 0.050998,
+    "spearman": 0.067961,
+    "abs_pearson": 0.050998,
+    "abs_spearman": 0.067961
   },
   {
-    "feature": "gold_futures_return_3m",
-    "target": "target_good_entry_3m",
-    "n": 5474,
-    "pearson": 0.036696,
-    "spearman": 0.053294,
-    "abs_pearson": 0.036696,
-    "abs_spearman": 0.053294
-  },
-  {
-    "feature": "iau_return_3m",
-    "target": "target_good_entry_3m",
-    "n": 5207,
-    "pearson": 0.037599,
-    "spearman": 0.053181,
-    "abs_pearson": 0.037599,
-    "abs_spearman": 0.053181
-  },
-  {
-    "feature": "wti_crude_oil_return_3m",
+    "feature": "sp500_return_3m",
     "target": "target_gold_max_drawdown_next_3m",
-    "n": 5536,
-    "pearson": -0.041314,
-    "spearman": -0.05316,
-    "abs_pearson": 0.041314,
-    "abs_spearman": 0.05316
+    "n": 5614,
+    "pearson": 0.104843,
+    "spearman": 0.067633,
+    "abs_pearson": 0.104843,
+    "abs_spearman": 0.067633
   },
   {
-    "feature": "vix_close_change_3m",
-    "target": "target_gold_return_next_1m",
-    "n": 5516,
-    "pearson": 0.059595,
-    "spearman": 0.052799,
-    "abs_pearson": 0.059595,
-    "abs_spearman": 0.052799
-  },
-  {
-    "feature": "gold_futures_return_1m",
+    "feature": "tnx_return_1m",
     "target": "target_gold_max_drawdown_next_3m",
-    "n": 5578,
-    "pearson": -0.087492,
-    "spearman": -0.051118,
-    "abs_pearson": 0.087492,
-    "abs_spearman": 0.051118
+    "n": 5656,
+    "pearson": -0.047222,
+    "spearman": -0.067189,
+    "abs_pearson": 0.047222,
+    "abs_spearman": 0.067189
   },
   {
-    "feature": "t10y2y_value_change_1m",
-    "target": "target_good_entry_3m",
-    "n": 5516,
-    "pearson": 0.027261,
-    "spearman": 0.050737,
-    "abs_pearson": 0.027261,
-    "abs_spearman": 0.050737
-  },
-  {
-    "feature": "dxy_return_3m",
-    "target": "target_bad_entry_3m",
-    "n": 5536,
-    "pearson": 0.05114,
-    "spearman": 0.050353,
-    "abs_pearson": 0.05114,
-    "abs_spearman": 0.050353
-  },
-  {
-    "feature": "central_bank_gold_reserves_top15_change_3m",
+    "feature": "gld_return_3m",
     "target": "target_gold_return_next_3m",
-    "n": 5474,
-    "pearson": -0.104381,
-    "spearman": -0.05034,
-    "abs_pearson": 0.104381,
-    "abs_spearman": 0.05034
-  },
-  {
-    "feature": "central_bank_gold_reserves_top15_tonnes_change_3m",
-    "target": "target_gold_return_next_3m",
-    "n": 5474,
-    "pearson": -0.104381,
-    "spearman": -0.05034,
-    "abs_pearson": 0.104381,
-    "abs_spearman": 0.05034
-  },
-  {
-    "feature": "wti_crude_oil_return_1m",
-    "target": "target_gold_return_next_1m",
-    "n": 5558,
-    "pearson": -0.062158,
-    "spearman": -0.049083,
-    "abs_pearson": 0.062158,
-    "abs_spearman": 0.049083
+    "n": 5331,
+    "pearson": 0.053627,
+    "spearman": 0.065437,
+    "abs_pearson": 0.053627,
+    "abs_spearman": 0.065437
   },
   {
     "feature": "t10yie_value",
     "target": "target_gold_max_drawdown_next_3m",
-    "n": 5599,
-    "pearson": -0.077654,
-    "spearman": -0.048024,
-    "abs_pearson": 0.077654,
-    "abs_spearman": 0.048024
+    "n": 5677,
+    "pearson": -0.091172,
+    "spearman": -0.064979,
+    "abs_pearson": 0.091172,
+    "abs_spearman": 0.064979
+  },
+  {
+    "feature": "wti_crude_oil_return_1m",
+    "target": "target_good_entry_3m",
+    "n": 5594,
+    "pearson": -0.061849,
+    "spearman": -0.064578,
+    "abs_pearson": 0.061849,
+    "abs_spearman": 0.064578
+  },
+  {
+    "feature": "payems_value_change_1m",
+    "target": "target_gold_max_drawdown_next_3m",
+    "n": 5656,
+    "pearson": -0.012078,
+    "spearman": -0.064362,
+    "abs_pearson": 0.012078,
+    "abs_spearman": 0.064362
+  },
+  {
+    "feature": "m2sl_value_change_3m",
+    "target": "target_gold_return_next_3m",
+    "n": 5552,
+    "pearson": 0.044302,
+    "spearman": -0.063748,
+    "abs_pearson": 0.044302,
+    "abs_spearman": 0.063748
+  },
+  {
+    "feature": "iau_return_3m",
+    "target": "target_gold_return_next_3m",
+    "n": 5285,
+    "pearson": 0.051799,
+    "spearman": 0.062244,
+    "abs_pearson": 0.051799,
+    "abs_spearman": 0.062244
+  },
+  {
+    "feature": "t10y2y_value_change_1m",
+    "target": "target_gold_return_next_3m",
+    "n": 5594,
+    "pearson": 0.054002,
+    "spearman": 0.061974,
+    "abs_pearson": 0.054002,
+    "abs_spearman": 0.061974
+  },
+  {
+    "feature": "payems_value",
+    "target": "target_bad_entry_3m",
+    "n": 5677,
+    "pearson": -0.092355,
+    "spearman": -0.061911,
+    "abs_pearson": 0.092355,
+    "abs_spearman": 0.061911
+  },
+  {
+    "feature": "gdpc1_value",
+    "target": "target_gold_max_drawdown_next_3m",
+    "n": 5677,
+    "pearson": 0.097247,
+    "spearman": 0.061825,
+    "abs_pearson": 0.097247,
+    "abs_spearman": 0.061825
+  },
+  {
+    "feature": "tnx_close_change_1m",
+    "target": "target_gold_return_next_1m",
+    "n": 5636,
+    "pearson": -0.074554,
+    "spearman": -0.061376,
+    "abs_pearson": 0.074554,
+    "abs_spearman": 0.061376
+  },
+  {
+    "feature": "t10y2y_value",
+    "target": "target_gold_return_next_1m",
+    "n": 5657,
+    "pearson": -0.063151,
+    "spearman": -0.061274,
+    "abs_pearson": 0.063151,
+    "abs_spearman": 0.061274
+  },
+  {
+    "feature": "vix_return_3m",
+    "target": "target_gold_return_next_1m",
+    "n": 5594,
+    "pearson": 0.093768,
+    "spearman": 0.06049,
+    "abs_pearson": 0.093768,
+    "abs_spearman": 0.06049
+  },
+  {
+    "feature": "pcepi_value",
+    "target": "target_gold_max_drawdown_next_3m",
+    "n": 5677,
+    "pearson": 0.065908,
+    "spearman": 0.060076,
+    "abs_pearson": 0.065908,
+    "abs_spearman": 0.060076
+  },
+  {
+    "feature": "nasdaq_return_3m",
+    "target": "target_gold_return_next_3m",
+    "n": 5552,
+    "pearson": 0.022407,
+    "spearman": 0.059223,
+    "abs_pearson": 0.022407,
+    "abs_spearman": 0.059223
+  },
+  {
+    "feature": "silver_futures_return_3m",
+    "target": "target_gold_return_next_1m",
+    "n": 5594,
+    "pearson": -0.031234,
+    "spearman": -0.059119,
+    "abs_pearson": 0.031234,
+    "abs_spearman": 0.059119
+  },
+  {
+    "feature": "nasdaq_return_3m",
+    "target": "target_gold_return_next_1m",
+    "n": 5594,
+    "pearson": -0.061904,
+    "spearman": -0.059015,
+    "abs_pearson": 0.061904,
+    "abs_spearman": 0.059015
+  },
+  {
+    "feature": "nasdaq_return_3m",
+    "target": "target_bad_entry_3m",
+    "n": 5614,
+    "pearson": -0.066762,
+    "spearman": -0.058106,
+    "abs_pearson": 0.066762,
+    "abs_spearman": 0.058106
+  },
+  {
+    "feature": "m2sl_value",
+    "target": "target_gold_max_drawdown_next_3m",
+    "n": 5677,
+    "pearson": 0.084904,
+    "spearman": 0.057652,
+    "abs_pearson": 0.084904,
+    "abs_spearman": 0.057652
   },
   {
     "feature": "tnx_close_change_1m",
     "target": "target_gold_max_drawdown_next_3m",
-    "n": 5578,
-    "pearson": -0.028487,
-    "spearman": -0.04761,
-    "abs_pearson": 0.028487,
-    "abs_spearman": 0.04761
+    "n": 5656,
+    "pearson": -0.038582,
+    "spearman": -0.05718,
+    "abs_pearson": 0.038582,
+    "abs_spearman": 0.05718
   },
   {
-    "feature": "nasdaq_return_3m",
+    "feature": "gold_futures_return_3m",
     "target": "target_gold_return_next_3m",
-    "n": 5474,
-    "pearson": 0.012678,
-    "spearman": 0.04755,
-    "abs_pearson": 0.012678,
-    "abs_spearman": 0.04755
+    "n": 5552,
+    "pearson": 0.048278,
+    "spearman": 0.05693,
+    "abs_pearson": 0.048278,
+    "abs_spearman": 0.05693
   },
   {
-    "feature": "nasdaq_return_3m",
-    "target": "target_gold_return_next_1m",
-    "n": 5516,
-    "pearson": -0.049081,
-    "spearman": -0.047329,
-    "abs_pearson": 0.049081,
-    "abs_spearman": 0.047329
-  },
-  {
-    "feature": "nasdaq_return_1m",
-    "target": "target_gold_max_drawdown_next_3m",
-    "n": 5578,
-    "pearson": 0.088189,
-    "spearman": 0.047205,
-    "abs_pearson": 0.088189,
-    "abs_spearman": 0.047205
-  },
-  {
-    "feature": "dxy_close_change_3m",
+    "feature": "m2sl_value_change_3m",
     "target": "target_bad_entry_3m",
-    "n": 5536,
-    "pearson": 0.047703,
-    "spearman": 0.047025,
-    "abs_pearson": 0.047703,
-    "abs_spearman": 0.047025
+    "n": 5614,
+    "pearson": 0.008301,
+    "spearman": 0.056894,
+    "abs_pearson": 0.008301,
+    "abs_spearman": 0.056894
   },
   {
-    "feature": "central_bank_gold_reserves_top15_change_3m",
-    "target": "target_good_entry_3m",
-    "n": 5474,
-    "pearson": -0.058554,
-    "spearman": -0.046532,
-    "abs_pearson": 0.058554,
-    "abs_spearman": 0.046532
-  },
-  {
-    "feature": "central_bank_gold_reserves_top15_tonnes_change_3m",
-    "target": "target_good_entry_3m",
-    "n": 5474,
-    "pearson": -0.058554,
-    "spearman": -0.046532,
-    "abs_pearson": 0.058554,
-    "abs_spearman": 0.046532
-  },
-  {
-    "feature": "gold_futures_return_1m",
+    "feature": "vix_close_change_3m",
     "target": "target_gold_return_next_1m",
-    "n": 5558,
-    "pearson": -0.099115,
-    "spearman": -0.046165,
-    "abs_pearson": 0.099115,
-    "abs_spearman": 0.046165
+    "n": 5594,
+    "pearson": 0.063069,
+    "spearman": 0.05657,
+    "abs_pearson": 0.063069,
+    "abs_spearman": 0.05657
   },
   {
-    "feature": "payems_value",
-    "target": "target_good_entry_3m",
-    "n": 5537,
-    "pearson": 0.082809,
-    "spearman": 0.045533,
-    "abs_pearson": 0.082809,
-    "abs_spearman": 0.045533
+    "feature": "cpiaucsl_value",
+    "target": "target_gold_max_drawdown_next_3m",
+    "n": 5677,
+    "pearson": 0.067193,
+    "spearman": 0.056182,
+    "abs_pearson": 0.067193,
+    "abs_spearman": 0.056182
+  },
+  {
+    "feature": "t10yie_value",
+    "target": "target_gold_return_next_3m",
+    "n": 5615,
+    "pearson": -0.114944,
+    "spearman": -0.055726,
+    "abs_pearson": 0.114944,
+    "abs_spearman": 0.055726
+  },
+  {
+    "feature": "sp500_return_1m",
+    "target": "target_gold_max_drawdown_next_3m",
+    "n": 5656,
+    "pearson": 0.085441,
+    "spearman": 0.055589,
+    "abs_pearson": 0.085441,
+    "abs_spearman": 0.055589
   },
   {
     "feature": "tnx_return_1m",
     "target": "target_bad_entry_3m",
-    "n": 5578,
-    "pearson": 0.036153,
-    "spearman": 0.045474,
-    "abs_pearson": 0.036153,
-    "abs_spearman": 0.045474
+    "n": 5656,
+    "pearson": 0.041037,
+    "spearman": 0.054348,
+    "abs_pearson": 0.041037,
+    "abs_spearman": 0.054348
   },
   {
-    "feature": "pcepi_value_change_1m",
-    "target": "target_gold_max_drawdown_next_3m",
-    "n": 5578,
-    "pearson": 0.031119,
-    "spearman": 0.045268,
-    "abs_pearson": 0.031119,
-    "abs_spearman": 0.045268
-  },
-  {
-    "feature": "pcepi_value",
+    "feature": "cpiaucsl_value_change_3m",
     "target": "target_gold_return_next_3m",
-    "n": 5537,
-    "pearson": 0.1211,
-    "spearman": 0.044842,
-    "abs_pearson": 0.1211,
-    "abs_spearman": 0.044842
-  },
-  {
-    "feature": "vix_return_1m",
-    "target": "target_gold_max_drawdown_next_3m",
-    "n": 5578,
-    "pearson": -0.068318,
-    "spearman": -0.044487,
-    "abs_pearson": 0.068318,
-    "abs_spearman": 0.044487
-  },
-  {
-    "feature": "cpiaucsl_value_change_1m",
-    "target": "target_gold_max_drawdown_next_3m",
-    "n": 5578,
-    "pearson": 0.003733,
-    "spearman": 0.043974,
-    "abs_pearson": 0.003733,
-    "abs_spearman": 0.043974
+    "n": 5552,
+    "pearson": -0.153061,
+    "spearman": -0.054335,
+    "abs_pearson": 0.153061,
+    "abs_spearman": 0.054335
   },
   {
     "feature": "fedfunds_value_change_3m",
     "target": "target_bad_entry_3m",
-    "n": 5536,
-    "pearson": -0.053493,
-    "spearman": -0.043814,
-    "abs_pearson": 0.053493,
+    "n": 5614,
+    "pearson": -0.054656,
+    "spearman": -0.054139,
+    "abs_pearson": 0.054656,
+    "abs_spearman": 0.054139
+  },
+  {
+    "feature": "dxy_return_3m",
+    "target": "target_bad_entry_3m",
+    "n": 5614,
+    "pearson": 0.052405,
+    "spearman": 0.053974,
+    "abs_pearson": 0.052405,
+    "abs_spearman": 0.053974
+  },
+  {
+    "feature": "t10y2y_value_change_1m",
+    "target": "target_good_entry_3m",
+    "n": 5594,
+    "pearson": 0.029501,
+    "spearman": 0.053348,
+    "abs_pearson": 0.029501,
+    "abs_spearman": 0.053348
+  },
+  {
+    "feature": "nasdaq_return_1m",
+    "target": "target_gold_return_next_1m",
+    "n": 5636,
+    "pearson": -0.054366,
+    "spearman": -0.051037,
+    "abs_pearson": 0.054366,
+    "abs_spearman": 0.051037
+  },
+  {
+    "feature": "dxy_close_change_3m",
+    "target": "target_bad_entry_3m",
+    "n": 5614,
+    "pearson": 0.049607,
+    "spearman": 0.050868,
+    "abs_pearson": 0.049607,
+    "abs_spearman": 0.050868
+  },
+  {
+    "feature": "fedfunds_value_change_1m",
+    "target": "target_gold_return_next_1m",
+    "n": 5636,
+    "pearson": -0.057247,
+    "spearman": -0.050534,
+    "abs_pearson": 0.057247,
+    "abs_spearman": 0.050534
+  },
+  {
+    "feature": "central_bank_gold_reserves_top15_tonnes_change_1m",
+    "target": "target_gold_return_next_1m",
+    "n": 5636,
+    "pearson": -0.045411,
+    "spearman": -0.049303,
+    "abs_pearson": 0.045411,
+    "abs_spearman": 0.049303
+  },
+  {
+    "feature": "t10y2y_value_change_3m",
+    "target": "target_gold_max_drawdown_next_3m",
+    "n": 5614,
+    "pearson": 0.015041,
+    "spearman": 0.04841,
+    "abs_pearson": 0.015041,
+    "abs_spearman": 0.04841
+  },
+  {
+    "feature": "sp500_return_1m",
+    "target": "target_bad_entry_3m",
+    "n": 5656,
+    "pearson": -0.055626,
+    "spearman": -0.048162,
+    "abs_pearson": 0.055626,
+    "abs_spearman": 0.048162
+  },
+  {
+    "feature": "gld_return_3m",
+    "target": "target_good_entry_3m",
+    "n": 5331,
+    "pearson": 0.027056,
+    "spearman": 0.047907,
+    "abs_pearson": 0.027056,
+    "abs_spearman": 0.047907
+  },
+  {
+    "feature": "m2sl_value_change_3m",
+    "target": "target_good_entry_3m",
+    "n": 5552,
+    "pearson": 0.047511,
+    "spearman": -0.046765,
+    "abs_pearson": 0.047511,
+    "abs_spearman": 0.046765
+  },
+  {
+    "feature": "gdpc1_value",
+    "target": "target_bad_entry_3m",
+    "n": 5677,
+    "pearson": -0.073528,
+    "spearman": -0.045995,
+    "abs_pearson": 0.073528,
+    "abs_spearman": 0.045995
+  },
+  {
+    "feature": "days_to_next_fomc",
+    "target": "target_gold_max_drawdown_next_3m",
+    "n": 5677,
+    "pearson": 0.025335,
+    "spearman": 0.045954,
+    "abs_pearson": 0.025335,
+    "abs_spearman": 0.045954
+  },
+  {
+    "feature": "sp500_return_1m",
+    "target": "target_gold_return_next_1m",
+    "n": 5636,
+    "pearson": -0.047311,
+    "spearman": -0.045744,
+    "abs_pearson": 0.047311,
+    "abs_spearman": 0.045744
+  },
+  {
+    "feature": "dfii10_value_change_3m",
+    "target": "target_bad_entry_3m",
+    "n": 5614,
+    "pearson": 0.037928,
+    "spearman": 0.045696,
+    "abs_pearson": 0.037928,
+    "abs_spearman": 0.045696
+  },
+  {
+    "feature": "t10yie_value",
+    "target": "target_gold_return_next_1m",
+    "n": 5657,
+    "pearson": -0.089552,
+    "spearman": -0.045629,
+    "abs_pearson": 0.089552,
+    "abs_spearman": 0.045629
+  },
+  {
+    "feature": "gold_futures_return_3m",
+    "target": "target_good_entry_3m",
+    "n": 5552,
+    "pearson": 0.02336,
+    "spearman": 0.043915,
+    "abs_pearson": 0.02336,
+    "abs_spearman": 0.043915
+  },
+  {
+    "feature": "pcepi_value",
+    "target": "target_bad_entry_3m",
+    "n": 5677,
+    "pearson": -0.04743,
+    "spearman": -0.043868,
+    "abs_pearson": 0.04743,
+    "abs_spearman": 0.043868
+  },
+  {
+    "feature": "tnx_close_change_1m",
+    "target": "target_bad_entry_3m",
+    "n": 5656,
+    "pearson": 0.027458,
+    "spearman": 0.043814,
+    "abs_pearson": 0.027458,
     "abs_spearman": 0.043814
   },
   {
-    "feature": "nasdaq_return_1m",
-    "target": "target_bad_entry_3m",
-    "n": 5578,
-    "pearson": -0.051714,
-    "spearman": -0.042323,
-    "abs_pearson": 0.051714,
-    "abs_spearman": 0.042323
-  },
-  {
-    "feature": "cpiaucsl_value",
-    "target": "target_gold_return_next_3m",
-    "n": 5537,
-    "pearson": 0.122531,
-    "spearman": 0.041627,
-    "abs_pearson": 0.122531,
-    "abs_spearman": 0.041627
-  },
-  {
-    "feature": "silver_futures_return_3m",
-    "target": "target_gold_max_drawdown_next_3m",
-    "n": 5536,
-    "pearson": -0.032859,
-    "spearman": -0.041494,
-    "abs_pearson": 0.032859,
-    "abs_spearman": 0.041494
-  },
-  {
-    "feature": "rrpontsyd_value",
+    "feature": "iau_return_3m",
     "target": "target_good_entry_3m",
-    "n": 5536,
-    "pearson": -0.043033,
-    "spearman": -0.041035,
-    "abs_pearson": 0.043033,
-    "abs_spearman": 0.041035
+    "n": 5285,
+    "pearson": 0.023686,
+    "spearman": 0.043427,
+    "abs_pearson": 0.023686,
+    "abs_spearman": 0.043427
   },
   {
-    "feature": "gdpc1_value",
-    "target": "target_gold_return_next_3m",
-    "n": 5537,
-    "pearson": 0.107872,
-    "spearman": 0.040933,
-    "abs_pearson": 0.107872,
-    "abs_spearman": 0.040933
-  },
-  {
-    "feature": "t10yie_value",
-    "target": "target_gold_return_next_3m",
-    "n": 5537,
-    "pearson": -0.103334,
-    "spearman": -0.040931,
-    "abs_pearson": 0.103334,
-    "abs_spearman": 0.040931
-  },
-  {
-    "feature": "vix_return_1m",
-    "target": "target_good_entry_3m",
-    "n": 5516,
-    "pearson": 0.02631,
-    "spearman": 0.040662,
-    "abs_pearson": 0.02631,
-    "abs_spearman": 0.040662
-  },
-  {
-    "feature": "vix_return_1m",
-    "target": "target_gold_return_next_3m",
-    "n": 5516,
-    "pearson": 0.054506,
-    "spearman": 0.03998,
-    "abs_pearson": 0.054506,
-    "abs_spearman": 0.03998
-  },
-  {
-    "feature": "vix_close_change_1m",
+    "feature": "m2sl_value_change_3m",
     "target": "target_gold_max_drawdown_next_3m",
-    "n": 5578,
-    "pearson": -0.079703,
-    "spearman": -0.039424,
-    "abs_pearson": 0.079703,
-    "abs_spearman": 0.039424
+    "n": 5614,
+    "pearson": 0.023885,
+    "spearman": -0.043279,
+    "abs_pearson": 0.023885,
+    "abs_spearman": 0.043279
   },
   {
-    "feature": "vix_close_change_1m",
-    "target": "target_good_entry_3m",
-    "n": 5516,
-    "pearson": 0.029682,
-    "spearman": 0.039398,
-    "abs_pearson": 0.029682,
-    "abs_spearman": 0.039398
-  },
-  {
-    "feature": "t10yie_value_change_1m",
-    "target": "target_gold_return_next_1m",
-    "n": 5558,
-    "pearson": -0.020931,
-    "spearman": -0.039318,
-    "abs_pearson": 0.020931,
-    "abs_spearman": 0.039318
-  },
-  {
-    "feature": "t10y2y_value_change_3m",
-    "target": "target_gold_max_drawdown_next_3m",
-    "n": 5536,
-    "pearson": 0.005677,
-    "spearman": 0.038803,
-    "abs_pearson": 0.005677,
-    "abs_spearman": 0.038803
-  },
-  {
-    "feature": "nasdaq_return_1m",
-    "target": "target_gold_return_next_1m",
-    "n": 5558,
-    "pearson": -0.038513,
-    "spearman": -0.038729,
-    "abs_pearson": 0.038513,
-    "abs_spearman": 0.038729
-  },
-  {
-    "feature": "dfii10_value_change_3m",
+    "feature": "days_to_next_fomc",
     "target": "target_bad_entry_3m",
-    "n": 5536,
-    "pearson": 0.034531,
-    "spearman": 0.03852,
-    "abs_pearson": 0.034531,
-    "abs_spearman": 0.03852
-  },
-  {
-    "feature": "central_bank_gold_reserves_top15_tonnes",
-    "target": "target_gold_return_next_3m",
-    "n": 5537,
-    "pearson": 0.08053,
-    "spearman": 0.038478,
-    "abs_pearson": 0.08053,
-    "abs_spearman": 0.038478
-  },
-  {
-    "feature": "vix_close_change_1m",
-    "target": "target_gold_return_next_3m",
-    "n": 5516,
-    "pearson": 0.052991,
-    "spearman": 0.038275,
-    "abs_pearson": 0.052991,
-    "abs_spearman": 0.038275
-  },
-  {
-    "feature": "m2sl_value",
-    "target": "target_gold_return_next_3m",
-    "n": 5537,
-    "pearson": 0.073683,
-    "spearman": 0.038123,
-    "abs_pearson": 0.073683,
-    "abs_spearman": 0.038123
-  },
-  {
-    "feature": "silver_futures_return_1m",
-    "target": "target_gold_return_next_1m",
-    "n": 5558,
-    "pearson": -0.033568,
-    "spearman": -0.0375,
-    "abs_pearson": 0.033568,
-    "abs_spearman": 0.0375
-  },
-  {
-    "feature": "t10y2y_value_change_1m",
-    "target": "target_bad_entry_3m",
-    "n": 5578,
-    "pearson": 0.029414,
-    "spearman": 0.03729,
-    "abs_pearson": 0.029414,
-    "abs_spearman": 0.03729
-  },
-  {
-    "feature": "gld_return_1m",
-    "target": "target_gold_max_drawdown_next_3m",
-    "n": 5357,
-    "pearson": -0.076402,
-    "spearman": -0.036917,
-    "abs_pearson": 0.076402,
-    "abs_spearman": 0.036917
+    "n": 5677,
+    "pearson": -0.039871,
+    "spearman": -0.042377,
+    "abs_pearson": 0.039871,
+    "abs_spearman": 0.042377
   },
   {
     "feature": "wti_crude_oil_return_1m",
-    "target": "target_gold_max_drawdown_next_3m",
-    "n": 5578,
-    "pearson": -0.027084,
-    "spearman": -0.036895,
-    "abs_pearson": 0.027084,
-    "abs_spearman": 0.036895
-  },
-  {
-    "feature": "rrpontsyd_value_change_1m",
     "target": "target_gold_return_next_1m",
-    "n": 5557,
-    "pearson": -0.04174,
-    "spearman": -0.036837,
-    "abs_pearson": 0.04174,
-    "abs_spearman": 0.036837
+    "n": 5636,
+    "pearson": -0.054204,
+    "spearman": -0.042192,
+    "abs_pearson": 0.054204,
+    "abs_spearman": 0.042192
   },
   {
-    "feature": "days_to_next_fomc",
-    "target": "target_gold_max_drawdown_next_3m",
-    "n": 5599,
-    "pearson": 0.010652,
-    "spearman": 0.036598,
-    "abs_pearson": 0.010652,
-    "abs_spearman": 0.036598
-  },
-  {
-    "feature": "iau_return_1m",
-    "target": "target_gold_max_drawdown_next_3m",
-    "n": 5311,
-    "pearson": -0.07515,
-    "spearman": -0.036076,
-    "abs_pearson": 0.07515,
-    "abs_spearman": 0.036076
-  },
-  {
-    "feature": "t10y2y_value_change_1m",
-    "target": "target_gold_return_next_1m",
-    "n": 5558,
-    "pearson": 0.002074,
-    "spearman": 0.036004,
-    "abs_pearson": 0.002074,
-    "abs_spearman": 0.036004
-  },
-  {
-    "feature": "m2sl_value_change_1m",
-    "target": "target_good_entry_3m",
-    "n": 5516,
-    "pearson": 0.070523,
-    "spearman": 0.035587,
-    "abs_pearson": 0.070523,
-    "abs_spearman": 0.035587
-  },
-  {
-    "feature": "m2sl_value_change_1m",
-    "target": "target_gold_return_next_3m",
-    "n": 5516,
-    "pearson": 0.081692,
-    "spearman": 0.035383,
-    "abs_pearson": 0.081692,
-    "abs_spearman": 0.035383
-  },
-  {
-    "feature": "central_bank_gold_reserves_top15_tonnes_change_1m",
-    "target": "target_gold_return_next_3m",
-    "n": 5516,
-    "pearson": -0.075237,
-    "spearman": -0.035324,
-    "abs_pearson": 0.075237,
-    "abs_spearman": 0.035324
-  },
-  {
-    "feature": "t10yie_value",
-    "target": "target_gold_return_next_1m",
-    "n": 5579,
-    "pearson": -0.082118,
-    "spearman": -0.035043,
-    "abs_pearson": 0.082118,
-    "abs_spearman": 0.035043
-  },
-  {
-    "feature": "iau_return_1m",
-    "target": "target_gold_return_next_1m",
-    "n": 5291,
-    "pearson": -0.089855,
-    "spearman": -0.033829,
-    "abs_pearson": 0.089855,
-    "abs_spearman": 0.033829
-  },
-  {
-    "feature": "sp500_return_1m",
-    "target": "target_gold_return_next_1m",
-    "n": 5558,
-    "pearson": -0.034707,
-    "spearman": -0.033791,
-    "abs_pearson": 0.034707,
-    "abs_spearman": 0.033791
-  },
-  {
-    "feature": "pcepi_value",
-    "target": "target_good_entry_3m",
-    "n": 5537,
-    "pearson": 0.090676,
-    "spearman": 0.033506,
-    "abs_pearson": 0.090676,
-    "abs_spearman": 0.033506
-  },
-  {
-    "feature": "m2sl_value_change_3m",
-    "target": "target_gold_return_next_3m",
-    "n": 5474,
-    "pearson": 0.061201,
-    "spearman": -0.033211,
-    "abs_pearson": 0.061201,
-    "abs_spearman": 0.033211
-  },
-  {
-    "feature": "silver_futures_return_1m",
-    "target": "target_gold_return_next_3m",
-    "n": 5516,
-    "pearson": -0.043151,
-    "spearman": -0.032919,
-    "abs_pearson": 0.043151,
-    "abs_spearman": 0.032919
-  },
-  {
-    "feature": "silver_futures_return_3m",
-    "target": "target_good_entry_3m",
-    "n": 5474,
-    "pearson": 0.012852,
-    "spearman": 0.032892,
-    "abs_pearson": 0.012852,
-    "abs_spearman": 0.032892
-  },
-  {
-    "feature": "gld_return_1m",
-    "target": "target_gold_return_next_1m",
-    "n": 5337,
-    "pearson": -0.088216,
-    "spearman": -0.032664,
-    "abs_pearson": 0.088216,
-    "abs_spearman": 0.032664
-  },
-  {
-    "feature": "pcepi_value_change_1m",
-    "target": "target_gold_return_next_1m",
-    "n": 5558,
-    "pearson": -0.015313,
-    "spearman": 0.032178,
-    "abs_pearson": 0.015313,
-    "abs_spearman": 0.032178
-  },
-  {
-    "feature": "t10yie_value_change_1m",
-    "target": "target_gold_max_drawdown_next_3m",
-    "n": 5578,
-    "pearson": 0.029017,
-    "spearman": -0.032013,
-    "abs_pearson": 0.029017,
-    "abs_spearman": 0.032013
-  },
-  {
-    "feature": "central_bank_gold_reserves_top15_change_3m",
-    "target": "target_gold_return_next_1m",
-    "n": 5516,
-    "pearson": -0.063805,
-    "spearman": -0.031837,
-    "abs_pearson": 0.063805,
-    "abs_spearman": 0.031837
-  },
-  {
-    "feature": "central_bank_gold_reserves_top15_tonnes_change_3m",
-    "target": "target_gold_return_next_1m",
-    "n": 5516,
-    "pearson": -0.063805,
-    "spearman": -0.031837,
-    "abs_pearson": 0.063805,
-    "abs_spearman": 0.031837
-  },
-  {
-    "feature": "tnx_close_change_1m",
+    "feature": "m2sl_value",
     "target": "target_bad_entry_3m",
-    "n": 5578,
-    "pearson": 0.017232,
-    "spearman": 0.031789,
-    "abs_pearson": 0.017232,
-    "abs_spearman": 0.031789
-  },
-  {
-    "feature": "vix_close_change_1m",
-    "target": "target_gold_return_next_1m",
-    "n": 5558,
-    "pearson": 0.016964,
-    "spearman": 0.031693,
-    "abs_pearson": 0.016964,
-    "abs_spearman": 0.031693
-  },
-  {
-    "feature": "cpiaucsl_value",
-    "target": "target_good_entry_3m",
-    "n": 5537,
-    "pearson": 0.092231,
-    "spearman": 0.031668,
-    "abs_pearson": 0.092231,
-    "abs_spearman": 0.031668
-  },
-  {
-    "feature": "m2sl_value_change_3m",
-    "target": "target_bad_entry_3m",
-    "n": 5536,
-    "pearson": -0.005321,
-    "spearman": 0.031613,
-    "abs_pearson": 0.005321,
-    "abs_spearman": 0.031613
-  },
-  {
-    "feature": "m2sl_value_change_1m",
-    "target": "target_gold_max_drawdown_next_3m",
-    "n": 5578,
-    "pearson": 0.028881,
-    "spearman": 0.031409,
-    "abs_pearson": 0.028881,
-    "abs_spearman": 0.031409
-  },
-  {
-    "feature": "days_to_next_fomc",
-    "target": "target_bad_entry_3m",
-    "n": 5599,
-    "pearson": -0.028473,
-    "spearman": -0.031216,
-    "abs_pearson": 0.028473,
-    "abs_spearman": 0.031216
-  },
-  {
-    "feature": "sp500_return_3m",
-    "target": "target_gold_return_next_1m",
-    "n": 5516,
-    "pearson": -0.042836,
-    "spearman": -0.031115,
-    "abs_pearson": 0.042836,
-    "abs_spearman": 0.031115
-  },
-  {
-    "feature": "copper_futures_return_1m",
-    "target": "target_gold_max_drawdown_next_3m",
-    "n": 5578,
-    "pearson": -0.001745,
-    "spearman": 0.031055,
-    "abs_pearson": 0.001745,
-    "abs_spearman": 0.031055
+    "n": 5677,
+    "pearson": -0.058926,
+    "spearman": -0.041753,
+    "abs_pearson": 0.058926,
+    "abs_spearman": 0.041753
   },
   {
     "feature": "gold_drawdown_from_252d_high",
     "target": "target_gold_return_next_1m",
-    "n": 5579,
-    "pearson": -0.003733,
-    "spearman": 0.030772,
-    "abs_pearson": 0.003733,
-    "abs_spearman": 0.030772
-  },
-  {
-    "feature": "nasdaq_return_3m",
-    "target": "target_gold_max_drawdown_next_3m",
-    "n": 5536,
-    "pearson": 0.076423,
-    "spearman": 0.030397,
-    "abs_pearson": 0.076423,
-    "abs_spearman": 0.030397
-  },
-  {
-    "feature": "silver_futures_return_1m",
-    "target": "target_gold_max_drawdown_next_3m",
-    "n": 5578,
-    "pearson": -0.02624,
-    "spearman": -0.030331,
-    "abs_pearson": 0.02624,
-    "abs_spearman": 0.030331
-  },
-  {
-    "feature": "m2sl_value",
-    "target": "target_good_entry_3m",
-    "n": 5537,
-    "pearson": 0.048368,
-    "spearman": 0.030113,
-    "abs_pearson": 0.048368,
-    "abs_spearman": 0.030113
-  },
-  {
-    "feature": "vix_return_1m",
-    "target": "target_gold_return_next_1m",
-    "n": 5558,
-    "pearson": 0.032052,
-    "spearman": 0.029984,
-    "abs_pearson": 0.032052,
-    "abs_spearman": 0.029984
-  },
-  {
-    "feature": "pcepi_value_change_1m",
-    "target": "target_good_entry_3m",
-    "n": 5516,
-    "pearson": -0.019107,
-    "spearman": 0.029675,
-    "abs_pearson": 0.019107,
-    "abs_spearman": 0.029675
+    "n": 5657,
+    "pearson": 0.008035,
+    "spearman": 0.041631,
+    "abs_pearson": 0.008035,
+    "abs_spearman": 0.041631
   },
   {
     "feature": "central_bank_gold_reserves_top15_change_3m",
     "target": "target_gold_max_drawdown_next_3m",
-    "n": 5536,
-    "pearson": -0.016668,
-    "spearman": 0.029579,
-    "abs_pearson": 0.016668,
-    "abs_spearman": 0.029579
+    "n": 5614,
+    "pearson": -0.007327,
+    "spearman": 0.040802,
+    "abs_pearson": 0.007327,
+    "abs_spearman": 0.040802
   },
   {
     "feature": "central_bank_gold_reserves_top15_tonnes_change_3m",
     "target": "target_gold_max_drawdown_next_3m",
-    "n": 5536,
-    "pearson": -0.016668,
-    "spearman": 0.029579,
-    "abs_pearson": 0.016668,
-    "abs_spearman": 0.029579
+    "n": 5614,
+    "pearson": -0.007327,
+    "spearman": 0.040802,
+    "abs_pearson": 0.007327,
+    "abs_spearman": 0.040802
   },
   {
-    "feature": "dxy_close_change_1m",
+    "feature": "wti_crude_oil_return_1m",
     "target": "target_gold_max_drawdown_next_3m",
-    "n": 5578,
-    "pearson": -0.030497,
-    "spearman": -0.029171,
-    "abs_pearson": 0.030497,
-    "abs_spearman": 0.029171
+    "n": 5656,
+    "pearson": -0.046936,
+    "spearman": -0.040628,
+    "abs_pearson": 0.046936,
+    "abs_spearman": 0.040628
   },
   {
-    "feature": "gdpc1_value",
+    "feature": "sp500_return_3m",
+    "target": "target_gold_return_next_1m",
+    "n": 5594,
+    "pearson": -0.05119,
+    "spearman": -0.040122,
+    "abs_pearson": 0.05119,
+    "abs_spearman": 0.040122
+  },
+  {
+    "feature": "cpiaucsl_value",
+    "target": "target_bad_entry_3m",
+    "n": 5677,
+    "pearson": -0.04904,
+    "spearman": -0.039827,
+    "abs_pearson": 0.04904,
+    "abs_spearman": 0.039827
+  },
+  {
+    "feature": "vix_close_change_1m",
+    "target": "target_gold_return_next_1m",
+    "n": 5636,
+    "pearson": 0.022849,
+    "spearman": 0.039337,
+    "abs_pearson": 0.022849,
+    "abs_spearman": 0.039337
+  },
+  {
+    "feature": "cpiaucsl_value_change_3m",
+    "target": "target_gold_max_drawdown_next_3m",
+    "n": 5614,
+    "pearson": -0.092688,
+    "spearman": -0.03796,
+    "abs_pearson": 0.092688,
+    "abs_spearman": 0.03796
+  },
+  {
+    "feature": "t10y2y_value_change_1m",
+    "target": "target_gold_return_next_1m",
+    "n": 5636,
+    "pearson": 0.004601,
+    "spearman": 0.037721,
+    "abs_pearson": 0.004601,
+    "abs_spearman": 0.037721
+  },
+  {
+    "feature": "central_bank_gold_reserves_top15_change_3m",
     "target": "target_good_entry_3m",
-    "n": 5537,
-    "pearson": 0.071949,
-    "spearman": 0.028907,
-    "abs_pearson": 0.071949,
-    "abs_spearman": 0.028907
+    "n": 5552,
+    "pearson": -0.053404,
+    "spearman": -0.037664,
+    "abs_pearson": 0.053404,
+    "abs_spearman": 0.037664
   },
   {
-    "feature": "dxy_return_1m",
+    "feature": "central_bank_gold_reserves_top15_tonnes_change_3m",
+    "target": "target_good_entry_3m",
+    "n": 5552,
+    "pearson": -0.053404,
+    "spearman": -0.037664,
+    "abs_pearson": 0.053404,
+    "abs_spearman": 0.037664
+  },
+  {
+    "feature": "vix_return_1m",
+    "target": "target_gold_return_next_1m",
+    "n": 5636,
+    "pearson": 0.038086,
+    "spearman": 0.037513,
+    "abs_pearson": 0.038086,
+    "abs_spearman": 0.037513
+  },
+  {
+    "feature": "t10yie_value_change_1m",
+    "target": "target_gold_return_next_1m",
+    "n": 5636,
+    "pearson": -0.02005,
+    "spearman": -0.037447,
+    "abs_pearson": 0.02005,
+    "abs_spearman": 0.037447
+  },
+  {
+    "feature": "t10yie_value_change_1m",
     "target": "target_gold_max_drawdown_next_3m",
-    "n": 5578,
-    "pearson": -0.03115,
-    "spearman": -0.028547,
-    "abs_pearson": 0.03115,
-    "abs_spearman": 0.028547
+    "n": 5656,
+    "pearson": 0.0212,
+    "spearman": -0.037428,
+    "abs_pearson": 0.0212,
+    "abs_spearman": 0.037428
+  },
+  {
+    "feature": "silver_futures_return_1m",
+    "target": "target_gold_return_next_1m",
+    "n": 5636,
+    "pearson": -0.032544,
+    "spearman": -0.036944,
+    "abs_pearson": 0.032544,
+    "abs_spearman": 0.036944
+  },
+  {
+    "feature": "rrpontsyd_value_change_1m",
+    "target": "target_gold_return_next_1m",
+    "n": 5635,
+    "pearson": -0.041429,
+    "spearman": -0.036914,
+    "abs_pearson": 0.041429,
+    "abs_spearman": 0.036914
+  },
+  {
+    "feature": "gold_futures_return_1m",
+    "target": "target_gold_return_next_1m",
+    "n": 5636,
+    "pearson": -0.088314,
+    "spearman": -0.036795,
+    "abs_pearson": 0.088314,
+    "abs_spearman": 0.036795
+  },
+  {
+    "feature": "vix_return_1m",
+    "target": "target_good_entry_3m",
+    "n": 5594,
+    "pearson": 0.024139,
+    "spearman": 0.036254,
+    "abs_pearson": 0.024139,
+    "abs_spearman": 0.036254
+  },
+  {
+    "feature": "vix_return_1m",
+    "target": "target_gold_max_drawdown_next_3m",
+    "n": 5656,
+    "pearson": -0.059205,
+    "spearman": -0.035402,
+    "abs_pearson": 0.059205,
+    "abs_spearman": 0.035402
+  },
+  {
+    "feature": "vix_close_change_1m",
+    "target": "target_good_entry_3m",
+    "n": 5594,
+    "pearson": 0.027878,
+    "spearman": 0.034883,
+    "abs_pearson": 0.027878,
+    "abs_spearman": 0.034883
   },
   {
     "feature": "vix_return_3m",
     "target": "target_good_entry_3m",
-    "n": 5474,
-    "pearson": 0.036739,
-    "spearman": -0.027968,
-    "abs_pearson": 0.036739,
-    "abs_spearman": 0.027968
+    "n": 5552,
+    "pearson": 0.032217,
+    "spearman": -0.034373,
+    "abs_pearson": 0.032217,
+    "abs_spearman": 0.034373
   },
   {
-    "feature": "m2sl_value_change_3m",
-    "target": "target_good_entry_3m",
-    "n": 5474,
-    "pearson": 0.055831,
-    "spearman": -0.027828,
-    "abs_pearson": 0.055831,
-    "abs_spearman": 0.027828
-  },
-  {
-    "feature": "dxy_return_3m",
+    "feature": "nasdaq_return_1m",
     "target": "target_gold_max_drawdown_next_3m",
-    "n": 5536,
-    "pearson": -0.057633,
-    "spearman": -0.027699,
-    "abs_pearson": 0.057633,
-    "abs_spearman": 0.027699
+    "n": 5656,
+    "pearson": 0.062966,
+    "spearman": 0.033904,
+    "abs_pearson": 0.062966,
+    "abs_spearman": 0.033904
   },
   {
-    "feature": "copper_futures_return_1m",
-    "target": "target_bad_entry_3m",
-    "n": 5578,
-    "pearson": 0.007119,
-    "spearman": -0.026172,
-    "abs_pearson": 0.007119,
-    "abs_spearman": 0.026172
+    "feature": "silver_futures_return_3m",
+    "target": "target_gold_max_drawdown_next_3m",
+    "n": 5614,
+    "pearson": -0.026106,
+    "spearman": -0.03356,
+    "abs_pearson": 0.026106,
+    "abs_spearman": 0.03356
   },
   {
-    "feature": "vix_return_1m",
-    "target": "target_bad_entry_3m",
-    "n": 5578,
-    "pearson": 0.040663,
-    "spearman": 0.025869,
-    "abs_pearson": 0.040663,
-    "abs_spearman": 0.025869
-  },
-  {
-    "feature": "dfii10_value_change_1m",
-    "target": "target_gold_return_next_1m",
-    "n": 5558,
-    "pearson": -0.061512,
-    "spearman": -0.025718,
-    "abs_pearson": 0.061512,
-    "abs_spearman": 0.025718
-  },
-  {
-    "feature": "cpiaucsl_value_change_3m",
+    "feature": "central_bank_gold_reserves_top15_change_3m",
     "target": "target_gold_return_next_3m",
-    "n": 5474,
-    "pearson": -0.120964,
-    "spearman": -0.025578,
-    "abs_pearson": 0.120964,
-    "abs_spearman": 0.025578
+    "n": 5552,
+    "pearson": -0.091717,
+    "spearman": -0.033554,
+    "abs_pearson": 0.091717,
+    "abs_spearman": 0.033554
+  },
+  {
+    "feature": "central_bank_gold_reserves_top15_tonnes_change_3m",
+    "target": "target_gold_return_next_3m",
+    "n": 5552,
+    "pearson": -0.091717,
+    "spearman": -0.033554,
+    "abs_pearson": 0.091717,
+    "abs_spearman": 0.033554
+  },
+  {
+    "feature": "cpiaucsl_value_change_1m",
+    "target": "target_gold_return_next_3m",
+    "n": 5594,
+    "pearson": -0.137154,
+    "spearman": -0.03342,
+    "abs_pearson": 0.137154,
+    "abs_spearman": 0.03342
   },
   {
     "feature": "t10yie_value",
     "target": "target_good_entry_3m",
-    "n": 5537,
-    "pearson": -0.073934,
-    "spearman": -0.025572,
-    "abs_pearson": 0.073934,
-    "abs_spearman": 0.025572
+    "n": 5615,
+    "pearson": -0.080022,
+    "spearman": -0.033143,
+    "abs_pearson": 0.080022,
+    "abs_spearman": 0.033143
   },
   {
-    "feature": "payems_value",
+    "feature": "vix_return_1m",
+    "target": "target_gold_return_next_3m",
+    "n": 5594,
+    "pearson": 0.049817,
+    "spearman": 0.032725,
+    "abs_pearson": 0.049817,
+    "abs_spearman": 0.032725
+  },
+  {
+    "feature": "cpiaucsl_value_change_3m",
+    "target": "target_bad_entry_3m",
+    "n": 5614,
+    "pearson": 0.084648,
+    "spearman": 0.032192,
+    "abs_pearson": 0.084648,
+    "abs_spearman": 0.032192
+  },
+  {
+    "feature": "gold_futures_return_1m",
+    "target": "target_gold_max_drawdown_next_3m",
+    "n": 5656,
+    "pearson": -0.06332,
+    "spearman": -0.032032,
+    "abs_pearson": 0.06332,
+    "abs_spearman": 0.032032
+  },
+  {
+    "feature": "dfii10_value_change_1m",
     "target": "target_gold_return_next_1m",
-    "n": 5579,
-    "pearson": 0.054038,
-    "spearman": 0.02552,
-    "abs_pearson": 0.054038,
-    "abs_spearman": 0.02552
-  },
-  {
-    "feature": "cpiaucsl_value_change_1m",
-    "target": "target_bad_entry_3m",
-    "n": 5578,
-    "pearson": 0.01007,
-    "spearman": -0.02523,
-    "abs_pearson": 0.01007,
-    "abs_spearman": 0.02523
-  },
-  {
-    "feature": "payems_value_change_1m",
-    "target": "target_bad_entry_3m",
-    "n": 5578,
-    "pearson": 0.013788,
-    "spearman": 0.024539,
-    "abs_pearson": 0.013788,
-    "abs_spearman": 0.024539
+    "n": 5636,
+    "pearson": -0.065323,
+    "spearman": -0.031484,
+    "abs_pearson": 0.065323,
+    "abs_spearman": 0.031484
   },
   {
     "feature": "t10yie_value_change_1m",
     "target": "target_bad_entry_3m",
-    "n": 5578,
-    "pearson": -0.005569,
-    "spearman": 0.024344,
-    "abs_pearson": 0.005569,
-    "abs_spearman": 0.024344
+    "n": 5656,
+    "pearson": -0.00003,
+    "spearman": 0.031467,
+    "abs_pearson": 0.00003,
+    "abs_spearman": 0.031467
   },
   {
-    "feature": "gold_futures_return_1m",
-    "target": "target_bad_entry_3m",
-    "n": 5578,
-    "pearson": 0.0502,
-    "spearman": 0.023591,
-    "abs_pearson": 0.0502,
-    "abs_spearman": 0.023591
-  },
-  {
-    "feature": "copper_futures_return_3m",
-    "target": "target_gold_max_drawdown_next_3m",
-    "n": 5536,
-    "pearson": -0.004432,
-    "spearman": 0.023362,
-    "abs_pearson": 0.004432,
-    "abs_spearman": 0.023362
-  },
-  {
-    "feature": "dxy_close_change_3m",
-    "target": "target_gold_max_drawdown_next_3m",
-    "n": 5536,
-    "pearson": -0.046528,
-    "spearman": -0.022953,
-    "abs_pearson": 0.046528,
-    "abs_spearman": 0.022953
-  },
-  {
-    "feature": "pcepi_value_change_1m",
-    "target": "target_bad_entry_3m",
-    "n": 5578,
-    "pearson": -0.009357,
-    "spearman": -0.0228,
-    "abs_pearson": 0.009357,
-    "abs_spearman": 0.0228
-  },
-  {
-    "feature": "vix_close_change_3m",
-    "target": "target_good_entry_3m",
-    "n": 5474,
-    "pearson": 0.027639,
-    "spearman": -0.02276,
-    "abs_pearson": 0.027639,
-    "abs_spearman": 0.02276
+    "feature": "vix_close_change_1m",
+    "target": "target_gold_return_next_3m",
+    "n": 5594,
+    "pearson": 0.04937,
+    "spearman": 0.03077,
+    "abs_pearson": 0.04937,
+    "abs_spearman": 0.03077
   },
   {
     "feature": "dfii10_value_change_1m",
     "target": "target_gold_max_drawdown_next_3m",
-    "n": 5578,
-    "pearson": -0.051992,
-    "spearman": -0.022307,
-    "abs_pearson": 0.051992,
-    "abs_spearman": 0.022307
-  },
-  {
-    "feature": "pcepi_value_change_3m",
-    "target": "target_gold_return_next_1m",
-    "n": 5516,
-    "pearson": -0.045589,
-    "spearman": 0.022207,
-    "abs_pearson": 0.045589,
-    "abs_spearman": 0.022207
+    "n": 5656,
+    "pearson": -0.057637,
+    "spearman": -0.030602,
+    "abs_pearson": 0.057637,
+    "abs_spearman": 0.030602
   },
   {
     "feature": "vix_close_change_1m",
-    "target": "target_bad_entry_3m",
-    "n": 5578,
-    "pearson": 0.046278,
-    "spearman": 0.020921,
-    "abs_pearson": 0.046278,
-    "abs_spearman": 0.020921
+    "target": "target_gold_max_drawdown_next_3m",
+    "n": 5656,
+    "pearson": -0.0693,
+    "spearman": -0.030421,
+    "abs_pearson": 0.0693,
+    "abs_spearman": 0.030421
   },
   {
-    "feature": "dfii10_value_change_3m",
+    "feature": "t10y2y_value_change_1m",
+    "target": "target_bad_entry_3m",
+    "n": 5656,
+    "pearson": 0.024171,
+    "spearman": 0.030316,
+    "abs_pearson": 0.024171,
+    "abs_spearman": 0.030316
+  },
+  {
+    "feature": "payems_value",
     "target": "target_gold_return_next_3m",
-    "n": 5474,
-    "pearson": 0.002224,
-    "spearman": -0.02091,
-    "abs_pearson": 0.002224,
-    "abs_spearman": 0.02091
+    "n": 5615,
+    "pearson": 0.075417,
+    "spearman": 0.030228,
+    "abs_pearson": 0.075417,
+    "abs_spearman": 0.030228
   },
   {
-    "feature": "central_bank_gold_reserves_top15_tonnes",
+    "feature": "dxy_return_3m",
+    "target": "target_gold_max_drawdown_next_3m",
+    "n": 5614,
+    "pearson": -0.057904,
+    "spearman": -0.030142,
+    "abs_pearson": 0.057904,
+    "abs_spearman": 0.030142
+  },
+  {
+    "feature": "dxy_close_change_1m",
+    "target": "target_gold_max_drawdown_next_3m",
+    "n": 5656,
+    "pearson": -0.029835,
+    "spearman": -0.030021,
+    "abs_pearson": 0.029835,
+    "abs_spearman": 0.030021
+  },
+  {
+    "feature": "nasdaq_return_3m",
+    "target": "target_gold_max_drawdown_next_3m",
+    "n": 5614,
+    "pearson": 0.073887,
+    "spearman": 0.029775,
+    "abs_pearson": 0.073887,
+    "abs_spearman": 0.029775
+  },
+  {
+    "feature": "rrpontsyd_value",
     "target": "target_good_entry_3m",
-    "n": 5537,
-    "pearson": 0.053106,
-    "spearman": 0.020559,
-    "abs_pearson": 0.053106,
-    "abs_spearman": 0.020559
-  },
-  {
-    "feature": "silver_futures_return_1m",
-    "target": "target_bad_entry_3m",
-    "n": 5578,
-    "pearson": 0.026905,
-    "spearman": 0.020317,
-    "abs_pearson": 0.026905,
-    "abs_spearman": 0.020317
-  },
-  {
-    "feature": "central_bank_gold_reserves_top15_tonnes_change_1m",
-    "target": "target_good_entry_3m",
-    "n": 5516,
-    "pearson": -0.03145,
-    "spearman": -0.020099,
-    "abs_pearson": 0.03145,
-    "abs_spearman": 0.020099
+    "n": 5614,
+    "pearson": -0.03802,
+    "spearman": -0.029714,
+    "abs_pearson": 0.03802,
+    "abs_spearman": 0.029714
   },
   {
     "feature": "fedfunds_value_change_1m",
     "target": "target_bad_entry_3m",
-    "n": 5578,
-    "pearson": -0.030766,
-    "spearman": -0.019743,
-    "abs_pearson": 0.030766,
-    "abs_spearman": 0.019743
+    "n": 5656,
+    "pearson": -0.031591,
+    "spearman": -0.02971,
+    "abs_pearson": 0.031591,
+    "abs_spearman": 0.02971
+  },
+  {
+    "feature": "dxy_return_1m",
+    "target": "target_gold_max_drawdown_next_3m",
+    "n": 5656,
+    "pearson": -0.030342,
+    "spearman": -0.029337,
+    "abs_pearson": 0.030342,
+    "abs_spearman": 0.029337
+  },
+  {
+    "feature": "vix_close_change_3m",
+    "target": "target_good_entry_3m",
+    "n": 5552,
+    "pearson": 0.022938,
+    "spearman": -0.029236,
+    "abs_pearson": 0.022938,
+    "abs_spearman": 0.029236
+  },
+  {
+    "feature": "pcepi_value_change_3m",
+    "target": "target_gold_return_next_3m",
+    "n": 5552,
+    "pearson": -0.126891,
+    "spearman": -0.027763,
+    "abs_pearson": 0.126891,
+    "abs_spearman": 0.027763
+  },
+  {
+    "feature": "silver_futures_return_1m",
+    "target": "target_gold_return_next_3m",
+    "n": 5594,
+    "pearson": -0.039516,
+    "spearman": -0.027259,
+    "abs_pearson": 0.039516,
+    "abs_spearman": 0.027259
+  },
+  {
+    "feature": "pcepi_value_change_3m",
+    "target": "target_bad_entry_3m",
+    "n": 5614,
+    "pearson": 0.074563,
+    "spearman": 0.026799,
+    "abs_pearson": 0.074563,
+    "abs_spearman": 0.026799
+  },
+  {
+    "feature": "nasdaq_return_1m",
+    "target": "target_bad_entry_3m",
+    "n": 5656,
+    "pearson": -0.032072,
+    "spearman": -0.026784,
+    "abs_pearson": 0.032072,
+    "abs_spearman": 0.026784
+  },
+  {
+    "feature": "cpiaucsl_value_change_3m",
+    "target": "target_good_entry_3m",
+    "n": 5552,
+    "pearson": -0.09531,
+    "spearman": -0.026439,
+    "abs_pearson": 0.09531,
+    "abs_spearman": 0.026439
+  },
+  {
+    "feature": "payems_value",
+    "target": "target_good_entry_3m",
+    "n": 5615,
+    "pearson": 0.060801,
+    "spearman": 0.026106,
+    "abs_pearson": 0.060801,
+    "abs_spearman": 0.026106
   },
   {
     "feature": "wti_crude_oil_return_1m",
     "target": "target_bad_entry_3m",
-    "n": 5578,
-    "pearson": 0.01947,
-    "spearman": 0.019536,
-    "abs_pearson": 0.01947,
-    "abs_spearman": 0.019536
-  },
-  {
-    "feature": "gld_return_3m",
-    "target": "target_gold_max_drawdown_next_3m",
-    "n": 5315,
-    "pearson": 0.011667,
-    "spearman": 0.019255,
-    "abs_pearson": 0.011667,
-    "abs_spearman": 0.019255
+    "n": 5656,
+    "pearson": 0.034724,
+    "spearman": 0.026006,
+    "abs_pearson": 0.034724,
+    "abs_spearman": 0.026006
   },
   {
     "feature": "days_to_next_fomc",
     "target": "target_good_entry_3m",
-    "n": 5537,
-    "pearson": 0.024097,
-    "spearman": 0.019246,
-    "abs_pearson": 0.024097,
-    "abs_spearman": 0.019246
-  },
-  {
-    "feature": "dfii10_value_change_3m",
-    "target": "target_good_entry_3m",
-    "n": 5474,
-    "pearson": 0.002794,
-    "spearman": -0.018847,
-    "abs_pearson": 0.002794,
-    "abs_spearman": 0.018847
-  },
-  {
-    "feature": "vix_percentile_1y",
-    "target": "target_gold_return_next_3m",
-    "n": 5286,
-    "pearson": 0.058522,
-    "spearman": 0.018641,
-    "abs_pearson": 0.058522,
-    "abs_spearman": 0.018641
-  },
-  {
-    "feature": "gld_return_1m",
-    "target": "target_good_entry_3m",
-    "n": 5295,
-    "pearson": 0.002587,
-    "spearman": 0.018129,
-    "abs_pearson": 0.002587,
-    "abs_spearman": 0.018129
-  },
-  {
-    "feature": "copper_futures_return_3m",
-    "target": "target_bad_entry_3m",
-    "n": 5536,
-    "pearson": 0.014143,
-    "spearman": -0.018089,
-    "abs_pearson": 0.014143,
-    "abs_spearman": 0.018089
-  },
-  {
-    "feature": "pcepi_value_change_1m",
-    "target": "target_gold_return_next_3m",
-    "n": 5516,
-    "pearson": -0.061297,
-    "spearman": 0.018002,
-    "abs_pearson": 0.061297,
-    "abs_spearman": 0.018002
-  },
-  {
-    "feature": "iau_return_3m",
-    "target": "target_gold_max_drawdown_next_3m",
-    "n": 5269,
-    "pearson": 0.012591,
-    "spearman": 0.017979,
-    "abs_pearson": 0.012591,
-    "abs_spearman": 0.017979
-  },
-  {
-    "feature": "m2sl_value_change_3m",
-    "target": "target_gold_max_drawdown_next_3m",
-    "n": 5536,
-    "pearson": 0.041273,
-    "spearman": -0.017558,
-    "abs_pearson": 0.041273,
-    "abs_spearman": 0.017558
-  },
-  {
-    "feature": "m2sl_value_change_1m",
-    "target": "target_bad_entry_3m",
-    "n": 5578,
-    "pearson": -0.009476,
-    "spearman": -0.017345,
-    "abs_pearson": 0.009476,
-    "abs_spearman": 0.017345
-  },
-  {
-    "feature": "copper_futures_return_3m",
-    "target": "target_good_entry_3m",
-    "n": 5474,
-    "pearson": -0.033809,
-    "spearman": 0.016674,
-    "abs_pearson": 0.033809,
-    "abs_spearman": 0.016674
-  },
-  {
-    "feature": "dxy_return_1m",
-    "target": "target_good_entry_3m",
-    "n": 5516,
-    "pearson": -0.016352,
-    "spearman": -0.016643,
-    "abs_pearson": 0.016352,
-    "abs_spearman": 0.016643
-  },
-  {
-    "feature": "silver_futures_return_3m",
-    "target": "target_gold_return_next_3m",
-    "n": 5474,
-    "pearson": 0.005228,
-    "spearman": 0.016564,
-    "abs_pearson": 0.005228,
-    "abs_spearman": 0.016564
-  },
-  {
-    "feature": "rrpontsyd_value",
-    "target": "target_gold_return_next_3m",
-    "n": 5536,
-    "pearson": -0.054034,
-    "spearman": -0.015992,
-    "abs_pearson": 0.054034,
-    "abs_spearman": 0.015992
+    "n": 5615,
+    "pearson": 0.031093,
+    "spearman": 0.026005,
+    "abs_pearson": 0.031093,
+    "abs_spearman": 0.026005
   },
   {
     "feature": "copper_futures_return_1m",
-    "target": "target_good_entry_3m",
-    "n": 5516,
-    "pearson": -0.05515,
-    "spearman": -0.015904,
-    "abs_pearson": 0.05515,
-    "abs_spearman": 0.015904
-  },
-  {
-    "feature": "dfii10_value_change_3m",
-    "target": "target_gold_return_next_1m",
-    "n": 5516,
-    "pearson": -0.000133,
-    "spearman": 0.015842,
-    "abs_pearson": 0.000133,
-    "abs_spearman": 0.015842
-  },
-  {
-    "feature": "fedfunds_value_change_3m",
     "target": "target_gold_max_drawdown_next_3m",
-    "n": 5536,
-    "pearson": 0.061503,
-    "spearman": -0.015767,
-    "abs_pearson": 0.061503,
-    "abs_spearman": 0.015767
-  },
-  {
-    "feature": "pcepi_value_change_3m",
-    "target": "target_good_entry_3m",
-    "n": 5474,
-    "pearson": -0.049291,
-    "spearman": 0.015663,
-    "abs_pearson": 0.049291,
-    "abs_spearman": 0.015663
+    "n": 5656,
+    "pearson": -0.008688,
+    "spearman": 0.025822,
+    "abs_pearson": 0.008688,
+    "abs_spearman": 0.025822
   },
   {
     "feature": "silver_futures_return_3m",
-    "target": "target_bad_entry_3m",
-    "n": 5536,
-    "pearson": 0.01881,
-    "spearman": -0.015372,
-    "abs_pearson": 0.01881,
-    "abs_spearman": 0.015372
-  },
-  {
-    "feature": "dxy_close_change_1m",
-    "target": "target_gold_return_next_1m",
-    "n": 5558,
-    "pearson": 0.009625,
-    "spearman": -0.01456,
-    "abs_pearson": 0.009625,
-    "abs_spearman": 0.01456
-  },
-  {
-    "feature": "cpiaucsl_value_change_1m",
-    "target": "target_gold_return_next_1m",
-    "n": 5558,
-    "pearson": -0.043134,
-    "spearman": 0.014077,
-    "abs_pearson": 0.043134,
-    "abs_spearman": 0.014077
-  },
-  {
-    "feature": "dxy_close_change_1m",
     "target": "target_good_entry_3m",
-    "n": 5516,
-    "pearson": -0.010139,
-    "spearman": -0.013817,
-    "abs_pearson": 0.010139,
-    "abs_spearman": 0.013817
+    "n": 5552,
+    "pearson": -0.007081,
+    "spearman": 0.025643,
+    "abs_pearson": 0.007081,
+    "abs_spearman": 0.025643
   },
   {
-    "feature": "t10y2y_value_change_1m",
+    "feature": "dxy_close_change_3m",
     "target": "target_gold_max_drawdown_next_3m",
-    "n": 5578,
-    "pearson": -0.051409,
-    "spearman": -0.013126,
-    "abs_pearson": 0.051409,
-    "abs_spearman": 0.013126
-  },
-  {
-    "feature": "nasdaq_return_1m",
-    "target": "target_gold_return_next_3m",
-    "n": 5516,
-    "pearson": -0.055299,
-    "spearman": -0.012809,
-    "abs_pearson": 0.055299,
-    "abs_spearman": 0.012809
-  },
-  {
-    "feature": "dxy_return_1m",
-    "target": "target_gold_return_next_1m",
-    "n": 5558,
-    "pearson": 0.017609,
-    "spearman": -0.012806,
-    "abs_pearson": 0.017609,
-    "abs_spearman": 0.012806
+    "n": 5614,
+    "pearson": -0.047714,
+    "spearman": -0.025512,
+    "abs_pearson": 0.047714,
+    "abs_spearman": 0.025512
   },
   {
     "feature": "central_bank_gold_reserves_top15_change_3m",
     "target": "target_bad_entry_3m",
-    "n": 5536,
-    "pearson": 0.038476,
-    "spearman": -0.012533,
-    "abs_pearson": 0.038476,
-    "abs_spearman": 0.012533
+    "n": 5614,
+    "pearson": 0.030229,
+    "spearman": -0.025297,
+    "abs_pearson": 0.030229,
+    "abs_spearman": 0.025297
   },
   {
     "feature": "central_bank_gold_reserves_top15_tonnes_change_3m",
     "target": "target_bad_entry_3m",
-    "n": 5536,
-    "pearson": 0.038476,
-    "spearman": -0.012533,
-    "abs_pearson": 0.038476,
-    "abs_spearman": 0.012533
-  },
-  {
-    "feature": "iau_return_1m",
-    "target": "target_good_entry_3m",
-    "n": 5249,
-    "pearson": -0.00257,
-    "spearman": 0.01199,
-    "abs_pearson": 0.00257,
-    "abs_spearman": 0.01199
-  },
-  {
-    "feature": "days_to_next_fomc",
-    "target": "target_gold_return_next_3m",
-    "n": 5537,
-    "pearson": -0.043439,
-    "spearman": -0.011956,
-    "abs_pearson": 0.043439,
-    "abs_spearman": 0.011956
-  },
-  {
-    "feature": "vix_percentile_1y",
-    "target": "target_gold_return_next_1m",
-    "n": 5328,
-    "pearson": -0.002019,
-    "spearman": 0.011837,
-    "abs_pearson": 0.002019,
-    "abs_spearman": 0.011837
-  },
-  {
-    "feature": "cpiaucsl_value_change_3m",
-    "target": "target_good_entry_3m",
-    "n": 5474,
-    "pearson": -0.081222,
-    "spearman": -0.011643,
-    "abs_pearson": 0.081222,
-    "abs_spearman": 0.011643
-  },
-  {
-    "feature": "m2sl_value_change_3m",
-    "target": "target_gold_return_next_1m",
-    "n": 5516,
-    "pearson": 0.047832,
-    "spearman": 0.011085,
-    "abs_pearson": 0.047832,
-    "abs_spearman": 0.011085
-  },
-  {
-    "feature": "nasdaq_return_1m",
-    "target": "target_good_entry_3m",
-    "n": 5516,
-    "pearson": -0.03191,
-    "spearman": -0.010815,
-    "abs_pearson": 0.03191,
-    "abs_spearman": 0.010815
+    "n": 5614,
+    "pearson": 0.030229,
+    "spearman": -0.025297,
+    "abs_pearson": 0.030229,
+    "abs_spearman": 0.025297
   },
   {
     "feature": "dfii10_value_change_3m",
-    "target": "target_gold_max_drawdown_next_3m",
-    "n": 5536,
-    "pearson": -0.048402,
-    "spearman": -0.010535,
-    "abs_pearson": 0.048402,
-    "abs_spearman": 0.010535
+    "target": "target_gold_return_next_3m",
+    "n": 5552,
+    "pearson": 0.0008,
+    "spearman": -0.024944,
+    "abs_pearson": 0.0008,
+    "abs_spearman": 0.024944
   },
   {
-    "feature": "pcepi_value_change_3m",
-    "target": "target_gold_max_drawdown_next_3m",
-    "n": 5536,
-    "pearson": -0.017421,
-    "spearman": 0.010475,
-    "abs_pearson": 0.017421,
-    "abs_spearman": 0.010475
-  },
-  {
-    "feature": "dxy_close_change_1m",
+    "feature": "silver_futures_return_3m",
     "target": "target_bad_entry_3m",
-    "n": 5578,
-    "pearson": 0.012502,
-    "spearman": 0.010261,
-    "abs_pearson": 0.012502,
-    "abs_spearman": 0.010261
+    "n": 5614,
+    "pearson": 0.010092,
+    "spearman": -0.024578,
+    "abs_pearson": 0.010092,
+    "abs_spearman": 0.024578
+  },
+  {
+    "feature": "iau_return_1m",
+    "target": "target_gold_return_next_1m",
+    "n": 5369,
+    "pearson": -0.078793,
+    "spearman": -0.024375,
+    "abs_pearson": 0.078793,
+    "abs_spearman": 0.024375
+  },
+  {
+    "feature": "central_bank_gold_reserves_top15_tonnes_change_1m",
+    "target": "target_gold_return_next_3m",
+    "n": 5594,
+    "pearson": -0.067062,
+    "spearman": -0.023885,
+    "abs_pearson": 0.067062,
+    "abs_spearman": 0.023885
+  },
+  {
+    "feature": "gld_return_1m",
+    "target": "target_gold_return_next_1m",
+    "n": 5415,
+    "pearson": -0.077342,
+    "spearman": -0.023372,
+    "abs_pearson": 0.077342,
+    "abs_spearman": 0.023372
   },
   {
     "feature": "silver_futures_return_1m",
-    "target": "target_good_entry_3m",
-    "n": 5516,
-    "pearson": -0.018739,
-    "spearman": -0.010134,
-    "abs_pearson": 0.018739,
-    "abs_spearman": 0.010134
-  },
-  {
-    "feature": "dxy_return_1m",
-    "target": "target_bad_entry_3m",
-    "n": 5578,
-    "pearson": 0.012753,
-    "spearman": 0.01002,
-    "abs_pearson": 0.012753,
-    "abs_spearman": 0.01002
-  },
-  {
-    "feature": "pcepi_value",
-    "target": "target_gold_return_next_1m",
-    "n": 5579,
-    "pearson": 0.050908,
-    "spearman": 0.009244,
-    "abs_pearson": 0.050908,
-    "abs_spearman": 0.009244
-  },
-  {
-    "feature": "vix_close_change_3m",
-    "target": "target_gold_return_next_3m",
-    "n": 5474,
-    "pearson": 0.096308,
-    "spearman": 0.009236,
-    "abs_pearson": 0.096308,
-    "abs_spearman": 0.009236
-  },
-  {
-    "feature": "vix_return_3m",
-    "target": "target_gold_return_next_3m",
-    "n": 5474,
-    "pearson": 0.106121,
-    "spearman": 0.009229,
-    "abs_pearson": 0.106121,
-    "abs_spearman": 0.009229
-  },
-  {
-    "feature": "dxy_close_change_3m",
-    "target": "target_gold_return_next_3m",
-    "n": 5474,
-    "pearson": 0.026414,
-    "spearman": 0.00917,
-    "abs_pearson": 0.026414,
-    "abs_spearman": 0.00917
-  },
-  {
-    "feature": "gdpc1_value",
-    "target": "target_gold_return_next_1m",
-    "n": 5579,
-    "pearson": 0.046001,
-    "spearman": 0.009028,
-    "abs_pearson": 0.046001,
-    "abs_spearman": 0.009028
-  },
-  {
-    "feature": "t10y2y_value_change_3m",
-    "target": "target_bad_entry_3m",
-    "n": 5536,
-    "pearson": -0.001091,
-    "spearman": 0.008398,
-    "abs_pearson": 0.001091,
-    "abs_spearman": 0.008398
-  },
-  {
-    "feature": "pcepi_value_change_3m",
-    "target": "target_bad_entry_3m",
-    "n": 5536,
-    "pearson": 0.0253,
-    "spearman": -0.008242,
-    "abs_pearson": 0.0253,
-    "abs_spearman": 0.008242
-  },
-  {
-    "feature": "gld_return_1m",
-    "target": "target_bad_entry_3m",
-    "n": 5357,
-    "pearson": 0.03786,
-    "spearman": 0.007734,
-    "abs_pearson": 0.03786,
-    "abs_spearman": 0.007734
-  },
-  {
-    "feature": "dfii10_value_change_1m",
-    "target": "target_gold_return_next_3m",
-    "n": 5516,
-    "pearson": -0.003718,
-    "spearman": 0.007667,
-    "abs_pearson": 0.003718,
-    "abs_spearman": 0.007667
-  },
-  {
-    "feature": "gold_futures_return_1m",
-    "target": "target_good_entry_3m",
-    "n": 5516,
-    "pearson": -0.005928,
-    "spearman": 0.007394,
-    "abs_pearson": 0.005928,
-    "abs_spearman": 0.007394
-  },
-  {
-    "feature": "pcepi_value_change_3m",
-    "target": "target_gold_return_next_3m",
-    "n": 5474,
-    "pearson": -0.081712,
-    "spearman": 0.007069,
-    "abs_pearson": 0.081712,
-    "abs_spearman": 0.007069
-  },
-  {
-    "feature": "gld_return_1m",
-    "target": "target_gold_return_next_3m",
-    "n": 5295,
-    "pearson": -0.018028,
-    "spearman": 0.007041,
-    "abs_pearson": 0.018028,
-    "abs_spearman": 0.007041
-  },
-  {
-    "feature": "cpiaucsl_value",
-    "target": "target_gold_return_next_1m",
-    "n": 5579,
-    "pearson": 0.051288,
-    "spearman": 0.007027,
-    "abs_pearson": 0.051288,
-    "abs_spearman": 0.007027
-  },
-  {
-    "feature": "copper_futures_return_1m",
-    "target": "target_gold_return_next_1m",
-    "n": 5558,
-    "pearson": -0.031922,
-    "spearman": 0.006813,
-    "abs_pearson": 0.031922,
-    "abs_spearman": 0.006813
-  },
-  {
-    "feature": "dxy_close_change_3m",
-    "target": "target_gold_return_next_1m",
-    "n": 5516,
-    "pearson": 0.018828,
-    "spearman": 0.006813,
-    "abs_pearson": 0.018828,
-    "abs_spearman": 0.006813
-  },
-  {
-    "feature": "cpiaucsl_value_change_1m",
-    "target": "target_gold_return_next_3m",
-    "n": 5516,
-    "pearson": -0.101089,
-    "spearman": -0.006812,
-    "abs_pearson": 0.101089,
-    "abs_spearman": 0.006812
-  },
-  {
-    "feature": "dxy_return_3m",
-    "target": "target_gold_return_next_1m",
-    "n": 5516,
-    "pearson": 0.015429,
-    "spearman": 0.006733,
-    "abs_pearson": 0.015429,
-    "abs_spearman": 0.006733
-  },
-  {
-    "feature": "vix_return_3m",
     "target": "target_gold_max_drawdown_next_3m",
-    "n": 5536,
-    "pearson": -0.009753,
-    "spearman": -0.006375,
-    "abs_pearson": 0.009753,
-    "abs_spearman": 0.006375
-  },
-  {
-    "feature": "central_bank_gold_reserves_top15_tonnes_change_1m",
-    "target": "target_bad_entry_3m",
-    "n": 5578,
-    "pearson": 0.074217,
-    "spearman": -0.006293,
-    "abs_pearson": 0.074217,
-    "abs_spearman": 0.006293
-  },
-  {
-    "feature": "gold_futures_return_3m",
-    "target": "target_gold_return_next_1m",
-    "n": 5516,
-    "pearson": -0.033843,
-    "spearman": -0.006219,
-    "abs_pearson": 0.033843,
-    "abs_spearman": 0.006219
-  },
-  {
-    "feature": "m2sl_value",
-    "target": "target_gold_return_next_1m",
-    "n": 5579,
-    "pearson": 0.029254,
-    "spearman": 0.006059,
-    "abs_pearson": 0.029254,
-    "abs_spearman": 0.006059
-  },
-  {
-    "feature": "cpiaucsl_value_change_3m",
-    "target": "target_gold_return_next_1m",
-    "n": 5516,
-    "pearson": -0.076493,
-    "spearman": -0.005888,
-    "abs_pearson": 0.076493,
-    "abs_spearman": 0.005888
-  },
-  {
-    "feature": "dfii10_value_change_1m",
-    "target": "target_bad_entry_3m",
-    "n": 5578,
-    "pearson": 0.020391,
-    "spearman": 0.0056,
-    "abs_pearson": 0.020391,
-    "abs_spearman": 0.0056
-  },
-  {
-    "feature": "iau_return_1m",
-    "target": "target_bad_entry_3m",
-    "n": 5311,
-    "pearson": 0.035646,
-    "spearman": 0.005045,
-    "abs_pearson": 0.035646,
-    "abs_spearman": 0.005045
-  },
-  {
-    "feature": "dxy_close_change_1m",
-    "target": "target_gold_return_next_3m",
-    "n": 5516,
-    "pearson": 0.021846,
-    "spearman": 0.004829,
-    "abs_pearson": 0.021846,
-    "abs_spearman": 0.004829
-  },
-  {
-    "feature": "rrpontsyd_value",
-    "target": "target_gold_return_next_1m",
-    "n": 5578,
-    "pearson": -0.035231,
-    "spearman": -0.004585,
-    "abs_pearson": 0.035231,
-    "abs_spearman": 0.004585
-  },
-  {
-    "feature": "gold_futures_return_3m",
-    "target": "target_gold_max_drawdown_next_3m",
-    "n": 5536,
-    "pearson": 0.000783,
-    "spearman": 0.00455,
-    "abs_pearson": 0.000783,
-    "abs_spearman": 0.00455
-  },
-  {
-    "feature": "iau_return_1m",
-    "target": "target_gold_return_next_3m",
-    "n": 5249,
-    "pearson": -0.020112,
-    "spearman": 0.004441,
-    "abs_pearson": 0.020112,
-    "abs_spearman": 0.004441
-  },
-  {
-    "feature": "sp500_return_1m",
-    "target": "target_good_entry_3m",
-    "n": 5516,
-    "pearson": -0.025378,
-    "spearman": -0.004258,
-    "abs_pearson": 0.025378,
-    "abs_spearman": 0.004258
-  },
-  {
-    "feature": "vix_close_change_3m",
-    "target": "target_gold_max_drawdown_next_3m",
-    "n": 5536,
-    "pearson": -0.038489,
-    "spearman": -0.003957,
-    "abs_pearson": 0.038489,
-    "abs_spearman": 0.003957
-  },
-  {
-    "feature": "dxy_return_3m",
-    "target": "target_gold_return_next_3m",
-    "n": 5474,
-    "pearson": 0.025605,
-    "spearman": 0.003762,
-    "abs_pearson": 0.025605,
-    "abs_spearman": 0.003762
-  },
-  {
-    "feature": "dxy_return_3m",
-    "target": "target_good_entry_3m",
-    "n": 5474,
-    "pearson": 0.007913,
-    "spearman": -0.003347,
-    "abs_pearson": 0.007913,
-    "abs_spearman": 0.003347
-  },
-  {
-    "feature": "vix_percentile_1y",
-    "target": "target_good_entry_3m",
-    "n": 5286,
-    "pearson": 0.000478,
-    "spearman": 0.003321,
-    "abs_pearson": 0.000478,
-    "abs_spearman": 0.003321
-  },
-  {
-    "feature": "central_bank_gold_reserves_top15_tonnes_change_1m",
-    "target": "target_gold_max_drawdown_next_3m",
-    "n": 5578,
-    "pearson": -0.03564,
-    "spearman": -0.003156,
-    "abs_pearson": 0.03564,
-    "abs_spearman": 0.003156
-  },
-  {
-    "feature": "cpiaucsl_value_change_3m",
-    "target": "target_gold_max_drawdown_next_3m",
-    "n": 5536,
-    "pearson": -0.040774,
-    "spearman": -0.003096,
-    "abs_pearson": 0.040774,
-    "abs_spearman": 0.003096
-  },
-  {
-    "feature": "iau_return_3m",
-    "target": "target_gold_return_next_1m",
-    "n": 5249,
-    "pearson": -0.030849,
-    "spearman": -0.002833,
-    "abs_pearson": 0.030849,
-    "abs_spearman": 0.002833
+    "n": 5656,
+    "pearson": -0.020169,
+    "spearman": -0.023234,
+    "abs_pearson": 0.020169,
+    "abs_spearman": 0.023234
   },
   {
     "feature": "copper_futures_return_3m",
-    "target": "target_gold_return_next_3m",
-    "n": 5474,
-    "pearson": -0.059602,
-    "spearman": 0.002814,
-    "abs_pearson": 0.059602,
-    "abs_spearman": 0.002814
-  },
-  {
-    "feature": "dxy_return_1m",
-    "target": "target_gold_return_next_3m",
-    "n": 5516,
-    "pearson": 0.019224,
-    "spearman": 0.002759,
-    "abs_pearson": 0.019224,
-    "abs_spearman": 0.002759
-  },
-  {
-    "feature": "vix_close_change_3m",
-    "target": "target_bad_entry_3m",
-    "n": 5536,
-    "pearson": 0.012713,
-    "spearman": -0.002703,
-    "abs_pearson": 0.012713,
-    "abs_spearman": 0.002703
-  },
-  {
-    "feature": "sp500_return_1m",
-    "target": "target_gold_return_next_3m",
-    "n": 5516,
-    "pearson": -0.043653,
-    "spearman": 0.002675,
-    "abs_pearson": 0.043653,
-    "abs_spearman": 0.002675
-  },
-  {
-    "feature": "cpiaucsl_value_change_1m",
-    "target": "target_good_entry_3m",
-    "n": 5516,
-    "pearson": -0.05941,
-    "spearman": 0.002522,
-    "abs_pearson": 0.05941,
-    "abs_spearman": 0.002522
+    "target": "target_gold_max_drawdown_next_3m",
+    "n": 5614,
+    "pearson": -0.004237,
+    "spearman": 0.023015,
+    "abs_pearson": 0.004237,
+    "abs_spearman": 0.023015
   },
   {
     "feature": "cpiaucsl_value_change_3m",
+    "target": "target_gold_return_next_1m",
+    "n": 5594,
+    "pearson": -0.098297,
+    "spearman": -0.022869,
+    "abs_pearson": 0.098297,
+    "abs_spearman": 0.022869
+  },
+  {
+    "feature": "gld_return_3m",
+    "target": "target_gold_max_drawdown_next_3m",
+    "n": 5393,
+    "pearson": 0.014662,
+    "spearman": 0.022682,
+    "abs_pearson": 0.014662,
+    "abs_spearman": 0.022682
+  },
+  {
+    "feature": "central_bank_gold_reserves_top15_change_3m",
+    "target": "target_gold_return_next_1m",
+    "n": 5594,
+    "pearson": -0.057857,
+    "spearman": -0.022435,
+    "abs_pearson": 0.057857,
+    "abs_spearman": 0.022435
+  },
+  {
+    "feature": "central_bank_gold_reserves_top15_tonnes_change_3m",
+    "target": "target_gold_return_next_1m",
+    "n": 5594,
+    "pearson": -0.057857,
+    "spearman": -0.022435,
+    "abs_pearson": 0.057857,
+    "abs_spearman": 0.022435
+  },
+  {
+    "feature": "pcepi_value_change_3m",
+    "target": "target_gold_max_drawdown_next_3m",
+    "n": 5614,
+    "pearson": -0.078103,
+    "spearman": -0.021823,
+    "abs_pearson": 0.078103,
+    "abs_spearman": 0.021823
+  },
+  {
+    "feature": "m2sl_value_change_1m",
+    "target": "target_gold_return_next_1m",
+    "n": 5636,
+    "pearson": 0.007621,
+    "spearman": 0.02159,
+    "abs_pearson": 0.007621,
+    "abs_spearman": 0.02159
+  },
+  {
+    "feature": "iau_return_3m",
+    "target": "target_gold_max_drawdown_next_3m",
+    "n": 5347,
+    "pearson": 0.015582,
+    "spearman": 0.021584,
+    "abs_pearson": 0.015582,
+    "abs_spearman": 0.021584
+  },
+  {
+    "feature": "dfii10_value_change_3m",
+    "target": "target_good_entry_3m",
+    "n": 5552,
+    "pearson": 0.001687,
+    "spearman": -0.020909,
+    "abs_pearson": 0.001687,
+    "abs_spearman": 0.020909
+  },
+  {
+    "feature": "cpiaucsl_value_change_1m",
+    "target": "target_gold_max_drawdown_next_3m",
+    "n": 5656,
+    "pearson": -0.034757,
+    "spearman": 0.020254,
+    "abs_pearson": 0.034757,
+    "abs_spearman": 0.020254
+  },
+  {
+    "feature": "payems_value_change_1m",
     "target": "target_bad_entry_3m",
-    "n": 5536,
-    "pearson": 0.043035,
-    "spearman": -0.002049,
-    "abs_pearson": 0.043035,
-    "abs_spearman": 0.002049
+    "n": 5656,
+    "pearson": 0.013843,
+    "spearman": 0.017843,
+    "abs_pearson": 0.013843,
+    "abs_spearman": 0.017843
   },
   {
     "feature": "copper_futures_return_1m",
-    "target": "target_gold_return_next_3m",
-    "n": 5516,
-    "pearson": -0.0645,
-    "spearman": 0.001979,
-    "abs_pearson": 0.0645,
-    "abs_spearman": 0.001979
+    "target": "target_bad_entry_3m",
+    "n": 5656,
+    "pearson": 0.012957,
+    "spearman": -0.017753,
+    "abs_pearson": 0.012957,
+    "abs_spearman": 0.017753
   },
   {
-    "feature": "dxy_close_change_3m",
-    "target": "target_good_entry_3m",
-    "n": 5474,
-    "pearson": 0.011873,
-    "spearman": 0.001627,
-    "abs_pearson": 0.011873,
-    "abs_spearman": 0.001627
-  },
-  {
-    "feature": "gold_futures_return_1m",
-    "target": "target_gold_return_next_3m",
-    "n": 5516,
-    "pearson": -0.024223,
-    "spearman": -0.001598,
-    "abs_pearson": 0.024223,
-    "abs_spearman": 0.001598
+    "feature": "gld_return_1m",
+    "target": "target_gold_max_drawdown_next_3m",
+    "n": 5435,
+    "pearson": -0.051715,
+    "spearman": -0.017418,
+    "abs_pearson": 0.051715,
+    "abs_spearman": 0.017418
   },
   {
     "feature": "vix_return_3m",
+    "target": "target_gold_max_drawdown_next_3m",
+    "n": 5614,
+    "pearson": -0.020488,
+    "spearman": -0.017141,
+    "abs_pearson": 0.020488,
+    "abs_spearman": 0.017141
+  },
+  {
+    "feature": "copper_futures_return_1m",
+    "target": "target_good_entry_3m",
+    "n": 5594,
+    "pearson": -0.055776,
+    "spearman": -0.016858,
+    "abs_pearson": 0.055776,
+    "abs_spearman": 0.016858
+  },
+  {
+    "feature": "vix_return_1m",
     "target": "target_bad_entry_3m",
-    "n": 5536,
-    "pearson": 0.003451,
-    "spearman": 0.001165,
-    "abs_pearson": 0.003451,
-    "abs_spearman": 0.001165
+    "n": 5656,
+    "pearson": 0.034445,
+    "spearman": 0.016577,
+    "abs_pearson": 0.034445,
+    "abs_spearman": 0.016577
   },
   {
     "feature": "central_bank_gold_reserves_top15_tonnes",
     "target": "target_gold_return_next_1m",
-    "n": 5579,
-    "pearson": 0.030327,
-    "spearman": 0.001136,
-    "abs_pearson": 0.030327,
-    "abs_spearman": 0.001136
+    "n": 5657,
+    "pearson": 0.010715,
+    "spearman": -0.016553,
+    "abs_pearson": 0.010715,
+    "abs_spearman": 0.016553
   },
   {
-    "feature": "fedfunds_value_change_1m",
+    "feature": "iau_return_1m",
     "target": "target_gold_max_drawdown_next_3m",
-    "n": 5578,
-    "pearson": 0.050425,
-    "spearman": -0.000691,
-    "abs_pearson": 0.050425,
-    "abs_spearman": 0.000691
+    "n": 5389,
+    "pearson": -0.050388,
+    "spearman": -0.016448,
+    "abs_pearson": 0.050388,
+    "abs_spearman": 0.016448
+  },
+  {
+    "feature": "m2sl_value_change_3m",
+    "target": "target_gold_return_next_1m",
+    "n": 5594,
+    "pearson": 0.03199,
+    "spearman": -0.016356,
+    "abs_pearson": 0.03199,
+    "abs_spearman": 0.016356
+  },
+  {
+    "feature": "copper_futures_return_3m",
+    "target": "target_bad_entry_3m",
+    "n": 5614,
+    "pearson": 0.014041,
+    "spearman": -0.015983,
+    "abs_pearson": 0.014041,
+    "abs_spearman": 0.015983
+  },
+  {
+    "feature": "m2sl_value_change_1m",
+    "target": "target_bad_entry_3m",
+    "n": 5656,
+    "pearson": 0.011244,
+    "spearman": 0.015981,
+    "abs_pearson": 0.011244,
+    "abs_spearman": 0.015981
+  },
+  {
+    "feature": "pcepi_value_change_1m",
+    "target": "target_gold_return_next_1m",
+    "n": 5636,
+    "pearson": -0.035758,
+    "spearman": 0.015834,
+    "abs_pearson": 0.035758,
+    "abs_spearman": 0.015834
+  },
+  {
+    "feature": "dfii10_value_change_3m",
+    "target": "target_gold_max_drawdown_next_3m",
+    "n": 5614,
+    "pearson": -0.0491,
+    "spearman": -0.015802,
+    "abs_pearson": 0.0491,
+    "abs_spearman": 0.015802
+  },
+  {
+    "feature": "gld_return_1m",
+    "target": "target_good_entry_3m",
+    "n": 5373,
+    "pearson": 0.000622,
+    "spearman": 0.015798,
+    "abs_pearson": 0.000622,
+    "abs_spearman": 0.015798
   },
   {
     "feature": "dfii10_value_change_1m",
+    "target": "target_bad_entry_3m",
+    "n": 5656,
+    "pearson": 0.027796,
+    "spearman": 0.015631,
+    "abs_pearson": 0.027796,
+    "abs_spearman": 0.015631
+  },
+  {
+    "feature": "dxy_return_1m",
     "target": "target_good_entry_3m",
-    "n": 5516,
-    "pearson": -0.000559,
-    "spearman": -0.000594,
-    "abs_pearson": 0.000559,
-    "abs_spearman": 0.000594
+    "n": 5594,
+    "pearson": -0.015681,
+    "spearman": -0.01559,
+    "abs_pearson": 0.015681,
+    "abs_spearman": 0.01559
+  },
+  {
+    "feature": "central_bank_gold_reserves_top15_tonnes_change_1m",
+    "target": "target_bad_entry_3m",
+    "n": 5656,
+    "pearson": 0.068098,
+    "spearman": -0.014979,
+    "abs_pearson": 0.068098,
+    "abs_spearman": 0.014979
   },
   {
     "feature": "gld_return_3m",
     "target": "target_gold_return_next_1m",
-    "n": 5295,
-    "pearson": -0.028591,
-    "spearman": 0.000551,
-    "abs_pearson": 0.028591,
-    "abs_spearman": 0.000551
+    "n": 5373,
+    "pearson": -0.010344,
+    "spearman": 0.014893,
+    "abs_pearson": 0.010344,
+    "abs_spearman": 0.014893
+  },
+  {
+    "feature": "vix_close_change_3m",
+    "target": "target_gold_max_drawdown_next_3m",
+    "n": 5614,
+    "pearson": -0.048163,
+    "spearman": -0.014641,
+    "abs_pearson": 0.048163,
+    "abs_spearman": 0.014641
+  },
+  {
+    "feature": "pcepi_value_change_1m",
+    "target": "target_gold_return_next_3m",
+    "n": 5594,
+    "pearson": -0.101902,
+    "spearman": -0.014385,
+    "abs_pearson": 0.101902,
+    "abs_spearman": 0.014385
+  },
+  {
+    "feature": "central_bank_gold_reserves_top15_tonnes_change_1m",
+    "target": "target_good_entry_3m",
+    "n": 5594,
+    "pearson": -0.028245,
+    "spearman": -0.014348,
+    "abs_pearson": 0.028245,
+    "abs_spearman": 0.014348
+  },
+  {
+    "feature": "silver_futures_return_1m",
+    "target": "target_bad_entry_3m",
+    "n": 5656,
+    "pearson": 0.01986,
+    "spearman": 0.014334,
+    "abs_pearson": 0.01986,
+    "abs_spearman": 0.014334
+  },
+  {
+    "feature": "pcepi_value_change_1m",
+    "target": "target_gold_max_drawdown_next_3m",
+    "n": 5656,
+    "pearson": -0.024653,
+    "spearman": 0.014265,
+    "abs_pearson": 0.024653,
+    "abs_spearman": 0.014265
+  },
+  {
+    "feature": "dxy_close_change_1m",
+    "target": "target_gold_return_next_1m",
+    "n": 5636,
+    "pearson": 0.009532,
+    "spearman": -0.014,
+    "abs_pearson": 0.009532,
+    "abs_spearman": 0.014
+  },
+  {
+    "feature": "pcepi_value",
+    "target": "target_good_entry_3m",
+    "n": 5615,
+    "pearson": 0.061875,
+    "spearman": 0.013872,
+    "abs_pearson": 0.061875,
+    "abs_spearman": 0.013872
+  },
+  {
+    "feature": "iau_return_1m",
+    "target": "target_bad_entry_3m",
+    "n": 5389,
+    "pearson": 0.01371,
+    "spearman": -0.013689,
+    "abs_pearson": 0.01371,
+    "abs_spearman": 0.013689
+  },
+  {
+    "feature": "m2sl_value_change_1m",
+    "target": "target_good_entry_3m",
+    "n": 5594,
+    "pearson": 0.057987,
+    "spearman": 0.013314,
+    "abs_pearson": 0.057987,
+    "abs_spearman": 0.013314
+  },
+  {
+    "feature": "m2sl_value",
+    "target": "target_gold_return_next_1m",
+    "n": 5657,
+    "pearson": 0.006861,
+    "spearman": -0.013171,
+    "abs_pearson": 0.006861,
+    "abs_spearman": 0.013171
+  },
+  {
+    "feature": "dxy_close_change_1m",
+    "target": "target_good_entry_3m",
+    "n": 5594,
+    "pearson": -0.009528,
+    "spearman": -0.012697,
+    "abs_pearson": 0.009528,
+    "abs_spearman": 0.012697
+  },
+  {
+    "feature": "pcepi_value_change_1m",
+    "target": "target_bad_entry_3m",
+    "n": 5656,
+    "pearson": 0.034099,
+    "spearman": 0.012653,
+    "abs_pearson": 0.034099,
+    "abs_spearman": 0.012653
+  },
+  {
+    "feature": "pcepi_value_change_1m",
+    "target": "target_good_entry_3m",
+    "n": 5594,
+    "pearson": -0.038197,
+    "spearman": 0.012385,
+    "abs_pearson": 0.038197,
+    "abs_spearman": 0.012385
+  },
+  {
+    "feature": "dxy_return_1m",
+    "target": "target_gold_return_next_1m",
+    "n": 5636,
+    "pearson": 0.017521,
+    "spearman": -0.012313,
+    "abs_pearson": 0.017521,
+    "abs_spearman": 0.012313
+  },
+  {
+    "feature": "cpiaucsl_value",
+    "target": "target_gold_return_next_1m",
+    "n": 5657,
+    "pearson": 0.022076,
+    "spearman": -0.012207,
+    "abs_pearson": 0.022076,
+    "abs_spearman": 0.012207
+  },
+  {
+    "feature": "cpiaucsl_value",
+    "target": "target_good_entry_3m",
+    "n": 5615,
+    "pearson": 0.064018,
+    "spearman": 0.01208,
+    "abs_pearson": 0.064018,
+    "abs_spearman": 0.01208
+  },
+  {
+    "feature": "vix_close_change_1m",
+    "target": "target_bad_entry_3m",
+    "n": 5656,
+    "pearson": 0.039476,
+    "spearman": 0.011757,
+    "abs_pearson": 0.039476,
+    "abs_spearman": 0.011757
+  },
+  {
+    "feature": "iau_return_3m",
+    "target": "target_gold_return_next_1m",
+    "n": 5327,
+    "pearson": -0.012367,
+    "spearman": 0.01175,
+    "abs_pearson": 0.012367,
+    "abs_spearman": 0.01175
+  },
+  {
+    "feature": "dxy_close_change_3m",
+    "target": "target_gold_return_next_3m",
+    "n": 5552,
+    "pearson": 0.028227,
+    "spearman": 0.011164,
+    "abs_pearson": 0.028227,
+    "abs_spearman": 0.011164
+  },
+  {
+    "feature": "vix_return_3m",
+    "target": "target_bad_entry_3m",
+    "n": 5614,
+    "pearson": 0.011091,
+    "spearman": 0.011088,
+    "abs_pearson": 0.011091,
+    "abs_spearman": 0.011088
+  },
+  {
+    "feature": "gld_return_1m",
+    "target": "target_bad_entry_3m",
+    "n": 5435,
+    "pearson": 0.015957,
+    "spearman": -0.010964,
+    "abs_pearson": 0.015957,
+    "abs_spearman": 0.010964
+  },
+  {
+    "feature": "copper_futures_return_3m",
+    "target": "target_good_entry_3m",
+    "n": 5552,
+    "pearson": -0.037688,
+    "spearman": 0.010748,
+    "abs_pearson": 0.037688,
+    "abs_spearman": 0.010748
+  },
+  {
+    "feature": "cpiaucsl_value_change_1m",
+    "target": "target_good_entry_3m",
+    "n": 5594,
+    "pearson": -0.074642,
+    "spearman": -0.010657,
+    "abs_pearson": 0.074642,
+    "abs_spearman": 0.010657
+  },
+  {
+    "feature": "gdpc1_value",
+    "target": "target_gold_return_next_1m",
+    "n": 5657,
+    "pearson": 0.020483,
+    "spearman": -0.010389,
+    "abs_pearson": 0.020483,
+    "abs_spearman": 0.010389
+  },
+  {
+    "feature": "m2sl_value",
+    "target": "target_good_entry_3m",
+    "n": 5615,
+    "pearson": 0.027617,
+    "spearman": 0.010322,
+    "abs_pearson": 0.027617,
+    "abs_spearman": 0.010322
+  },
+  {
+    "feature": "dxy_close_change_1m",
+    "target": "target_bad_entry_3m",
+    "n": 5656,
+    "pearson": 0.012394,
+    "spearman": 0.010286,
+    "abs_pearson": 0.012394,
+    "abs_spearman": 0.010286
+  },
+  {
+    "feature": "pcepi_value",
+    "target": "target_gold_return_next_1m",
+    "n": 5657,
+    "pearson": 0.020881,
+    "spearman": -0.010063,
+    "abs_pearson": 0.020881,
+    "abs_spearman": 0.010063
+  },
+  {
+    "feature": "dxy_return_1m",
+    "target": "target_bad_entry_3m",
+    "n": 5656,
+    "pearson": 0.012509,
+    "spearman": 0.010027,
+    "abs_pearson": 0.012509,
+    "abs_spearman": 0.010027
+  },
+  {
+    "feature": "iau_return_1m",
+    "target": "target_good_entry_3m",
+    "n": 5327,
+    "pearson": -0.004368,
+    "spearman": 0.009773,
+    "abs_pearson": 0.004368,
+    "abs_spearman": 0.009773
+  },
+  {
+    "feature": "gdpc1_value",
+    "target": "target_good_entry_3m",
+    "n": 5615,
+    "pearson": 0.047527,
+    "spearman": 0.009393,
+    "abs_pearson": 0.047527,
+    "abs_spearman": 0.009393
+  },
+  {
+    "feature": "vix_percentile_1y",
+    "target": "target_gold_return_next_1m",
+    "n": 5406,
+    "pearson": -0.002958,
+    "spearman": 0.009171,
+    "abs_pearson": 0.002958,
+    "abs_spearman": 0.009171
+  },
+  {
+    "feature": "silver_futures_return_1m",
+    "target": "target_good_entry_3m",
+    "n": 5594,
+    "pearson": -0.019305,
+    "spearman": -0.008442,
+    "abs_pearson": 0.019305,
+    "abs_spearman": 0.008442
+  },
+  {
+    "feature": "nasdaq_return_1m",
+    "target": "target_good_entry_3m",
+    "n": 5594,
+    "pearson": -0.032451,
+    "spearman": -0.008395,
+    "abs_pearson": 0.032451,
+    "abs_spearman": 0.008395
+  },
+  {
+    "feature": "fedfunds_value_change_1m",
+    "target": "target_gold_max_drawdown_next_3m",
+    "n": 5656,
+    "pearson": 0.050668,
+    "spearman": 0.008369,
+    "abs_pearson": 0.050668,
+    "abs_spearman": 0.008369
+  },
+  {
+    "feature": "gold_futures_return_3m",
+    "target": "target_gold_max_drawdown_next_3m",
+    "n": 5614,
+    "pearson": 0.003829,
+    "spearman": 0.008261,
+    "abs_pearson": 0.003829,
+    "abs_spearman": 0.008261
+  },
+  {
+    "feature": "nasdaq_return_1m",
+    "target": "target_gold_return_next_3m",
+    "n": 5594,
+    "pearson": -0.056701,
+    "spearman": -0.008238,
+    "abs_pearson": 0.056701,
+    "abs_spearman": 0.008238
+  },
+  {
+    "feature": "gold_futures_return_3m",
+    "target": "target_gold_return_next_1m",
+    "n": 5594,
+    "pearson": -0.016245,
+    "spearman": 0.00764,
+    "abs_pearson": 0.016245,
+    "abs_spearman": 0.00764
+  },
+  {
+    "feature": "dfii10_value_change_3m",
+    "target": "target_gold_return_next_1m",
+    "n": 5594,
+    "pearson": -0.0067,
+    "spearman": 0.007428,
+    "abs_pearson": 0.0067,
+    "abs_spearman": 0.007428
+  },
+  {
+    "feature": "cpiaucsl_value_change_1m",
+    "target": "target_gold_return_next_1m",
+    "n": 5636,
+    "pearson": -0.044894,
+    "spearman": 0.00734,
+    "abs_pearson": 0.044894,
+    "abs_spearman": 0.00734
+  },
+  {
+    "feature": "pcepi_value",
+    "target": "target_gold_return_next_3m",
+    "n": 5615,
+    "pearson": 0.060515,
+    "spearman": 0.00724,
+    "abs_pearson": 0.060515,
+    "abs_spearman": 0.00724
+  },
+  {
+    "feature": "vix_close_change_3m",
+    "target": "target_bad_entry_3m",
+    "n": 5614,
+    "pearson": 0.020032,
+    "spearman": 0.007114,
+    "abs_pearson": 0.020032,
+    "abs_spearman": 0.007114
+  },
+  {
+    "feature": "copper_futures_return_3m",
+    "target": "target_gold_return_next_3m",
+    "n": 5552,
+    "pearson": -0.06547,
+    "spearman": -0.007005,
+    "abs_pearson": 0.06547,
+    "abs_spearman": 0.007005
+  },
+  {
+    "feature": "dfii10_value_change_1m",
+    "target": "target_gold_return_next_3m",
+    "n": 5594,
+    "pearson": -0.003768,
+    "spearman": 0.006695,
+    "abs_pearson": 0.003768,
+    "abs_spearman": 0.006695
   },
   {
     "feature": "copper_futures_return_3m",
     "target": "target_gold_return_next_1m",
-    "n": 5516,
-    "pearson": -0.052287,
-    "spearman": -0.000463,
-    "abs_pearson": 0.052287,
-    "abs_spearman": 0.000463
+    "n": 5594,
+    "pearson": -0.055849,
+    "spearman": -0.006502,
+    "abs_pearson": 0.055849,
+    "abs_spearman": 0.006502
+  },
+  {
+    "feature": "sp500_return_1m",
+    "target": "target_gold_return_next_3m",
+    "n": 5594,
+    "pearson": -0.044047,
+    "spearman": 0.006466,
+    "abs_pearson": 0.044047,
+    "abs_spearman": 0.006466
+  },
+  {
+    "feature": "rrpontsyd_value",
+    "target": "target_gold_return_next_3m",
+    "n": 5614,
+    "pearson": -0.042621,
+    "spearman": 0.006175,
+    "abs_pearson": 0.042621,
+    "abs_spearman": 0.006175
+  },
+  {
+    "feature": "dxy_close_change_1m",
+    "target": "target_gold_return_next_3m",
+    "n": 5594,
+    "pearson": 0.020984,
+    "spearman": 0.006003,
+    "abs_pearson": 0.020984,
+    "abs_spearman": 0.006003
+  },
+  {
+    "feature": "dxy_return_3m",
+    "target": "target_gold_return_next_3m",
+    "n": 5552,
+    "pearson": 0.027638,
+    "spearman": 0.005791,
+    "abs_pearson": 0.027638,
+    "abs_spearman": 0.005791
+  },
+  {
+    "feature": "fedfunds_value_change_3m",
+    "target": "target_gold_max_drawdown_next_3m",
+    "n": 5614,
+    "pearson": 0.062425,
+    "spearman": -0.005777,
+    "abs_pearson": 0.062425,
+    "abs_spearman": 0.005777
+  },
+  {
+    "feature": "payems_value",
+    "target": "target_gold_return_next_1m",
+    "n": 5657,
+    "pearson": 0.031052,
+    "spearman": 0.005745,
+    "abs_pearson": 0.031052,
+    "abs_spearman": 0.005745
+  },
+  {
+    "feature": "rrpontsyd_value",
+    "target": "target_gold_return_next_1m",
+    "n": 5656,
+    "pearson": -0.029706,
+    "spearman": 0.005645,
+    "abs_pearson": 0.029706,
+    "abs_spearman": 0.005645
+  },
+  {
+    "feature": "t10y2y_value_change_1m",
+    "target": "target_gold_max_drawdown_next_3m",
+    "n": 5656,
+    "pearson": -0.044147,
+    "spearman": -0.005608,
+    "abs_pearson": 0.044147,
+    "abs_spearman": 0.005608
+  },
+  {
+    "feature": "silver_futures_return_3m",
+    "target": "target_gold_return_next_3m",
+    "n": 5552,
+    "pearson": -0.029252,
+    "spearman": 0.005455,
+    "abs_pearson": 0.029252,
+    "abs_spearman": 0.005455
+  },
+  {
+    "feature": "gld_return_1m",
+    "target": "target_gold_return_next_3m",
+    "n": 5373,
+    "pearson": -0.017626,
+    "spearman": 0.005403,
+    "abs_pearson": 0.017626,
+    "abs_spearman": 0.005403
+  },
+  {
+    "feature": "vix_close_change_3m",
+    "target": "target_gold_return_next_3m",
+    "n": 5552,
+    "pearson": 0.082402,
+    "spearman": -0.005402,
+    "abs_pearson": 0.082402,
+    "abs_spearman": 0.005402
+  },
+  {
+    "feature": "vix_return_3m",
+    "target": "target_gold_return_next_3m",
+    "n": 5552,
+    "pearson": 0.092318,
+    "spearman": -0.005348,
+    "abs_pearson": 0.092318,
+    "abs_spearman": 0.005348
+  },
+  {
+    "feature": "gold_futures_return_1m",
+    "target": "target_good_entry_3m",
+    "n": 5594,
+    "pearson": -0.00759,
+    "spearman": 0.005108,
+    "abs_pearson": 0.00759,
+    "abs_spearman": 0.005108
+  },
+  {
+    "feature": "vix_percentile_1y",
+    "target": "target_good_entry_3m",
+    "n": 5364,
+    "pearson": -0.007855,
+    "spearman": -0.00503,
+    "abs_pearson": 0.007855,
+    "abs_spearman": 0.00503
+  },
+  {
+    "feature": "gold_futures_return_1m",
+    "target": "target_bad_entry_3m",
+    "n": 5656,
+    "pearson": 0.028923,
+    "spearman": 0.004981,
+    "abs_pearson": 0.028923,
+    "abs_spearman": 0.004981
+  },
+  {
+    "feature": "central_bank_gold_reserves_top15_tonnes_change_1m",
+    "target": "target_gold_max_drawdown_next_3m",
+    "n": 5656,
+    "pearson": -0.029024,
+    "spearman": 0.004878,
+    "abs_pearson": 0.029024,
+    "abs_spearman": 0.004878
+  },
+  {
+    "feature": "copper_futures_return_1m",
+    "target": "target_gold_return_next_1m",
+    "n": 5636,
+    "pearson": -0.04057,
+    "spearman": -0.004326,
+    "abs_pearson": 0.04057,
+    "abs_spearman": 0.004326
+  },
+  {
+    "feature": "cpiaucsl_value",
+    "target": "target_gold_return_next_3m",
+    "n": 5615,
+    "pearson": 0.063115,
+    "spearman": 0.004127,
+    "abs_pearson": 0.063115,
+    "abs_spearman": 0.004127
+  },
+  {
+    "feature": "dxy_return_1m",
+    "target": "target_gold_return_next_3m",
+    "n": 5594,
+    "pearson": 0.018592,
+    "spearman": 0.003822,
+    "abs_pearson": 0.018592,
+    "abs_spearman": 0.003822
+  },
+  {
+    "feature": "gdpc1_value",
+    "target": "target_gold_return_next_3m",
+    "n": 5615,
+    "pearson": 0.055464,
+    "spearman": 0.003501,
+    "abs_pearson": 0.055464,
+    "abs_spearman": 0.003501
+  },
+  {
+    "feature": "gold_futures_return_1m",
+    "target": "target_gold_return_next_3m",
+    "n": 5594,
+    "pearson": -0.023789,
+    "spearman": -0.003441,
+    "abs_pearson": 0.023789,
+    "abs_spearman": 0.003441
+  },
+  {
+    "feature": "dxy_return_3m",
+    "target": "target_gold_return_next_1m",
+    "n": 5594,
+    "pearson": 0.013433,
+    "spearman": 0.0031,
+    "abs_pearson": 0.013433,
+    "abs_spearman": 0.0031
+  },
+  {
+    "feature": "dxy_close_change_3m",
+    "target": "target_good_entry_3m",
+    "n": 5552,
+    "pearson": 0.013245,
+    "spearman": 0.003098,
+    "abs_pearson": 0.013245,
+    "abs_spearman": 0.003098
+  },
+  {
+    "feature": "central_bank_gold_reserves_top15_tonnes",
+    "target": "target_gold_return_next_3m",
+    "n": 5615,
+    "pearson": 0.039701,
+    "spearman": 0.003094,
+    "abs_pearson": 0.039701,
+    "abs_spearman": 0.003094
+  },
+  {
+    "feature": "dxy_close_change_3m",
+    "target": "target_gold_return_next_1m",
+    "n": 5594,
+    "pearson": 0.016347,
+    "spearman": 0.00299,
+    "abs_pearson": 0.016347,
+    "abs_spearman": 0.00299
+  },
+  {
+    "feature": "iau_return_1m",
+    "target": "target_gold_return_next_3m",
+    "n": 5327,
+    "pearson": -0.019506,
+    "spearman": 0.002972,
+    "abs_pearson": 0.019506,
+    "abs_spearman": 0.002972
+  },
+  {
+    "feature": "t10y2y_value_change_3m",
+    "target": "target_bad_entry_3m",
+    "n": 5614,
+    "pearson": -0.009368,
+    "spearman": -0.002852,
+    "abs_pearson": 0.009368,
+    "abs_spearman": 0.002852
+  },
+  {
+    "feature": "pcepi_value_change_3m",
+    "target": "target_good_entry_3m",
+    "n": 5552,
+    "pearson": -0.06975,
+    "spearman": -0.00279,
+    "abs_pearson": 0.06975,
+    "abs_spearman": 0.00279
+  },
+  {
+    "feature": "days_to_next_fomc",
+    "target": "target_gold_return_next_3m",
+    "n": 5615,
+    "pearson": -0.025308,
+    "spearman": 0.002403,
+    "abs_pearson": 0.025308,
+    "abs_spearman": 0.002403
+  },
+  {
+    "feature": "central_bank_gold_reserves_top15_tonnes",
+    "target": "target_good_entry_3m",
+    "n": 5615,
+    "pearson": 0.034228,
+    "spearman": 0.002381,
+    "abs_pearson": 0.034228,
+    "abs_spearman": 0.002381
+  },
+  {
+    "feature": "m2sl_value_change_1m",
+    "target": "target_gold_return_next_3m",
+    "n": 5594,
+    "pearson": 0.060293,
+    "spearman": 0.002315,
+    "abs_pearson": 0.060293,
+    "abs_spearman": 0.002315
+  },
+  {
+    "feature": "sp500_return_1m",
+    "target": "target_good_entry_3m",
+    "n": 5594,
+    "pearson": -0.02569,
+    "spearman": -0.002262,
+    "abs_pearson": 0.02569,
+    "abs_spearman": 0.002262
+  },
+  {
+    "feature": "dxy_return_3m",
+    "target": "target_good_entry_3m",
+    "n": 5552,
+    "pearson": 0.009371,
+    "spearman": -0.001869,
+    "abs_pearson": 0.009371,
+    "abs_spearman": 0.001869
+  },
+  {
+    "feature": "vix_percentile_1y",
+    "target": "target_gold_return_next_3m",
+    "n": 5364,
+    "pearson": 0.037741,
+    "spearman": 0.001732,
+    "abs_pearson": 0.037741,
+    "abs_spearman": 0.001732
+  },
+  {
+    "feature": "pcepi_value_change_3m",
+    "target": "target_gold_return_next_1m",
+    "n": 5594,
+    "pearson": -0.073929,
+    "spearman": 0.001292,
+    "abs_pearson": 0.073929,
+    "abs_spearman": 0.001292
+  },
+  {
+    "feature": "dfii10_value_change_1m",
+    "target": "target_good_entry_3m",
+    "n": 5594,
+    "pearson": -0.000789,
+    "spearman": -0.001095,
+    "abs_pearson": 0.000789,
+    "abs_spearman": 0.001095
+  },
+  {
+    "feature": "copper_futures_return_1m",
+    "target": "target_gold_return_next_3m",
+    "n": 5594,
+    "pearson": -0.064916,
+    "spearman": 0.000893,
+    "abs_pearson": 0.064916,
+    "abs_spearman": 0.000893
+  },
+  {
+    "feature": "m2sl_value_change_1m",
+    "target": "target_gold_max_drawdown_next_3m",
+    "n": 5656,
+    "pearson": 0.00395,
+    "spearman": -0.000839,
+    "abs_pearson": 0.00395,
+    "abs_spearman": 0.000839
+  },
+  {
+    "feature": "cpiaucsl_value_change_1m",
+    "target": "target_bad_entry_3m",
+    "n": 5656,
+    "pearson": 0.038059,
+    "spearman": 0.000725,
+    "abs_pearson": 0.038059,
+    "abs_spearman": 0.000725
+  },
+  {
+    "feature": "m2sl_value",
+    "target": "target_gold_return_next_3m",
+    "n": 5615,
+    "pearson": 0.028964,
+    "spearman": 0.000583,
+    "abs_pearson": 0.028964,
+    "abs_spearman": 0.000583
   }
 ]
