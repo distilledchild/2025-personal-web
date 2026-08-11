@@ -63,6 +63,60 @@ const stabilityWindows = [
   { label: '2022_present', start: '2022-01-01', end: '9999-12-31' },
 ];
 
+const timingThreshold = 70;
+const troyOunceToGrams = 31.1034768;
+
+const timingSignalConfigs = [
+  {
+    feature: 'payems_value_change_3m',
+    label: 'Payroll cooling',
+    category: 'Growth',
+    bullishWhen: 'low',
+    weight: 0.22,
+    detail: 'Slower payroll growth has historically been one of the cleaner macro backdrops for better forward gold returns.',
+  },
+  {
+    feature: 'dxy_return_3m',
+    label: 'Dollar pressure',
+    category: 'Dollar',
+    bullishWhen: 'low',
+    weight: 0.18,
+    detail: 'A weaker dollar reduces headwind for gold because gold is priced globally in USD.',
+  },
+  {
+    feature: 'tnx_return_3m',
+    label: '10Y yield pressure',
+    category: 'Rates',
+    bullishWhen: 'low',
+    weight: 0.17,
+    detail: 'Falling or stable long rates reduce the opportunity-cost pressure that often weighs on gold.',
+  },
+  {
+    feature: 'gold_futures_return_3m',
+    label: 'Gold momentum',
+    category: 'Trend',
+    bullishWhen: 'high',
+    weight: 0.15,
+    detail: 'Positive three-month momentum confirms that buyers are already supporting the trend.',
+  },
+  {
+    feature: 't10yie_value',
+    label: 'Inflation expectation level',
+    category: 'Inflation',
+    bullishWhen: 'low',
+    weight: 0.14,
+    detail: 'The historical analysis showed very high breakeven inflation levels were not automatically better entry points.',
+  },
+  {
+    feature: 'gold_drawdown_from_252d_high',
+    label: 'Trend health vs 52W high',
+    category: 'Trend',
+    bullishWhen: 'high',
+    weight: 0.14,
+    detail: 'A smaller drawdown from the 52-week high keeps the trend-health signal constructive.',
+  },
+];
+
 const parseCsv = (text) => {
   const lines = text.trim().split(/\r?\n/);
   const headers = lines[0].split(',');
@@ -340,6 +394,193 @@ const buildStability = (rows, features) => {
   });
 };
 
+const percentileRank = (values, currentValue) => {
+  const sorted = values
+    .filter((value) => value !== null && Number.isFinite(value))
+    .sort((a, b) => a - b);
+
+  if (!sorted.length || currentValue === null) return null;
+
+  const lowerOrEqual = sorted.filter((value) => value <= currentValue).length;
+  return lowerOrEqual / sorted.length;
+};
+
+const formatTimingValue = (feature, value) => {
+  if (value === null) return 'n/a';
+
+  if (feature.includes('return') || feature.includes('drawdown')) {
+    return `${(value * 100).toFixed(1)}%`;
+  }
+
+  if (feature === 'payems_value_change_3m') {
+    return `${Math.round(value).toLocaleString()}k jobs`;
+  }
+
+  if (feature === 't10yie_value' || feature === 'tnx_close' || feature === 'dfii10_value') {
+    return `${value.toFixed(2)}%`;
+  }
+
+  return Math.abs(value) >= 100 ? value.toLocaleString(undefined, { maximumFractionDigits: 0 }) : value.toFixed(2);
+};
+
+const getTimingZone = (score) => {
+  if (score >= timingThreshold) {
+    return {
+      id: 'accumulation',
+      label: 'Accumulation zone',
+      action: 'Gold setup is favorable enough to consider accumulation.',
+    };
+  }
+
+  if (score >= 50) {
+    return {
+      id: 'watch',
+      label: 'Watch zone',
+      action: 'The setup has constructive pieces, but it is below the accumulation threshold.',
+    };
+  }
+
+  if (score >= 30) {
+    return {
+      id: 'caution',
+      label: 'Caution zone',
+      action: 'Macro and trend signals are mixed; avoid forcing a new entry.',
+    };
+  }
+
+  return {
+    id: 'avoid',
+    label: 'Avoid zone',
+    action: 'The setup is unfavorable for a fresh gold entry.',
+  };
+};
+
+const buildTimingSignalsForRow = (row, historicalRows) => {
+  const availableConfigs = timingSignalConfigs.filter((config) => row && toNumber(row[config.feature]) !== null);
+  const totalWeight = availableConfigs.reduce((sum, config) => sum + config.weight, 0);
+
+  return availableConfigs.map((config) => {
+    const currentValue = toNumber(row[config.feature]);
+    const historicalValues = historicalRows.map((historicalRow) => toNumber(historicalRow[config.feature]));
+    const rawPercentile = percentileRank(historicalValues, currentValue);
+    const signalScore = rawPercentile === null
+      ? 50
+      : config.bullishWhen === 'high'
+        ? rawPercentile * 100
+        : (1 - rawPercentile) * 100;
+    const normalizedWeight = totalWeight ? config.weight / totalWeight : 0;
+
+    return {
+      feature: config.feature,
+      label: config.label,
+      category: config.category,
+      detail: config.detail,
+      direction: config.bullishWhen === 'high' ? 'Higher is better' : 'Lower is better',
+      currentValue: round(currentValue),
+      formattedValue: formatTimingValue(config.feature, currentValue),
+      percentile: round(rawPercentile),
+      signalScore: round(signalScore, 1),
+      weight: round(normalizedWeight, 4),
+      contributionPoints: round((signalScore - 50) * normalizedWeight, 1),
+    };
+  });
+};
+
+const scoreTimingSignals = (signals) => round(
+  signals.reduce((sum, signal) => sum + signal.signalScore * signal.weight, 0),
+  1,
+);
+
+const getIsoDateOneYearBefore = (dateString) => {
+  const date = new Date(`${dateString}T00:00:00Z`);
+  date.setUTCFullYear(date.getUTCFullYear() - 1);
+  return date.toISOString().slice(0, 10);
+};
+
+const getNextBusinessDate = (dateString) => {
+  const date = new Date(`${dateString}T00:00:00Z`);
+  do {
+    date.setUTCDate(date.getUTCDate() + 1);
+  } while (date.getUTCDay() === 0 || date.getUTCDay() === 6);
+  return date.toISOString().slice(0, 10);
+};
+
+const buildGoldTimingSnapshot = (rows) => {
+  const indexedRows = rows.map((row, index) => ({ row, index }));
+  const latestItem = [...indexedRows]
+    .reverse()
+    .find(({ row }) => toNumber(row.gold_futures_close) !== null);
+  const latest = latestItem?.row;
+  const signals = latestItem
+    ? buildTimingSignalsForRow(latest, rows.slice(0, latestItem.index + 1))
+    : [];
+
+  const score = scoreTimingSignals(signals);
+  const zone = getTimingZone(score);
+  const historyStartDate = latest ? getIsoDateOneYearBefore(latest.date) : null;
+  const rawHistory = latest
+    ? indexedRows
+      .filter(({ row }) => (
+        row.date >= historyStartDate
+        && row.date <= latest.date
+        && toNumber(row.gold_futures_close) !== null
+      ))
+      .map(({ row, index }) => {
+        const rowSignals = buildTimingSignalsForRow(row, rows.slice(0, index + 1));
+        const rowScore = scoreTimingSignals(rowSignals);
+        const goldFuturesClose = toNumber(row.gold_futures_close);
+        return {
+          date: row.date,
+          score: rowScore,
+          zoneId: getTimingZone(rowScore).id,
+          goldFuturesClose: round(goldFuturesClose, 2),
+          goldPricePerGram: goldFuturesClose === null ? null : round(goldFuturesClose / troyOunceToGrams, 2),
+          fedFundsRate: round(toNumber(row.fedfunds_value), 2),
+        };
+      })
+    : [];
+
+  const history = rawHistory.map((point, index) => {
+    const predictedScore = index > 0 ? rawHistory[index - 1].score : null;
+    const forecastError = predictedScore === null ? null : round(point.score - predictedScore, 1);
+
+    return {
+      ...point,
+      predictedScore,
+      forecastError,
+    };
+  });
+
+  const latestHistoryPoint = history.at(-1);
+  const nextForecast = latestHistoryPoint
+    ? {
+      basisDate: latestHistoryPoint.date,
+      forecastDate: getNextBusinessDate(latestHistoryPoint.date),
+      predictedScore: latestHistoryPoint.score,
+      model: 'Persistence baseline: tomorrow score = latest available score',
+    }
+    : null;
+
+  return {
+    generatedAt: new Date().toISOString(),
+    asOfDate: latest?.date ?? null,
+    historyStartDate,
+    threshold: timingThreshold,
+    score,
+    zone,
+    signals,
+    history,
+    nextForecast,
+    methodology: [
+      'Use a compact set of six interpretable signals instead of the full feature table.',
+      'Convert the latest value of each signal into its historical percentile.',
+      'Flip the percentile when lower values are historically more bullish for gold.',
+      'Weight the signals into a 0-100 Gold Timing Score.',
+      `Treat ${timingThreshold}+ as the accumulation threshold; below that, keep the page in watch or caution mode.`,
+    ],
+  };
+};
+
 const formatPct = (value) => value === null || value === undefined
   ? 'n/a'
   : `${(value * 100).toFixed(2)}%`;
@@ -431,6 +672,7 @@ const main = async () => {
   const bucketBacktest = buildBucketBacktest(rows, features);
   const bucketSpreads = buildBucketSpreads(bucketBacktest);
   const stability = buildStability(rows, features);
+  const timingSnapshot = buildGoldTimingSnapshot(rows);
   const summary = buildMarkdownSummary({ rows, correlations, bucketSpreads, qualitySummary, stability, features });
 
   await writeCsv(path.join(analysisDir, 'data_quality_summary.csv'), qualitySummary);
@@ -442,6 +684,7 @@ const main = async () => {
   await writeJson(path.join(analysisDir, 'feature_bucket_spreads.json'), bucketSpreads);
   await writeCsv(path.join(analysisDir, 'correlation_stability.csv'), stability);
   await writeJson(path.join(analysisDir, 'correlation_stability.json'), stability);
+  await writeJson(path.join(analysisDir, 'gold_timing_snapshot.json'), timingSnapshot);
   await fs.writeFile(path.join(analysisDir, 'analysis_summary.md'), summary);
 
   console.log(`Analyzed ${rows.length} rows and ${features.length} features.`);

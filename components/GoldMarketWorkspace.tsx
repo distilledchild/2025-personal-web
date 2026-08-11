@@ -7,6 +7,7 @@ import {
     ComposedChart,
     Legend,
     Line,
+    ReferenceLine,
     ResponsiveContainer,
     Tooltip,
     XAxis,
@@ -16,9 +17,10 @@ import MarketCommodities from './MarketCommodities';
 import laggedCorrelationsRaw from '../data/gold-market/analysis/lagged_correlations.json';
 import bucketSpreadsRaw from '../data/gold-market/analysis/feature_bucket_spreads.json';
 import stabilityRaw from '../data/gold-market/analysis/correlation_stability.json';
+import timingSnapshotRaw from '../data/gold-market/analysis/gold_timing_snapshot.json';
 import manifestRaw from '../data/gold-market/metadata/manifest.json';
 
-type WorkspaceTab = 'data' | 'analysis' | 'model';
+type WorkspaceTab = 'dashboard' | 'data' | 'analysis' | 'model';
 
 interface CorrelationRow {
     feature: string;
@@ -52,9 +54,59 @@ interface StabilityRow {
     '2022_present_spearman': number | null;
 }
 
+interface TimingSignal {
+    feature: string;
+    label: string;
+    category: string;
+    detail: string;
+    direction: string;
+    currentValue: number | null;
+    formattedValue: string;
+    percentile: number | null;
+    signalScore: number;
+    weight: number;
+    contributionPoints: number;
+}
+
+interface TimingHistoryPoint {
+    date: string;
+    score: number;
+    zoneId: 'accumulation' | 'watch' | 'caution' | 'avoid';
+    goldFuturesClose: number | null;
+    goldPricePerGram: number | null;
+    fedFundsRate: number | null;
+    predictedScore: number | null;
+    forecastError: number | null;
+}
+
+interface TimingNextForecast {
+    basisDate: string;
+    forecastDate: string;
+    predictedScore: number;
+    model: string;
+}
+
+interface TimingSnapshot {
+    generatedAt: string;
+    asOfDate: string;
+    historyStartDate: string | null;
+    threshold: number;
+    score: number;
+    zone: {
+        id: 'accumulation' | 'watch' | 'caution' | 'avoid';
+        label: string;
+        action: string;
+    };
+    signals: TimingSignal[];
+    history: TimingHistoryPoint[];
+    nextForecast: TimingNextForecast | null;
+    methodology: string[];
+}
+
 const laggedCorrelations = laggedCorrelationsRaw as CorrelationRow[];
 const bucketSpreads = bucketSpreadsRaw as BucketSpreadRow[];
 const stability = stabilityRaw as StabilityRow[];
+const timingSnapshot = timingSnapshotRaw as TimingSnapshot;
 const manifest = manifestRaw as {
     startDate: string;
     endDate: string;
@@ -99,10 +151,23 @@ const compactFeature = (feature: string) => {
     return label.length > 26 ? `${label.slice(0, 24)}...` : label;
 };
 
+const formatShortDate = (date: string) => {
+    const parsed = new Date(`${date}T00:00:00Z`);
+    return parsed.toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' });
+};
+
+const formatChartValue = (value: number, label: string) => {
+    if (label === 'Actual score' || label === 'Predicted score') return `${value.toFixed(1)} / 100`;
+    if (label === 'Gold price') return `$${value.toLocaleString(undefined, { maximumFractionDigits: 2 })}/g`;
+    if (label === 'Fed funds rate') return `${value.toFixed(2)}%`;
+    if (label === 'Forecast error') return `${value > 0 ? '+' : ''}${value.toFixed(1)} pts`;
+    return value.toFixed(1);
+};
+
 const SectionHeader = ({ title, subtitle }: { title: string; subtitle: string }) => (
     <div>
         <h3 className="text-2xl font-black tracking-tight text-slate-950">{title}</h3>
-        <p className="mt-1 max-w-3xl text-sm font-medium leading-relaxed text-slate-500">{subtitle}</p>
+        <p className="mt-1 max-w-none whitespace-nowrap text-sm font-medium leading-relaxed text-slate-500">{subtitle}</p>
     </div>
 );
 
@@ -117,6 +182,399 @@ const MetricTile = ({ label, value, tone = 'slate' }: { label: string; value: st
         <div className={`rounded-lg border px-4 py-3 ${toneClass}`}>
             <p className="text-[11px] font-black uppercase tracking-wider opacity-60">{label}</p>
             <p className="mt-1 font-mono text-xl font-black">{value}</p>
+        </div>
+    );
+};
+
+const zoneTone = {
+    accumulation: {
+        card: 'border-emerald-200 bg-emerald-50 text-emerald-950',
+        badge: 'bg-emerald-600 text-white',
+        fill: '#16a34a',
+    },
+    watch: {
+        card: 'border-orange-200 bg-orange-50 text-orange-950',
+        badge: 'bg-orange-500 text-white',
+        fill: '#f97316',
+    },
+    caution: {
+        card: 'border-amber-200 bg-amber-50 text-amber-950',
+        badge: 'bg-amber-500 text-white',
+        fill: '#f59e0b',
+    },
+    avoid: {
+        card: 'border-rose-200 bg-rose-50 text-rose-950',
+        badge: 'bg-rose-600 text-white',
+        fill: '#e11d48',
+    },
+};
+
+const getSignalTone = (score: number) => {
+    if (score >= 60) {
+        return {
+            label: 'Supportive',
+            border: 'border-emerald-200',
+            soft: 'bg-emerald-50 text-emerald-800',
+            badge: 'bg-emerald-100 text-emerald-700',
+            bar: '#16a34a',
+        };
+    }
+
+    if (score >= 40) {
+        return {
+            label: 'Mixed',
+            border: 'border-amber-200',
+            soft: 'bg-amber-50 text-amber-800',
+            badge: 'bg-amber-100 text-amber-700',
+            bar: '#FFA300',
+        };
+    }
+
+    return {
+        label: 'Dragging',
+        border: 'border-rose-200',
+        soft: 'bg-rose-50 text-rose-800',
+        badge: 'bg-rose-100 text-rose-700',
+        bar: '#ef4444',
+    };
+};
+
+const DashboardTab = () => {
+    const tone = zoneTone[timingSnapshot.zone.id];
+    const contributionData = timingSnapshot.signals.map(signal => ({
+        name: signal.label,
+        category: signal.category,
+        contribution: signal.contributionPoints,
+        score: signal.signalScore,
+    }));
+    const topBoost = [...contributionData].sort((a, b) => b.contribution - a.contribution)[0];
+    const topDrag = [...contributionData].sort((a, b) => a.contribution - b.contribution)[0];
+    const netContribution = timingSnapshot.score - 50;
+    const scoreHistoryData = timingSnapshot.history.map(point => ({
+        ...point,
+        label: formatShortDate(point.date),
+    }));
+    const scoreForecastData = timingSnapshot.nextForecast
+        ? [
+            ...scoreHistoryData,
+            {
+                date: timingSnapshot.nextForecast.forecastDate,
+                label: formatShortDate(timingSnapshot.nextForecast.forecastDate),
+                score: null,
+                zoneId: 'watch' as const,
+                goldFuturesClose: null,
+                goldPricePerGram: null,
+                fedFundsRate: null,
+                predictedScore: timingSnapshot.nextForecast.predictedScore,
+                forecastError: null,
+            },
+        ]
+        : scoreHistoryData;
+    return (
+        <div className="space-y-8">
+            <SectionHeader
+                title="Gold Timing Dashboard"
+                subtitle="A simple decision layer: compress the most interpretable gold macro signals into one 0-100 timing score, then compare it with a fixed accumulation threshold."
+            />
+
+            <div className="grid grid-cols-1 gap-6">
+                <div className={`rounded-2xl border p-6 shadow-sm ${tone.card}`}>
+                    <div className="flex flex-col gap-5 md:flex-row md:items-start md:justify-between">
+                        <div>
+                            <p className="text-xs font-black uppercase tracking-[0.18em] opacity-70">Current score as of {timingSnapshot.asOfDate}</p>
+                            <div className="mt-3 flex items-end gap-3">
+                                <span className="font-mono text-6xl font-black leading-none">{timingSnapshot.score.toFixed(1)}</span>
+                                <span className="pb-2 text-xl font-black opacity-60">/ 100</span>
+                            </div>
+                            <p className="mt-4 max-w-none whitespace-nowrap text-base font-semibold leading-relaxed">{timingSnapshot.zone.action}</p>
+                        </div>
+                        <span className={`w-fit whitespace-nowrap rounded-full px-4 py-2 text-xs font-black uppercase tracking-wider ${tone.badge}`}>
+                            {timingSnapshot.zone.label}
+                        </span>
+                    </div>
+
+                    <div className="mt-8">
+                        <div
+                            className="relative h-5 rounded-full shadow-inner"
+                            style={{ background: 'linear-gradient(90deg, #FFCC80 0%, #FFB84D 50%, #f97316 70%, #f97316 100%)' }}
+                        >
+                            <div
+                                className="absolute -top-2 h-9 w-1 rounded-full bg-orange-950"
+                                style={{ left: `${Math.min(100, Math.max(0, timingSnapshot.score))}%` }}
+                            />
+                            <div
+                                className="absolute -bottom-8 -translate-x-1/2 text-center text-[11px] font-black uppercase tracking-wider text-orange-900"
+                                style={{ left: `${Math.min(100, Math.max(0, timingSnapshot.score))}%` }}
+                            >
+                                Current
+                            </div>
+                            <div
+                                className="absolute -top-2 h-9 w-1 rounded-full bg-slate-950"
+                                style={{ left: `${timingSnapshot.threshold}%` }}
+                            />
+                            <div
+                                className="absolute top-8 -translate-x-1/2 text-center text-[11px] font-black uppercase tracking-wider text-slate-700"
+                                style={{ left: `${timingSnapshot.threshold}%` }}
+                            >
+                                Accumulate
+                                <br />
+                                {timingSnapshot.threshold}+
+                            </div>
+                        </div>
+                        <div className="mt-10 flex justify-between font-mono text-xs font-black text-slate-500">
+                            <span>0 Avoid</span>
+                            <span>50 Watch</span>
+                            <span>100 Strong</span>
+                        </div>
+                    </div>
+
+                    <div className="mt-8 border-t border-orange-200/70 pt-5">
+                        <h4 className="text-sm font-black uppercase tracking-[0.18em] text-slate-800">How to read it</h4>
+                        <div className="mt-3 grid gap-3 text-sm font-semibold leading-relaxed text-slate-700">
+                            <p><strong style={{ color: '#f97316' }}>70+</strong> means the macro/trend setup is favorable enough to consider accumulation.</p>
+                            <p><strong style={{ color: '#FFA300' }}>50-69</strong> means watch: some signals are constructive, but not enough for a clean entry.</p>
+                            <p><strong style={{ color: '#FFB84D' }}>Below 50</strong> means avoid forcing a new gold position until the score improves.</p>
+                        </div>
+                        <p className="mt-4 rounded-lg bg-white/60 p-3 text-xs font-semibold leading-relaxed text-slate-600">
+                            This is an entry-timing aid, not a sell model or financial advice. The point is to make the macro environment visible, not to guarantee returns.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+                <div className="flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
+                    <div>
+                        <h4 className="text-lg font-black text-slate-950">Score trend with gold price</h4>
+                        <p className="mt-1 whitespace-nowrap text-sm font-medium text-slate-500">
+                            Left axis shows Gold Timing Score; right axis shows gold price in $/g. The dotted score line is the next-day baseline forecast.
+                        </p>
+                    </div>
+                </div>
+                <div className="mt-5 h-[320px]">
+                    <ResponsiveContainer width="100%" height="100%">
+                        <ComposedChart data={scoreForecastData} margin={{ top: 16, right: 24, left: 0, bottom: 0 }}>
+                            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+                            <XAxis
+                                dataKey="date"
+                                minTickGap={24}
+                                tickFormatter={formatShortDate}
+                                tick={{ fontSize: 11, fill: '#64748b' }}
+                            />
+                            <YAxis
+                                yAxisId="score"
+                                domain={[0, 100]}
+                                ticks={[0, 25, 50, 70, 100]}
+                                tick={{ fontSize: 11, fill: '#f97316', fontWeight: 700 }}
+                                tickMargin={6}
+                                width={36}
+                                mirror
+                                axisLine={{ stroke: '#f97316' }}
+                                tickLine={{ stroke: '#f97316' }}
+                            />
+                            <YAxis
+                                yAxisId="gold"
+                                orientation="right"
+                                domain={['dataMin - 5', 'dataMax + 5']}
+                                tickFormatter={(value) => `$${Number(value).toFixed(0)}`}
+                                tick={{ fontSize: 11, fill: '#fbbf24' }}
+                                width={76}
+                                axisLine={{ stroke: '#fbbf24' }}
+                                tickLine={{ stroke: '#fbbf24' }}
+                                label={{ value: 'Gold $/g', angle: 90, position: 'insideRight', fill: '#fbbf24', fontSize: 11, fontWeight: 800 }}
+                            />
+                            <YAxis yAxisId="error" domain={[-20, 20]} hide />
+                            <Tooltip
+                                formatter={(value: number, name: string) => [formatChartValue(value, name), name]}
+                                labelFormatter={(label, payload) => {
+                                    const point = payload?.[0]?.payload;
+                                    if (!point) return `${label}`;
+                                    const parts = [`${point.date}`];
+                                    if (point.goldPricePerGram !== null) parts.push(`Gold $${point.goldPricePerGram.toFixed(2)}/g`);
+                                    if (point.forecastError !== null) parts.push(`Error ${point.forecastError > 0 ? '+' : ''}${point.forecastError.toFixed(1)}pt`);
+                                    return parts.join(' | ');
+                                }}
+                            />
+                            <ReferenceLine
+                                yAxisId="score"
+                                y={timingSnapshot.threshold}
+                                stroke="#0f172a"
+                                strokeDasharray="4 4"
+                                label={{ value: 'Accumulation threshold', position: 'insideTopRight', fill: '#0f172a', fontSize: 11, fontWeight: 800 }}
+                            />
+                            <Bar
+                                yAxisId="error"
+                                dataKey="forecastError"
+                                name="Forecast error"
+                                fill="#cbd5e1"
+                                radius={[4, 4, 0, 0]}
+                                opacity={0.55}
+                            />
+                            <Line
+                                yAxisId="gold"
+                                type="monotone"
+                                dataKey="goldPricePerGram"
+                                name="Gold price"
+                                stroke="#fbbf24"
+                                strokeWidth={1.5}
+                                dot={false}
+                            />
+                            <Line
+                                yAxisId="score"
+                                type="monotone"
+                                dataKey="predictedScore"
+                                name="Predicted score"
+                                stroke="#475569"
+                                strokeWidth={1.25}
+                                strokeDasharray="6 6"
+                                dot={false}
+                                connectNulls
+                            />
+                            <Line
+                                yAxisId="score"
+                                type="monotone"
+                                dataKey="score"
+                                name="Actual score"
+                                stroke="#f97316"
+                                strokeWidth={1.5}
+                                dot={false}
+                                activeDot={{ r: 5, fill: '#f97316', stroke: '#fff', strokeWidth: 2 }}
+                            />
+                        </ComposedChart>
+                    </ResponsiveContainer>
+                </div>
+                <div className="mt-4 border-t border-slate-100 pt-4">
+                    <div className="flex items-center justify-between gap-3">
+                        <p className="whitespace-nowrap text-sm font-black text-slate-900">Fed funds rate</p>
+                    </div>
+                    <div className="mt-2 h-[120px]">
+                        <ResponsiveContainer width="100%" height="100%">
+                            <ComposedChart data={scoreHistoryData} margin={{ top: 8, right: 24, left: 0, bottom: 0 }}>
+                                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+                                <XAxis dataKey="date" minTickGap={24} tickFormatter={formatShortDate} tick={{ fontSize: 10, fill: '#64748b' }} />
+                                <YAxis
+                                    orientation="right"
+                                    domain={['dataMin - 0.1', 'dataMax + 0.1']}
+                                    tickFormatter={(value) => `${Number(value).toFixed(1)}%`}
+                                    tick={{ fontSize: 10, fill: '#0f766e' }}
+                                    width={48}
+                                />
+                                <Tooltip
+                                    formatter={(value: number, name: string) => [formatChartValue(value, name), name]}
+                                    labelFormatter={(label, payload) => {
+                                        const point = payload?.[0]?.payload;
+                                        return point ? `${point.date}` : `${label}`;
+                                    }}
+                                />
+                                <Line
+                                    type="stepAfter"
+                                    dataKey="fedFundsRate"
+                                    name="Fed funds rate"
+                                    stroke="#0f766e"
+                                    strokeWidth={1.5}
+                                    dot={false}
+                                />
+                            </ComposedChart>
+                        </ResponsiveContainer>
+                    </div>
+                </div>
+            </div>
+
+            <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
+                <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+                    <h4 className="text-lg font-black text-slate-950">What pushed the score?</h4>
+                    <p className="mt-1 text-sm font-medium text-slate-500">
+                        A compact summary of which factors moved the final score away from the neutral 50-point baseline. The detailed signal cards below explain every factor.
+                    </p>
+                    <div className="mt-5 grid gap-3">
+                        <div className="rounded-xl border border-emerald-100 bg-emerald-50 p-4">
+                            <p className="text-[11px] font-black uppercase tracking-[0.16em] text-emerald-700">Top boost</p>
+                            <div className="mt-2 flex items-center justify-between gap-3">
+                                <span className="text-sm font-black text-slate-950">{topBoost.name}</span>
+                                <span className="font-mono text-sm font-black text-emerald-700">+{topBoost.contribution.toFixed(1)} pts</span>
+                            </div>
+                        </div>
+                        <div className="rounded-xl border border-rose-100 bg-rose-50 p-4">
+                            <p className="text-[11px] font-black uppercase tracking-[0.16em] text-rose-700">Top drag</p>
+                            <div className="mt-2 flex items-center justify-between gap-3">
+                                <span className="text-sm font-black text-slate-950">{topDrag.name}</span>
+                                <span className="font-mono text-sm font-black text-rose-700">{topDrag.contribution.toFixed(1)} pts</span>
+                            </div>
+                        </div>
+                        <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+                            <p className="text-[11px] font-black uppercase tracking-[0.16em] text-slate-500">Net effect</p>
+                            <div className="mt-2 flex items-center justify-between gap-3">
+                                <span className="text-sm font-black text-slate-950">Final score vs neutral 50</span>
+                                <span className={`font-mono text-sm font-black ${netContribution >= 0 ? 'text-emerald-700' : 'text-rose-700'}`}>
+                                    {netContribution >= 0 ? '+' : ''}{netContribution.toFixed(1)} pts
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+                    <h4 className="text-lg font-black text-slate-950">Method</h4>
+                    <p className="mt-1 text-sm font-medium text-slate-500">The model is intentionally small so the score remains explainable.</p>
+                    <ol className="mt-5 space-y-3">
+                        {timingSnapshot.methodology.map((step, index) => (
+                            <li key={step} className="flex gap-3 rounded-lg bg-slate-50 p-3 text-sm font-semibold leading-relaxed text-slate-600">
+                                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-black text-white" style={{ backgroundColor: '#FFA300' }}>{index + 1}</span>
+                                <span>{step}</span>
+                            </li>
+                        ))}
+                    </ol>
+                </div>
+            </div>
+
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+                {timingSnapshot.signals.map(signal => {
+                    const signalTone = getSignalTone(signal.signalScore);
+
+                    return (
+                        <div key={signal.feature} className={`rounded-2xl border bg-white p-5 shadow-sm ${signalTone.border}`}>
+                            <div>
+                                <p className="text-[11px] font-black uppercase tracking-[0.18em] text-slate-500">{signal.category}</p>
+                                <h4 className="mt-1 text-lg font-black text-slate-950">{signal.label}</h4>
+                            </div>
+                            <div className="mt-4 grid grid-cols-2 gap-2">
+                                <div className={`rounded-xl px-3 py-2 text-center ${signalTone.badge}`}>
+                                    <p className="text-[10px] font-black uppercase tracking-wider opacity-70">Signal</p>
+                                    <p className="mt-1 font-mono text-sm font-black">{signal.signalScore.toFixed(1)}/100</p>
+                                </div>
+                                <div className="rounded-xl bg-slate-100 px-3 py-2 text-center text-slate-600">
+                                    <p className="text-[10px] font-black uppercase tracking-wider opacity-70">Impact</p>
+                                    <p className="mt-1 font-mono text-sm font-black">{(signal.weight * 100).toFixed(1)}/100</p>
+                                </div>
+                            </div>
+                            <p className="mt-3 text-xs font-semibold leading-relaxed text-slate-500">
+                                Signal score shows current condition; impact shows this signal's model weight out of 100.
+                            </p>
+                            <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-3">
+                                <div className="flex min-h-[84px] flex-col items-center justify-center rounded-lg bg-slate-50 p-3 text-center">
+                                    <p className="text-[10px] font-black uppercase tracking-wider text-slate-400">Current</p>
+                                    <p className="mt-1 font-mono text-sm font-black text-slate-900">{signal.formattedValue}</p>
+                                </div>
+                                <div className="flex min-h-[84px] flex-col items-center justify-center rounded-lg bg-slate-50 p-3 text-center">
+                                    <p className="text-[10px] font-black uppercase tracking-wider text-slate-400">Rule</p>
+                                    <p className="mt-1 text-sm font-black text-slate-900">{signal.direction}</p>
+                                </div>
+                                <div className={`flex min-h-[84px] flex-col items-center justify-center rounded-lg p-3 text-center ${signalTone.soft}`}>
+                                    <p className="text-[10px] font-black uppercase tracking-wider opacity-70">Now</p>
+                                    <p className="mt-1 text-sm font-black">{signalTone.label}</p>
+                                </div>
+                            </div>
+                            <div className="mt-4 h-2 rounded-full bg-slate-100">
+                                <div
+                                    className="h-2 rounded-full"
+                                    style={{ width: `${Math.min(100, Math.max(0, signal.signalScore))}%`, backgroundColor: signalTone.bar }}
+                                />
+                            </div>
+                            <p className="mt-4 text-sm font-medium leading-relaxed text-slate-500">{signal.detail}</p>
+                        </div>
+                    );
+                })}
+            </div>
         </div>
     );
 };
@@ -378,12 +836,13 @@ const ModelTab = () => {
 };
 
 const GoldMarketWorkspace: React.FC = () => {
-    const [activeWorkspaceTab, setActiveWorkspaceTab] = useState<WorkspaceTab>('data');
+    const [activeWorkspaceTab, setActiveWorkspaceTab] = useState<WorkspaceTab>('dashboard');
 
     const tabs: { id: WorkspaceTab; label: string }[] = [
+        { id: 'dashboard', label: 'Dashboard' },
         { id: 'data', label: 'Data' },
-        { id: 'analysis', label: 'Analysis' },
-        { id: 'model', label: 'Model' },
+        { id: 'analysis', label: 'Research Details' },
+        { id: 'model', label: 'Model Notes' },
     ];
 
     return (
@@ -405,6 +864,7 @@ const GoldMarketWorkspace: React.FC = () => {
                 ))}
             </div>
 
+            {activeWorkspaceTab === 'dashboard' && <DashboardTab />}
             {activeWorkspaceTab === 'data' && <MarketCommodities />}
             {activeWorkspaceTab === 'analysis' && <AnalysisTab />}
             {activeWorkspaceTab === 'model' && <ModelTab />}

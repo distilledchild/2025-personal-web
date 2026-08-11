@@ -1,0 +1,2627 @@
+{
+  "generatedAt": "2026-08-11T05:01:54.634Z",
+  "asOfDate": "2026-04-17",
+  "historyStartDate": "2025-04-17",
+  "threshold": 70,
+  "score": 56.2,
+  "zone": {
+    "id": "watch",
+    "label": "Watch zone",
+    "action": "The setup has constructive pieces, but it is below the accumulation threshold."
+  },
+  "signals": [
+    {
+      "feature": "payems_value_change_3m",
+      "label": "Payroll cooling",
+      "category": "Growth",
+      "detail": "Slower payroll growth has historically been one of the cleaner macro backdrops for better forward gold returns.",
+      "direction": "Lower is better",
+      "currentValue": 45,
+      "formattedValue": "45k jobs",
+      "percentile": 0.146108,
+      "signalScore": 85.4,
+      "weight": 0.22,
+      "contributionPoints": 7.8
+    },
+    {
+      "feature": "dxy_return_3m",
+      "label": "Dollar pressure",
+      "category": "Dollar",
+      "detail": "A weaker dollar reduces headwind for gold because gold is priced globally in USD.",
+      "direction": "Lower is better",
+      "currentValue": -0.012284,
+      "formattedValue": "-1.2%",
+      "percentile": 0.339895,
+      "signalScore": 66,
+      "weight": 0.18,
+      "contributionPoints": 2.9
+    },
+    {
+      "feature": "tnx_return_3m",
+      "label": "10Y yield pressure",
+      "category": "Rates",
+      "detail": "Falling or stable long rates reduce the opportunity-cost pressure that often weighs on gold.",
+      "direction": "Lower is better",
+      "currentValue": 0.020673,
+      "formattedValue": "2.1%",
+      "percentile": 0.562398,
+      "signalScore": 43.8,
+      "weight": 0.17,
+      "contributionPoints": -1.1
+    },
+    {
+      "feature": "gold_futures_return_3m",
+      "label": "Gold momentum",
+      "category": "Trend",
+      "detail": "Positive three-month momentum confirms that buyers are already supporting the trend.",
+      "direction": "Higher is better",
+      "currentValue": 0.052271,
+      "formattedValue": "5.2%",
+      "percentile": 0.625971,
+      "signalScore": 62.6,
+      "weight": 0.15,
+      "contributionPoints": 1.9
+    },
+    {
+      "feature": "t10yie_value",
+      "label": "Inflation expectation level",
+      "category": "Inflation",
+      "detail": "The historical analysis showed very high breakeven inflation levels were not automatically better entry points.",
+      "direction": "Lower is better",
+      "currentValue": 2.36,
+      "formattedValue": "2.36%",
+      "percentile": 0.744464,
+      "signalScore": 25.6,
+      "weight": 0.14,
+      "contributionPoints": -3.4
+    },
+    {
+      "feature": "gold_drawdown_from_252d_high",
+      "label": "Trend health vs 52W high",
+      "category": "Trend",
+      "detail": "A smaller drawdown from the 52-week high keeps the trend-health signal constructive.",
+      "direction": "Higher is better",
+      "currentValue": -0.086643,
+      "formattedValue": "-8.7%",
+      "percentile": 0.365,
+      "signalScore": 36.5,
+      "weight": 0.14,
+      "contributionPoints": -1.9
+    }
+  ],
+  "history": [
+    {
+      "date": "2025-04-17",
+      "score": 81.3,
+      "zoneId": "accumulation",
+      "goldFuturesClose": 3308.7,
+      "goldPricePerGram": 106.38,
+      "fedFundsRate": 4.33,
+      "predictedScore": null,
+      "forecastError": null
+    },
+    {
+      "date": "2025-04-21",
+      "score": 82.4,
+      "zoneId": "accumulation",
+      "goldFuturesClose": 3406.2,
+      "goldPricePerGram": 109.51,
+      "fedFundsRate": 4.33,
+      "predictedScore": 81.3,
+      "forecastError": 1.1
+    },
+    {
+      "date": "2025-04-22",
+      "score": 80.1,
+      "zoneId": "accumulation",
+      "goldFuturesClose": 3400.8,
+      "goldPricePerGram": 109.34,
+      "fedFundsRate": 4.33,
+      "predictedScore": 82.4,
+      "forecastError": -2.3
+    },
+    {
+      "date": "2025-04-23",
+      "score": 76.1,
+      "zoneId": "accumulation",
+      "goldFuturesClose": 3276.3,
+      "goldPricePerGram": 105.34,
+      "fedFundsRate": 4.33,
+      "predictedScore": 80.1,
+      "forecastError": -4
+    },
+    {
+      "date": "2025-04-24",
+      "score": 78.8,
+      "zoneId": "accumulation",
+      "goldFuturesClose": 3332,
+      "goldPricePerGram": 107.13,
+      "fedFundsRate": 4.33,
+      "predictedScore": 76.1,
+      "forecastError": 2.7
+    },
+    {
+      "date": "2025-04-25",
+      "score": 78,
+      "zoneId": "accumulation",
+      "goldFuturesClose": 3282.4,
+      "goldPricePerGram": 105.53,
+      "fedFundsRate": 4.33,
+      "predictedScore": 78.8,
+      "forecastError": -0.8
+    },
+    {
+      "date": "2025-04-28",
+      "score": 79.8,
+      "zoneId": "accumulation",
+      "goldFuturesClose": 3332.5,
+      "goldPricePerGram": 107.14,
+      "fedFundsRate": 4.33,
+      "predictedScore": 78,
+      "forecastError": 1.8
+    },
+    {
+      "date": "2025-04-29",
+      "score": 80.3,
+      "zoneId": "accumulation",
+      "goldFuturesClose": 3318.8,
+      "goldPricePerGram": 106.7,
+      "fedFundsRate": 4.33,
+      "predictedScore": 79.8,
+      "forecastError": 0.5
+    },
+    {
+      "date": "2025-04-30",
+      "score": 79.8,
+      "zoneId": "accumulation",
+      "goldFuturesClose": 3305,
+      "goldPricePerGram": 106.26,
+      "fedFundsRate": 4.33,
+      "predictedScore": 80.3,
+      "forecastError": -0.5
+    },
+    {
+      "date": "2025-05-01",
+      "score": 74.4,
+      "zoneId": "accumulation",
+      "goldFuturesClose": 3210,
+      "goldPricePerGram": 103.2,
+      "fedFundsRate": 4.33,
+      "predictedScore": 79.8,
+      "forecastError": -5.4
+    },
+    {
+      "date": "2025-05-02",
+      "score": 74.7,
+      "zoneId": "accumulation",
+      "goldFuturesClose": 3231.9,
+      "goldPricePerGram": 103.91,
+      "fedFundsRate": 4.33,
+      "predictedScore": 74.4,
+      "forecastError": 0.3
+    },
+    {
+      "date": "2025-05-05",
+      "score": 77.6,
+      "zoneId": "accumulation",
+      "goldFuturesClose": 3311.3,
+      "goldPricePerGram": 106.46,
+      "fedFundsRate": 4.33,
+      "predictedScore": 74.7,
+      "forecastError": 2.9
+    },
+    {
+      "date": "2025-05-06",
+      "score": 81.9,
+      "zoneId": "accumulation",
+      "goldFuturesClose": 3411.4,
+      "goldPricePerGram": 109.68,
+      "fedFundsRate": 4.33,
+      "predictedScore": 77.6,
+      "forecastError": 4.3
+    },
+    {
+      "date": "2025-05-07",
+      "score": 79.4,
+      "zoneId": "accumulation",
+      "goldFuturesClose": 3381.4,
+      "goldPricePerGram": 108.71,
+      "fedFundsRate": 4.33,
+      "predictedScore": 81.9,
+      "forecastError": -2.5
+    },
+    {
+      "date": "2025-05-08",
+      "score": 74.8,
+      "zoneId": "accumulation",
+      "goldFuturesClose": 3296.6,
+      "goldPricePerGram": 105.99,
+      "fedFundsRate": 4.33,
+      "predictedScore": 79.4,
+      "forecastError": -4.6
+    },
+    {
+      "date": "2025-05-09",
+      "score": 76.7,
+      "zoneId": "accumulation",
+      "goldFuturesClose": 3335.4,
+      "goldPricePerGram": 107.24,
+      "fedFundsRate": 4.33,
+      "predictedScore": 74.8,
+      "forecastError": 1.9
+    },
+    {
+      "date": "2025-05-12",
+      "score": 70.6,
+      "zoneId": "accumulation",
+      "goldFuturesClose": 3220,
+      "goldPricePerGram": 103.53,
+      "fedFundsRate": 4.33,
+      "predictedScore": 76.7,
+      "forecastError": -6.1
+    },
+    {
+      "date": "2025-05-13",
+      "score": 70.9,
+      "zoneId": "accumulation",
+      "goldFuturesClose": 3240.3,
+      "goldPricePerGram": 104.18,
+      "fedFundsRate": 4.33,
+      "predictedScore": 70.6,
+      "forecastError": 0.3
+    },
+    {
+      "date": "2025-05-14",
+      "score": 68,
+      "zoneId": "watch",
+      "goldFuturesClose": 3181.4,
+      "goldPricePerGram": 102.28,
+      "fedFundsRate": 4.33,
+      "predictedScore": 70.9,
+      "forecastError": -2.9
+    },
+    {
+      "date": "2025-05-15",
+      "score": 69.4,
+      "zoneId": "watch",
+      "goldFuturesClose": 3220.7,
+      "goldPricePerGram": 103.55,
+      "fedFundsRate": 4.33,
+      "predictedScore": 68,
+      "forecastError": 1.4
+    },
+    {
+      "date": "2025-05-16",
+      "score": 67.7,
+      "zoneId": "watch",
+      "goldFuturesClose": 3182,
+      "goldPricePerGram": 102.3,
+      "fedFundsRate": 4.33,
+      "predictedScore": 69.4,
+      "forecastError": -1.7
+    },
+    {
+      "date": "2025-05-19",
+      "score": 69.3,
+      "zoneId": "watch",
+      "goldFuturesClose": 3228.9,
+      "goldPricePerGram": 103.81,
+      "fedFundsRate": 4.33,
+      "predictedScore": 67.7,
+      "forecastError": 1.6
+    },
+    {
+      "date": "2025-05-20",
+      "score": 71.8,
+      "zoneId": "accumulation",
+      "goldFuturesClose": 3280.3,
+      "goldPricePerGram": 105.46,
+      "fedFundsRate": 4.33,
+      "predictedScore": 69.3,
+      "forecastError": 2.5
+    },
+    {
+      "date": "2025-05-21",
+      "score": 70.9,
+      "zoneId": "accumulation",
+      "goldFuturesClose": 3309.3,
+      "goldPricePerGram": 106.4,
+      "fedFundsRate": 4.33,
+      "predictedScore": 71.8,
+      "forecastError": -0.9
+    },
+    {
+      "date": "2025-05-22",
+      "score": 69.9,
+      "zoneId": "watch",
+      "goldFuturesClose": 3292.3,
+      "goldPricePerGram": 105.85,
+      "fedFundsRate": 4.33,
+      "predictedScore": 70.9,
+      "forecastError": -1
+    },
+    {
+      "date": "2025-05-23",
+      "score": 73.3,
+      "zoneId": "accumulation",
+      "goldFuturesClose": 3363.6,
+      "goldPricePerGram": 108.14,
+      "fedFundsRate": 4.33,
+      "predictedScore": 69.9,
+      "forecastError": 3.4
+    },
+    {
+      "date": "2025-05-27",
+      "score": 71.3,
+      "zoneId": "accumulation",
+      "goldFuturesClose": 3299.1,
+      "goldPricePerGram": 106.07,
+      "fedFundsRate": 4.33,
+      "predictedScore": 73.3,
+      "forecastError": -2
+    },
+    {
+      "date": "2025-05-28",
+      "score": 69.9,
+      "zoneId": "watch",
+      "goldFuturesClose": 3293.6,
+      "goldPricePerGram": 105.89,
+      "fedFundsRate": 4.33,
+      "predictedScore": 71.3,
+      "forecastError": -1.4
+    },
+    {
+      "date": "2025-05-29",
+      "score": 72.5,
+      "zoneId": "accumulation",
+      "goldFuturesClose": 3317.1,
+      "goldPricePerGram": 106.65,
+      "fedFundsRate": 4.33,
+      "predictedScore": 69.9,
+      "forecastError": 2.6
+    },
+    {
+      "date": "2025-05-30",
+      "score": 70.7,
+      "zoneId": "accumulation",
+      "goldFuturesClose": 3288.9,
+      "goldPricePerGram": 105.74,
+      "fedFundsRate": 4.33,
+      "predictedScore": 72.5,
+      "forecastError": -1.8
+    },
+    {
+      "date": "2025-06-02",
+      "score": 72.7,
+      "zoneId": "accumulation",
+      "goldFuturesClose": 3370.6,
+      "goldPricePerGram": 108.37,
+      "fedFundsRate": 4.33,
+      "predictedScore": 70.7,
+      "forecastError": 2
+    },
+    {
+      "date": "2025-06-03",
+      "score": 72,
+      "zoneId": "accumulation",
+      "goldFuturesClose": 3350.2,
+      "goldPricePerGram": 107.71,
+      "fedFundsRate": 4.33,
+      "predictedScore": 72.7,
+      "forecastError": -0.7
+    },
+    {
+      "date": "2025-06-04",
+      "score": 74.8,
+      "zoneId": "accumulation",
+      "goldFuturesClose": 3373.5,
+      "goldPricePerGram": 108.46,
+      "fedFundsRate": 4.33,
+      "predictedScore": 72,
+      "forecastError": 2.8
+    },
+    {
+      "date": "2025-06-05",
+      "score": 73.6,
+      "zoneId": "accumulation",
+      "goldFuturesClose": 3350.7,
+      "goldPricePerGram": 107.73,
+      "fedFundsRate": 4.33,
+      "predictedScore": 74.8,
+      "forecastError": -1.2
+    },
+    {
+      "date": "2025-06-06",
+      "score": 70.8,
+      "zoneId": "accumulation",
+      "goldFuturesClose": 3322.7,
+      "goldPricePerGram": 106.83,
+      "fedFundsRate": 4.33,
+      "predictedScore": 73.6,
+      "forecastError": -2.8
+    },
+    {
+      "date": "2025-06-09",
+      "score": 70.8,
+      "zoneId": "accumulation",
+      "goldFuturesClose": 3332.1,
+      "goldPricePerGram": 107.13,
+      "fedFundsRate": 4.33,
+      "predictedScore": 70.8,
+      "forecastError": 0
+    },
+    {
+      "date": "2025-06-10",
+      "score": 71,
+      "zoneId": "accumulation",
+      "goldFuturesClose": 3320.9,
+      "goldPricePerGram": 106.77,
+      "fedFundsRate": 4.33,
+      "predictedScore": 70.8,
+      "forecastError": 0.2
+    },
+    {
+      "date": "2025-06-11",
+      "score": 72.7,
+      "zoneId": "accumulation",
+      "goldFuturesClose": 3321.3,
+      "goldPricePerGram": 106.78,
+      "fedFundsRate": 4.33,
+      "predictedScore": 71,
+      "forecastError": 1.7
+    },
+    {
+      "date": "2025-06-12",
+      "score": 75.6,
+      "zoneId": "accumulation",
+      "goldFuturesClose": 3380.9,
+      "goldPricePerGram": 108.7,
+      "fedFundsRate": 4.33,
+      "predictedScore": 72.7,
+      "forecastError": 2.9
+    },
+    {
+      "date": "2025-06-13",
+      "score": 76.3,
+      "zoneId": "accumulation",
+      "goldFuturesClose": 3431.2,
+      "goldPricePerGram": 110.32,
+      "fedFundsRate": 4.33,
+      "predictedScore": 75.6,
+      "forecastError": 0.7
+    },
+    {
+      "date": "2025-06-16",
+      "score": 73.2,
+      "zoneId": "accumulation",
+      "goldFuturesClose": 3396.4,
+      "goldPricePerGram": 109.2,
+      "fedFundsRate": 4.33,
+      "predictedScore": 76.3,
+      "forecastError": -3.1
+    },
+    {
+      "date": "2025-06-17",
+      "score": 71.7,
+      "zoneId": "accumulation",
+      "goldFuturesClose": 3386.6,
+      "goldPricePerGram": 108.88,
+      "fedFundsRate": 4.33,
+      "predictedScore": 73.2,
+      "forecastError": -1.5
+    },
+    {
+      "date": "2025-06-18",
+      "score": 71.5,
+      "zoneId": "accumulation",
+      "goldFuturesClose": 3389.8,
+      "goldPricePerGram": 108.98,
+      "fedFundsRate": 4.33,
+      "predictedScore": 71.7,
+      "forecastError": -0.2
+    },
+    {
+      "date": "2025-06-20",
+      "score": 70.7,
+      "zoneId": "accumulation",
+      "goldFuturesClose": 3368.1,
+      "goldPricePerGram": 108.29,
+      "fedFundsRate": 4.33,
+      "predictedScore": 71.5,
+      "forecastError": -0.8
+    },
+    {
+      "date": "2025-06-23",
+      "score": 73.4,
+      "zoneId": "accumulation",
+      "goldFuturesClose": 3377.7,
+      "goldPricePerGram": 108.6,
+      "fedFundsRate": 4.33,
+      "predictedScore": 70.7,
+      "forecastError": 2.7
+    },
+    {
+      "date": "2025-06-24",
+      "score": 73,
+      "zoneId": "accumulation",
+      "goldFuturesClose": 3317.4,
+      "goldPricePerGram": 106.66,
+      "fedFundsRate": 4.33,
+      "predictedScore": 73.4,
+      "forecastError": -0.4
+    },
+    {
+      "date": "2025-06-25",
+      "score": 73.2,
+      "zoneId": "accumulation",
+      "goldFuturesClose": 3327.1,
+      "goldPricePerGram": 106.97,
+      "fedFundsRate": 4.33,
+      "predictedScore": 73,
+      "forecastError": 0.2
+    },
+    {
+      "date": "2025-06-26",
+      "score": 74.6,
+      "zoneId": "accumulation",
+      "goldFuturesClose": 3333.5,
+      "goldPricePerGram": 107.17,
+      "fedFundsRate": 4.33,
+      "predictedScore": 73.2,
+      "forecastError": 1.4
+    },
+    {
+      "date": "2025-06-27",
+      "score": 70.8,
+      "zoneId": "accumulation",
+      "goldFuturesClose": 3273.7,
+      "goldPricePerGram": 105.25,
+      "fedFundsRate": 4.33,
+      "predictedScore": 74.6,
+      "forecastError": -3.8
+    },
+    {
+      "date": "2025-06-30",
+      "score": 70.7,
+      "zoneId": "accumulation",
+      "goldFuturesClose": 3294.4,
+      "goldPricePerGram": 105.92,
+      "fedFundsRate": 4.33,
+      "predictedScore": 70.8,
+      "forecastError": -0.1
+    },
+    {
+      "date": "2025-07-01",
+      "score": 71.4,
+      "zoneId": "accumulation",
+      "goldFuturesClose": 3336.7,
+      "goldPricePerGram": 107.28,
+      "fedFundsRate": 4.33,
+      "predictedScore": 70.7,
+      "forecastError": 0.7
+    },
+    {
+      "date": "2025-07-02",
+      "score": 70.7,
+      "zoneId": "accumulation",
+      "goldFuturesClose": 3348,
+      "goldPricePerGram": 107.64,
+      "fedFundsRate": 4.33,
+      "predictedScore": 71.4,
+      "forecastError": -0.7
+    },
+    {
+      "date": "2025-07-03",
+      "score": 68.1,
+      "zoneId": "watch",
+      "goldFuturesClose": 3331.6,
+      "goldPricePerGram": 107.11,
+      "fedFundsRate": 4.33,
+      "predictedScore": 70.7,
+      "forecastError": -2.6
+    },
+    {
+      "date": "2025-07-04",
+      "score": 66.6,
+      "zoneId": "watch",
+      "goldFuturesClose": 3332.5,
+      "goldPricePerGram": 107.14,
+      "fedFundsRate": 4.33,
+      "predictedScore": 68.1,
+      "forecastError": -1.5
+    },
+    {
+      "date": "2025-07-07",
+      "score": 67,
+      "zoneId": "watch",
+      "goldFuturesClose": 3332.2,
+      "goldPricePerGram": 107.13,
+      "fedFundsRate": 4.33,
+      "predictedScore": 66.6,
+      "forecastError": 0.4
+    },
+    {
+      "date": "2025-07-08",
+      "score": 68.3,
+      "zoneId": "watch",
+      "goldFuturesClose": 3307,
+      "goldPricePerGram": 106.32,
+      "fedFundsRate": 4.33,
+      "predictedScore": 67,
+      "forecastError": 1.3
+    },
+    {
+      "date": "2025-07-09",
+      "score": 70.6,
+      "zoneId": "accumulation",
+      "goldFuturesClose": 3311.6,
+      "goldPricePerGram": 106.47,
+      "fedFundsRate": 4.33,
+      "predictedScore": 68.3,
+      "forecastError": 2.3
+    },
+    {
+      "date": "2025-07-10",
+      "score": 70.6,
+      "zoneId": "accumulation",
+      "goldFuturesClose": 3317.4,
+      "goldPricePerGram": 106.66,
+      "fedFundsRate": 4.33,
+      "predictedScore": 70.6,
+      "forecastError": 0
+    },
+    {
+      "date": "2025-07-11",
+      "score": 66.5,
+      "zoneId": "watch",
+      "goldFuturesClose": 3356,
+      "goldPricePerGram": 107.9,
+      "fedFundsRate": 4.33,
+      "predictedScore": 70.6,
+      "forecastError": -4.1
+    },
+    {
+      "date": "2025-07-14",
+      "score": 63.6,
+      "zoneId": "watch",
+      "goldFuturesClose": 3351.5,
+      "goldPricePerGram": 107.75,
+      "fedFundsRate": 4.33,
+      "predictedScore": 66.5,
+      "forecastError": -2.9
+    },
+    {
+      "date": "2025-07-15",
+      "score": 59.1,
+      "zoneId": "watch",
+      "goldFuturesClose": 3329.8,
+      "goldPricePerGram": 107.06,
+      "fedFundsRate": 4.33,
+      "predictedScore": 63.6,
+      "forecastError": -4.5
+    },
+    {
+      "date": "2025-07-16",
+      "score": 61.3,
+      "zoneId": "watch",
+      "goldFuturesClose": 3352.5,
+      "goldPricePerGram": 107.79,
+      "fedFundsRate": 4.33,
+      "predictedScore": 59.1,
+      "forecastError": 2.2
+    },
+    {
+      "date": "2025-07-17",
+      "score": 55.1,
+      "zoneId": "watch",
+      "goldFuturesClose": 3340.1,
+      "goldPricePerGram": 107.39,
+      "fedFundsRate": 4.33,
+      "predictedScore": 61.3,
+      "forecastError": -6.2
+    },
+    {
+      "date": "2025-07-18",
+      "score": 57.9,
+      "zoneId": "watch",
+      "goldFuturesClose": 3353,
+      "goldPricePerGram": 107.8,
+      "fedFundsRate": 4.33,
+      "predictedScore": 55.1,
+      "forecastError": 2.8
+    },
+    {
+      "date": "2025-07-21",
+      "score": 58.9,
+      "zoneId": "watch",
+      "goldFuturesClose": 3401.9,
+      "goldPricePerGram": 109.37,
+      "fedFundsRate": 4.33,
+      "predictedScore": 57.9,
+      "forecastError": 1
+    },
+    {
+      "date": "2025-07-22",
+      "score": 64.2,
+      "zoneId": "watch",
+      "goldFuturesClose": 3439.2,
+      "goldPricePerGram": 110.57,
+      "fedFundsRate": 4.33,
+      "predictedScore": 58.9,
+      "forecastError": 5.3
+    },
+    {
+      "date": "2025-07-23",
+      "score": 65.2,
+      "zoneId": "watch",
+      "goldFuturesClose": 3394.1,
+      "goldPricePerGram": 109.12,
+      "fedFundsRate": 4.33,
+      "predictedScore": 64.2,
+      "forecastError": 1
+    },
+    {
+      "date": "2025-07-24",
+      "score": 59.2,
+      "zoneId": "watch",
+      "goldFuturesClose": 3371,
+      "goldPricePerGram": 108.38,
+      "fedFundsRate": 4.33,
+      "predictedScore": 65.2,
+      "forecastError": -6
+    },
+    {
+      "date": "2025-07-25",
+      "score": 58.2,
+      "zoneId": "watch",
+      "goldFuturesClose": 3334,
+      "goldPricePerGram": 107.19,
+      "fedFundsRate": 4.33,
+      "predictedScore": 59.2,
+      "forecastError": -1
+    },
+    {
+      "date": "2025-07-28",
+      "score": 52.1,
+      "zoneId": "watch",
+      "goldFuturesClose": 3309.1,
+      "goldPricePerGram": 106.39,
+      "fedFundsRate": 4.33,
+      "predictedScore": 58.2,
+      "forecastError": -6.1
+    },
+    {
+      "date": "2025-07-29",
+      "score": 53.6,
+      "zoneId": "watch",
+      "goldFuturesClose": 3323.4,
+      "goldPricePerGram": 106.85,
+      "fedFundsRate": 4.33,
+      "predictedScore": 52.1,
+      "forecastError": 1.5
+    },
+    {
+      "date": "2025-07-30",
+      "score": 50.5,
+      "zoneId": "watch",
+      "goldFuturesClose": 3295.8,
+      "goldPricePerGram": 105.96,
+      "fedFundsRate": 4.33,
+      "predictedScore": 53.6,
+      "forecastError": -3.1
+    },
+    {
+      "date": "2025-07-31",
+      "score": 55.3,
+      "zoneId": "watch",
+      "goldFuturesClose": 3293.2,
+      "goldPricePerGram": 105.88,
+      "fedFundsRate": 4.33,
+      "predictedScore": 50.5,
+      "forecastError": 4.8
+    },
+    {
+      "date": "2025-08-01",
+      "score": 64.5,
+      "zoneId": "watch",
+      "goldFuturesClose": 3347.7,
+      "goldPricePerGram": 107.63,
+      "fedFundsRate": 4.33,
+      "predictedScore": 55.3,
+      "forecastError": 9.2
+    },
+    {
+      "date": "2025-08-04",
+      "score": 62.8,
+      "zoneId": "watch",
+      "goldFuturesClose": 3374.4,
+      "goldPricePerGram": 108.49,
+      "fedFundsRate": 4.33,
+      "predictedScore": 64.5,
+      "forecastError": -1.7
+    },
+    {
+      "date": "2025-08-05",
+      "score": 59.6,
+      "zoneId": "watch",
+      "goldFuturesClose": 3381.9,
+      "goldPricePerGram": 108.73,
+      "fedFundsRate": 4.33,
+      "predictedScore": 62.8,
+      "forecastError": -3.2
+    },
+    {
+      "date": "2025-08-06",
+      "score": 62.1,
+      "zoneId": "watch",
+      "goldFuturesClose": 3380,
+      "goldPricePerGram": 108.67,
+      "fedFundsRate": 4.33,
+      "predictedScore": 59.6,
+      "forecastError": 2.5
+    },
+    {
+      "date": "2025-08-07",
+      "score": 66.7,
+      "zoneId": "watch",
+      "goldFuturesClose": 3400.3,
+      "goldPricePerGram": 109.32,
+      "fedFundsRate": 4.33,
+      "predictedScore": 62.1,
+      "forecastError": 4.6
+    },
+    {
+      "date": "2025-08-08",
+      "score": 66.4,
+      "zoneId": "watch",
+      "goldFuturesClose": 3439.1,
+      "goldPricePerGram": 110.57,
+      "fedFundsRate": 4.33,
+      "predictedScore": 66.7,
+      "forecastError": -0.3
+    },
+    {
+      "date": "2025-08-11",
+      "score": 66.9,
+      "zoneId": "watch",
+      "goldFuturesClose": 3353.1,
+      "goldPricePerGram": 107.8,
+      "fedFundsRate": 4.33,
+      "predictedScore": 66.4,
+      "forecastError": 0.5
+    },
+    {
+      "date": "2025-08-12",
+      "score": 66.3,
+      "zoneId": "watch",
+      "goldFuturesClose": 3348.9,
+      "goldPricePerGram": 107.67,
+      "fedFundsRate": 4.33,
+      "predictedScore": 66.9,
+      "forecastError": -0.6
+    },
+    {
+      "date": "2025-08-13",
+      "score": 69.7,
+      "zoneId": "watch",
+      "goldFuturesClose": 3358.7,
+      "goldPricePerGram": 107.98,
+      "fedFundsRate": 4.33,
+      "predictedScore": 66.3,
+      "forecastError": 3.4
+    },
+    {
+      "date": "2025-08-14",
+      "score": 65.2,
+      "zoneId": "watch",
+      "goldFuturesClose": 3335.2,
+      "goldPricePerGram": 107.23,
+      "fedFundsRate": 4.33,
+      "predictedScore": 69.7,
+      "forecastError": -4.5
+    },
+    {
+      "date": "2025-08-15",
+      "score": 66.5,
+      "zoneId": "watch",
+      "goldFuturesClose": 3336,
+      "goldPricePerGram": 107.25,
+      "fedFundsRate": 4.33,
+      "predictedScore": 65.2,
+      "forecastError": 1.3
+    },
+    {
+      "date": "2025-08-18",
+      "score": 64.2,
+      "zoneId": "watch",
+      "goldFuturesClose": 3331.7,
+      "goldPricePerGram": 107.12,
+      "fedFundsRate": 4.33,
+      "predictedScore": 66.5,
+      "forecastError": -2.3
+    },
+    {
+      "date": "2025-08-19",
+      "score": 62.5,
+      "zoneId": "watch",
+      "goldFuturesClose": 3313.4,
+      "goldPricePerGram": 106.53,
+      "fedFundsRate": 4.33,
+      "predictedScore": 64.2,
+      "forecastError": -1.7
+    },
+    {
+      "date": "2025-08-20",
+      "score": 63.8,
+      "zoneId": "watch",
+      "goldFuturesClose": 3343.4,
+      "goldPricePerGram": 107.49,
+      "fedFundsRate": 4.33,
+      "predictedScore": 62.5,
+      "forecastError": 1.3
+    },
+    {
+      "date": "2025-08-21",
+      "score": 62.2,
+      "zoneId": "watch",
+      "goldFuturesClose": 3336.9,
+      "goldPricePerGram": 107.28,
+      "fedFundsRate": 4.33,
+      "predictedScore": 63.8,
+      "forecastError": -1.6
+    },
+    {
+      "date": "2025-08-22",
+      "score": 62.6,
+      "zoneId": "watch",
+      "goldFuturesClose": 3374.4,
+      "goldPricePerGram": 108.49,
+      "fedFundsRate": 4.33,
+      "predictedScore": 62.2,
+      "forecastError": 0.4
+    },
+    {
+      "date": "2025-08-25",
+      "score": 62.5,
+      "zoneId": "watch",
+      "goldFuturesClose": 3373.8,
+      "goldPricePerGram": 108.47,
+      "fedFundsRate": 4.33,
+      "predictedScore": 62.6,
+      "forecastError": -0.1
+    },
+    {
+      "date": "2025-08-26",
+      "score": 64.8,
+      "zoneId": "watch",
+      "goldFuturesClose": 3388.6,
+      "goldPricePerGram": 108.95,
+      "fedFundsRate": 4.33,
+      "predictedScore": 62.5,
+      "forecastError": 2.3
+    },
+    {
+      "date": "2025-08-27",
+      "score": 63.4,
+      "zoneId": "watch",
+      "goldFuturesClose": 3404.6,
+      "goldPricePerGram": 109.46,
+      "fedFundsRate": 4.33,
+      "predictedScore": 64.8,
+      "forecastError": -1.4
+    },
+    {
+      "date": "2025-08-28",
+      "score": 67.1,
+      "zoneId": "watch",
+      "goldFuturesClose": 3431.8,
+      "goldPricePerGram": 110.33,
+      "fedFundsRate": 4.33,
+      "predictedScore": 63.4,
+      "forecastError": 3.7
+    },
+    {
+      "date": "2025-08-29",
+      "score": 66.2,
+      "zoneId": "watch",
+      "goldFuturesClose": 3473.7,
+      "goldPricePerGram": 111.68,
+      "fedFundsRate": 4.33,
+      "predictedScore": 67.1,
+      "forecastError": -0.9
+    },
+    {
+      "date": "2025-09-02",
+      "score": 67.3,
+      "zoneId": "watch",
+      "goldFuturesClose": 3549.4,
+      "goldPricePerGram": 114.12,
+      "fedFundsRate": 4.22,
+      "predictedScore": 66.2,
+      "forecastError": 1.1
+    },
+    {
+      "date": "2025-09-03",
+      "score": 67.1,
+      "zoneId": "watch",
+      "goldFuturesClose": 3593.2,
+      "goldPricePerGram": 115.52,
+      "fedFundsRate": 4.22,
+      "predictedScore": 67.3,
+      "forecastError": -0.2
+    },
+    {
+      "date": "2025-09-04",
+      "score": 65.8,
+      "zoneId": "watch",
+      "goldFuturesClose": 3565.8,
+      "goldPricePerGram": 114.64,
+      "fedFundsRate": 4.22,
+      "predictedScore": 67.1,
+      "forecastError": -1.3
+    },
+    {
+      "date": "2025-09-05",
+      "score": 73.1,
+      "zoneId": "accumulation",
+      "goldFuturesClose": 3613.2,
+      "goldPricePerGram": 116.17,
+      "fedFundsRate": 4.22,
+      "predictedScore": 65.8,
+      "forecastError": 7.3
+    },
+    {
+      "date": "2025-09-08",
+      "score": 74,
+      "zoneId": "accumulation",
+      "goldFuturesClose": 3638.1,
+      "goldPricePerGram": 116.97,
+      "fedFundsRate": 4.22,
+      "predictedScore": 73.1,
+      "forecastError": 0.9
+    },
+    {
+      "date": "2025-09-09",
+      "score": 73.3,
+      "zoneId": "accumulation",
+      "goldFuturesClose": 3643.3,
+      "goldPricePerGram": 117.13,
+      "fedFundsRate": 4.22,
+      "predictedScore": 74,
+      "forecastError": -0.7
+    },
+    {
+      "date": "2025-09-10",
+      "score": 72.6,
+      "zoneId": "accumulation",
+      "goldFuturesClose": 3643.6,
+      "goldPricePerGram": 117.14,
+      "fedFundsRate": 4.22,
+      "predictedScore": 73.3,
+      "forecastError": -0.7
+    },
+    {
+      "date": "2025-09-11",
+      "score": 69.3,
+      "zoneId": "watch",
+      "goldFuturesClose": 3636.9,
+      "goldPricePerGram": 116.93,
+      "fedFundsRate": 4.22,
+      "predictedScore": 72.6,
+      "forecastError": -3.3
+    },
+    {
+      "date": "2025-09-12",
+      "score": 69.8,
+      "zoneId": "watch",
+      "goldFuturesClose": 3649.4,
+      "goldPricePerGram": 117.33,
+      "fedFundsRate": 4.22,
+      "predictedScore": 69.3,
+      "forecastError": 0.5
+    },
+    {
+      "date": "2025-09-15",
+      "score": 71.4,
+      "zoneId": "accumulation",
+      "goldFuturesClose": 3682.2,
+      "goldPricePerGram": 118.39,
+      "fedFundsRate": 4.22,
+      "predictedScore": 69.8,
+      "forecastError": 1.6
+    },
+    {
+      "date": "2025-09-16",
+      "score": 74,
+      "zoneId": "accumulation",
+      "goldFuturesClose": 3688.9,
+      "goldPricePerGram": 118.6,
+      "fedFundsRate": 4.22,
+      "predictedScore": 71.4,
+      "forecastError": 2.6
+    },
+    {
+      "date": "2025-09-17",
+      "score": 71.8,
+      "zoneId": "accumulation",
+      "goldFuturesClose": 3681.8,
+      "goldPricePerGram": 118.37,
+      "fedFundsRate": 4.22,
+      "predictedScore": 74,
+      "forecastError": -2.2
+    },
+    {
+      "date": "2025-09-18",
+      "score": 68.9,
+      "zoneId": "watch",
+      "goldFuturesClose": 3643.7,
+      "goldPricePerGram": 117.15,
+      "fedFundsRate": 4.22,
+      "predictedScore": 71.8,
+      "forecastError": -2.9
+    },
+    {
+      "date": "2025-09-19",
+      "score": 67.7,
+      "zoneId": "watch",
+      "goldFuturesClose": 3671.5,
+      "goldPricePerGram": 118.04,
+      "fedFundsRate": 4.22,
+      "predictedScore": 68.9,
+      "forecastError": -1.2
+    },
+    {
+      "date": "2025-09-22",
+      "score": 70.1,
+      "zoneId": "accumulation",
+      "goldFuturesClose": 3740.7,
+      "goldPricePerGram": 120.27,
+      "fedFundsRate": 4.22,
+      "predictedScore": 67.7,
+      "forecastError": 2.4
+    },
+    {
+      "date": "2025-09-23",
+      "score": 70.4,
+      "zoneId": "accumulation",
+      "goldFuturesClose": 3780.6,
+      "goldPricePerGram": 121.55,
+      "fedFundsRate": 4.22,
+      "predictedScore": 70.1,
+      "forecastError": 0.3
+    },
+    {
+      "date": "2025-09-24",
+      "score": 64.1,
+      "zoneId": "watch",
+      "goldFuturesClose": 3732.1,
+      "goldPricePerGram": 119.99,
+      "fedFundsRate": 4.22,
+      "predictedScore": 70.4,
+      "forecastError": -6.3
+    },
+    {
+      "date": "2025-09-25",
+      "score": 64,
+      "zoneId": "watch",
+      "goldFuturesClose": 3736.9,
+      "goldPricePerGram": 120.14,
+      "fedFundsRate": 4.22,
+      "predictedScore": 64.1,
+      "forecastError": -0.1
+    },
+    {
+      "date": "2025-09-26",
+      "score": 64.1,
+      "zoneId": "watch",
+      "goldFuturesClose": 3775.3,
+      "goldPricePerGram": 121.38,
+      "fedFundsRate": 4.22,
+      "predictedScore": 64,
+      "forecastError": 0.1
+    },
+    {
+      "date": "2025-09-29",
+      "score": 67.5,
+      "zoneId": "watch",
+      "goldFuturesClose": 3820.9,
+      "goldPricePerGram": 122.84,
+      "fedFundsRate": 4.22,
+      "predictedScore": 64.1,
+      "forecastError": 3.4
+    },
+    {
+      "date": "2025-09-30",
+      "score": 68,
+      "zoneId": "watch",
+      "goldFuturesClose": 3840.8,
+      "goldPricePerGram": 123.48,
+      "fedFundsRate": 4.22,
+      "predictedScore": 67.5,
+      "forecastError": 0.5
+    },
+    {
+      "date": "2025-10-01",
+      "score": 70.7,
+      "zoneId": "accumulation",
+      "goldFuturesClose": 3867.5,
+      "goldPricePerGram": 124.34,
+      "fedFundsRate": 4.09,
+      "predictedScore": 68,
+      "forecastError": 2.7
+    },
+    {
+      "date": "2025-10-02",
+      "score": 69,
+      "zoneId": "watch",
+      "goldFuturesClose": 3839.7,
+      "goldPricePerGram": 123.45,
+      "fedFundsRate": 4.09,
+      "predictedScore": 70.7,
+      "forecastError": -1.7
+    },
+    {
+      "date": "2025-10-03",
+      "score": 72.3,
+      "zoneId": "accumulation",
+      "goldFuturesClose": 3880.8,
+      "goldPricePerGram": 124.77,
+      "fedFundsRate": 4.09,
+      "predictedScore": 69,
+      "forecastError": 3.3
+    },
+    {
+      "date": "2025-10-06",
+      "score": 71.3,
+      "zoneId": "accumulation",
+      "goldFuturesClose": 3948.5,
+      "goldPricePerGram": 126.95,
+      "fedFundsRate": 4.09,
+      "predictedScore": 72.3,
+      "forecastError": -1
+    },
+    {
+      "date": "2025-10-07",
+      "score": 69.6,
+      "zoneId": "watch",
+      "goldFuturesClose": 3976.6,
+      "goldPricePerGram": 127.85,
+      "fedFundsRate": 4.09,
+      "predictedScore": 71.3,
+      "forecastError": -1.7
+    },
+    {
+      "date": "2025-10-08",
+      "score": 69.6,
+      "zoneId": "watch",
+      "goldFuturesClose": 4043.3,
+      "goldPricePerGram": 130,
+      "fedFundsRate": 4.09,
+      "predictedScore": 69.6,
+      "forecastError": 0
+    },
+    {
+      "date": "2025-10-09",
+      "score": 65.9,
+      "zoneId": "watch",
+      "goldFuturesClose": 3946.3,
+      "goldPricePerGram": 126.88,
+      "fedFundsRate": 4.09,
+      "predictedScore": 69.6,
+      "forecastError": -3.7
+    },
+    {
+      "date": "2025-10-10",
+      "score": 70.4,
+      "zoneId": "accumulation",
+      "goldFuturesClose": 3975.9,
+      "goldPricePerGram": 127.83,
+      "fedFundsRate": 4.09,
+      "predictedScore": 65.9,
+      "forecastError": 4.5
+    },
+    {
+      "date": "2025-10-13",
+      "score": 74.3,
+      "zoneId": "accumulation",
+      "goldFuturesClose": 4108.6,
+      "goldPricePerGram": 132.09,
+      "fedFundsRate": 4.09,
+      "predictedScore": 70.4,
+      "forecastError": 3.9
+    },
+    {
+      "date": "2025-10-14",
+      "score": 74.3,
+      "zoneId": "accumulation",
+      "goldFuturesClose": 4138.7,
+      "goldPricePerGram": 133.06,
+      "fedFundsRate": 4.09,
+      "predictedScore": 74.3,
+      "forecastError": 0
+    },
+    {
+      "date": "2025-10-15",
+      "score": 75.8,
+      "zoneId": "accumulation",
+      "goldFuturesClose": 4176.9,
+      "goldPricePerGram": 134.29,
+      "fedFundsRate": 4.09,
+      "predictedScore": 74.3,
+      "forecastError": 1.5
+    },
+    {
+      "date": "2025-10-16",
+      "score": 76.7,
+      "zoneId": "accumulation",
+      "goldFuturesClose": 4280.2,
+      "goldPricePerGram": 137.61,
+      "fedFundsRate": 4.09,
+      "predictedScore": 75.8,
+      "forecastError": 0.9
+    },
+    {
+      "date": "2025-10-17",
+      "score": 71.6,
+      "zoneId": "accumulation",
+      "goldFuturesClose": 4189.9,
+      "goldPricePerGram": 134.71,
+      "fedFundsRate": 4.09,
+      "predictedScore": 76.7,
+      "forecastError": -5.1
+    },
+    {
+      "date": "2025-10-20",
+      "score": 73.4,
+      "zoneId": "accumulation",
+      "goldFuturesClose": 4336.4,
+      "goldPricePerGram": 139.42,
+      "fedFundsRate": 4.09,
+      "predictedScore": 71.6,
+      "forecastError": 1.8
+    },
+    {
+      "date": "2025-10-21",
+      "score": 65.8,
+      "zoneId": "watch",
+      "goldFuturesClose": 4087.7,
+      "goldPricePerGram": 131.42,
+      "fedFundsRate": 4.09,
+      "predictedScore": 73.4,
+      "forecastError": -7.6
+    },
+    {
+      "date": "2025-10-22",
+      "score": 65.4,
+      "zoneId": "watch",
+      "goldFuturesClose": 4044.4,
+      "goldPricePerGram": 130.03,
+      "fedFundsRate": 4.09,
+      "predictedScore": 65.8,
+      "forecastError": -0.4
+    },
+    {
+      "date": "2025-10-23",
+      "score": 66.9,
+      "zoneId": "watch",
+      "goldFuturesClose": 4125.5,
+      "goldPricePerGram": 132.64,
+      "fedFundsRate": 4.09,
+      "predictedScore": 65.4,
+      "forecastError": 1.5
+    },
+    {
+      "date": "2025-10-24",
+      "score": 69.3,
+      "zoneId": "watch",
+      "goldFuturesClose": 4118.4,
+      "goldPricePerGram": 132.41,
+      "fedFundsRate": 4.09,
+      "predictedScore": 66.9,
+      "forecastError": 2.4
+    },
+    {
+      "date": "2025-10-27",
+      "score": 67.3,
+      "zoneId": "watch",
+      "goldFuturesClose": 4001.9,
+      "goldPricePerGram": 128.66,
+      "fedFundsRate": 4.09,
+      "predictedScore": 69.3,
+      "forecastError": -2
+    },
+    {
+      "date": "2025-10-28",
+      "score": 69.7,
+      "zoneId": "watch",
+      "goldFuturesClose": 3966.2,
+      "goldPricePerGram": 127.52,
+      "fedFundsRate": 4.09,
+      "predictedScore": 67.3,
+      "forecastError": 2.4
+    },
+    {
+      "date": "2025-10-29",
+      "score": 67.7,
+      "zoneId": "watch",
+      "goldFuturesClose": 3983.7,
+      "goldPricePerGram": 128.08,
+      "fedFundsRate": 4.09,
+      "predictedScore": 69.7,
+      "forecastError": -2
+    },
+    {
+      "date": "2025-10-30",
+      "score": 62.7,
+      "zoneId": "watch",
+      "goldFuturesClose": 4001.3,
+      "goldPricePerGram": 128.64,
+      "fedFundsRate": 4.09,
+      "predictedScore": 67.7,
+      "forecastError": -5
+    },
+    {
+      "date": "2025-10-31",
+      "score": 61.2,
+      "zoneId": "watch",
+      "goldFuturesClose": 3982.2,
+      "goldPricePerGram": 128.03,
+      "fedFundsRate": 4.09,
+      "predictedScore": 62.7,
+      "forecastError": -1.5
+    },
+    {
+      "date": "2025-11-03",
+      "score": 61,
+      "zoneId": "watch",
+      "goldFuturesClose": 4000.3,
+      "goldPricePerGram": 128.61,
+      "fedFundsRate": 3.88,
+      "predictedScore": 61.2,
+      "forecastError": -0.2
+    },
+    {
+      "date": "2025-11-04",
+      "score": 59.1,
+      "zoneId": "watch",
+      "goldFuturesClose": 3947.7,
+      "goldPricePerGram": 126.92,
+      "fedFundsRate": 3.88,
+      "predictedScore": 61,
+      "forecastError": -1.9
+    },
+    {
+      "date": "2025-11-05",
+      "score": 59.3,
+      "zoneId": "watch",
+      "goldFuturesClose": 3980.3,
+      "goldPricePerGram": 127.97,
+      "fedFundsRate": 3.88,
+      "predictedScore": 59.1,
+      "forecastError": 0.2
+    },
+    {
+      "date": "2025-11-06",
+      "score": 61.1,
+      "zoneId": "watch",
+      "goldFuturesClose": 3979.9,
+      "goldPricePerGram": 127.96,
+      "fedFundsRate": 3.88,
+      "predictedScore": 59.3,
+      "forecastError": 1.8
+    },
+    {
+      "date": "2025-11-07",
+      "score": 62.8,
+      "zoneId": "watch",
+      "goldFuturesClose": 3999.4,
+      "goldPricePerGram": 128.58,
+      "fedFundsRate": 3.88,
+      "predictedScore": 61.1,
+      "forecastError": 1.7
+    },
+    {
+      "date": "2025-11-10",
+      "score": 64.2,
+      "zoneId": "watch",
+      "goldFuturesClose": 4111.8,
+      "goldPricePerGram": 132.2,
+      "fedFundsRate": 3.88,
+      "predictedScore": 62.8,
+      "forecastError": 1.4
+    },
+    {
+      "date": "2025-11-11",
+      "score": 63.1,
+      "zoneId": "watch",
+      "goldFuturesClose": 4106.8,
+      "goldPricePerGram": 132.04,
+      "fedFundsRate": 3.88,
+      "predictedScore": 64.2,
+      "forecastError": -1.1
+    },
+    {
+      "date": "2025-11-12",
+      "score": 67.9,
+      "zoneId": "watch",
+      "goldFuturesClose": 4204.4,
+      "goldPricePerGram": 135.17,
+      "fedFundsRate": 3.88,
+      "predictedScore": 63.1,
+      "forecastError": 4.8
+    },
+    {
+      "date": "2025-11-13",
+      "score": 66.8,
+      "zoneId": "watch",
+      "goldFuturesClose": 4186.9,
+      "goldPricePerGram": 134.61,
+      "fedFundsRate": 3.88,
+      "predictedScore": 67.9,
+      "forecastError": -1.1
+    },
+    {
+      "date": "2025-11-14",
+      "score": 64.6,
+      "zoneId": "watch",
+      "goldFuturesClose": 4087.6,
+      "goldPricePerGram": 131.42,
+      "fedFundsRate": 3.88,
+      "predictedScore": 66.8,
+      "forecastError": -2.2
+    },
+    {
+      "date": "2025-11-17",
+      "score": 63.6,
+      "zoneId": "watch",
+      "goldFuturesClose": 4068.3,
+      "goldPricePerGram": 130.8,
+      "fedFundsRate": 3.88,
+      "predictedScore": 64.6,
+      "forecastError": -1
+    },
+    {
+      "date": "2025-11-18",
+      "score": 63.6,
+      "zoneId": "watch",
+      "goldFuturesClose": 4061.3,
+      "goldPricePerGram": 130.57,
+      "fedFundsRate": 3.88,
+      "predictedScore": 63.6,
+      "forecastError": 0
+    },
+    {
+      "date": "2025-11-19",
+      "score": 63.8,
+      "zoneId": "watch",
+      "goldFuturesClose": 4077.7,
+      "goldPricePerGram": 131.1,
+      "fedFundsRate": 3.88,
+      "predictedScore": 63.6,
+      "forecastError": 0.2
+    },
+    {
+      "date": "2025-11-20",
+      "score": 62,
+      "zoneId": "watch",
+      "goldFuturesClose": 4056.5,
+      "goldPricePerGram": 130.42,
+      "fedFundsRate": 3.88,
+      "predictedScore": 63.8,
+      "forecastError": -1.8
+    },
+    {
+      "date": "2025-11-21",
+      "score": 64.2,
+      "zoneId": "watch",
+      "goldFuturesClose": 4076.7,
+      "goldPricePerGram": 131.07,
+      "fedFundsRate": 3.88,
+      "predictedScore": 62,
+      "forecastError": 2.2
+    },
+    {
+      "date": "2025-11-24",
+      "score": 64.5,
+      "zoneId": "watch",
+      "goldFuturesClose": 4091.9,
+      "goldPricePerGram": 131.56,
+      "fedFundsRate": 3.88,
+      "predictedScore": 64.2,
+      "forecastError": 0.3
+    },
+    {
+      "date": "2025-11-25",
+      "score": 66.9,
+      "zoneId": "watch",
+      "goldFuturesClose": 4139.2,
+      "goldPricePerGram": 133.08,
+      "fedFundsRate": 3.88,
+      "predictedScore": 64.5,
+      "forecastError": 2.4
+    },
+    {
+      "date": "2025-11-26",
+      "score": 66.3,
+      "zoneId": "watch",
+      "goldFuturesClose": 4165.2,
+      "goldPricePerGram": 133.91,
+      "fedFundsRate": 3.88,
+      "predictedScore": 66.9,
+      "forecastError": -0.6
+    },
+    {
+      "date": "2025-11-28",
+      "score": 67.7,
+      "zoneId": "watch",
+      "goldFuturesClose": 4218.3,
+      "goldPricePerGram": 135.62,
+      "fedFundsRate": 3.88,
+      "predictedScore": 66.3,
+      "forecastError": 1.4
+    },
+    {
+      "date": "2025-12-01",
+      "score": 69,
+      "zoneId": "watch",
+      "goldFuturesClose": 4239.3,
+      "goldPricePerGram": 136.3,
+      "fedFundsRate": 3.72,
+      "predictedScore": 67.7,
+      "forecastError": 1.3
+    },
+    {
+      "date": "2025-12-02",
+      "score": 66.3,
+      "zoneId": "watch",
+      "goldFuturesClose": 4186.6,
+      "goldPricePerGram": 134.6,
+      "fedFundsRate": 3.72,
+      "predictedScore": 69,
+      "forecastError": -2.7
+    },
+    {
+      "date": "2025-12-03",
+      "score": 68.2,
+      "zoneId": "watch",
+      "goldFuturesClose": 4199.3,
+      "goldPricePerGram": 135.01,
+      "fedFundsRate": 3.72,
+      "predictedScore": 66.3,
+      "forecastError": 1.9
+    },
+    {
+      "date": "2025-12-04",
+      "score": 64.7,
+      "zoneId": "watch",
+      "goldFuturesClose": 4211.8,
+      "goldPricePerGram": 135.41,
+      "fedFundsRate": 3.72,
+      "predictedScore": 68.2,
+      "forecastError": -3.5
+    },
+    {
+      "date": "2025-12-05",
+      "score": 63.1,
+      "zoneId": "watch",
+      "goldFuturesClose": 4212.9,
+      "goldPricePerGram": 135.45,
+      "fedFundsRate": 3.72,
+      "predictedScore": 64.7,
+      "forecastError": -1.6
+    },
+    {
+      "date": "2025-12-08",
+      "score": 62.7,
+      "zoneId": "watch",
+      "goldFuturesClose": 4187.2,
+      "goldPricePerGram": 134.62,
+      "fedFundsRate": 3.72,
+      "predictedScore": 63.1,
+      "forecastError": -0.4
+    },
+    {
+      "date": "2025-12-09",
+      "score": 62.3,
+      "zoneId": "watch",
+      "goldFuturesClose": 4206.7,
+      "goldPricePerGram": 135.25,
+      "fedFundsRate": 3.72,
+      "predictedScore": 62.7,
+      "forecastError": -0.4
+    },
+    {
+      "date": "2025-12-10",
+      "score": 62.6,
+      "zoneId": "watch",
+      "goldFuturesClose": 4196.4,
+      "goldPricePerGram": 134.92,
+      "fedFundsRate": 3.72,
+      "predictedScore": 62.3,
+      "forecastError": 0.3
+    },
+    {
+      "date": "2025-12-11",
+      "score": 66.8,
+      "zoneId": "watch",
+      "goldFuturesClose": 4285.5,
+      "goldPricePerGram": 137.78,
+      "fedFundsRate": 3.72,
+      "predictedScore": 62.6,
+      "forecastError": 4.2
+    },
+    {
+      "date": "2025-12-12",
+      "score": 65.2,
+      "zoneId": "watch",
+      "goldFuturesClose": 4300.1,
+      "goldPricePerGram": 138.25,
+      "fedFundsRate": 3.72,
+      "predictedScore": 66.8,
+      "forecastError": -1.6
+    },
+    {
+      "date": "2025-12-15",
+      "score": 64.7,
+      "zoneId": "watch",
+      "goldFuturesClose": 4306.7,
+      "goldPricePerGram": 138.46,
+      "fedFundsRate": 3.72,
+      "predictedScore": 65.2,
+      "forecastError": -0.5
+    },
+    {
+      "date": "2025-12-16",
+      "score": 66.6,
+      "zoneId": "watch",
+      "goldFuturesClose": 4304.5,
+      "goldPricePerGram": 138.39,
+      "fedFundsRate": 3.72,
+      "predictedScore": 64.7,
+      "forecastError": 1.9
+    },
+    {
+      "date": "2025-12-17",
+      "score": 69.3,
+      "zoneId": "watch",
+      "goldFuturesClose": 4347.5,
+      "goldPricePerGram": 139.78,
+      "fedFundsRate": 3.72,
+      "predictedScore": 66.6,
+      "forecastError": 2.7
+    },
+    {
+      "date": "2025-12-18",
+      "score": 69.4,
+      "zoneId": "watch",
+      "goldFuturesClose": 4339.5,
+      "goldPricePerGram": 139.52,
+      "fedFundsRate": 3.72,
+      "predictedScore": 69.3,
+      "forecastError": 0.1
+    },
+    {
+      "date": "2025-12-19",
+      "score": 68.9,
+      "zoneId": "watch",
+      "goldFuturesClose": 4361.4,
+      "goldPricePerGram": 140.22,
+      "fedFundsRate": 3.72,
+      "predictedScore": 69.4,
+      "forecastError": -0.5
+    },
+    {
+      "date": "2025-12-22",
+      "score": 69.2,
+      "zoneId": "watch",
+      "goldFuturesClose": 4444.6,
+      "goldPricePerGram": 142.9,
+      "fedFundsRate": 3.72,
+      "predictedScore": 68.9,
+      "forecastError": 0.3
+    },
+    {
+      "date": "2025-12-23",
+      "score": 71.8,
+      "zoneId": "accumulation",
+      "goldFuturesClose": 4482.8,
+      "goldPricePerGram": 144.13,
+      "fedFundsRate": 3.72,
+      "predictedScore": 69.2,
+      "forecastError": 2.6
+    },
+    {
+      "date": "2025-12-24",
+      "score": 72.9,
+      "zoneId": "accumulation",
+      "goldFuturesClose": 4480.6,
+      "goldPricePerGram": 144.05,
+      "fedFundsRate": 3.72,
+      "predictedScore": 71.8,
+      "forecastError": 1.1
+    },
+    {
+      "date": "2025-12-26",
+      "score": 73.3,
+      "zoneId": "accumulation",
+      "goldFuturesClose": 4529.1,
+      "goldPricePerGram": 145.61,
+      "fedFundsRate": 3.72,
+      "predictedScore": 72.9,
+      "forecastError": 0.4
+    },
+    {
+      "date": "2025-12-29",
+      "score": 65.9,
+      "zoneId": "watch",
+      "goldFuturesClose": 4325.1,
+      "goldPricePerGram": 139.06,
+      "fedFundsRate": 3.72,
+      "predictedScore": 73.3,
+      "forecastError": -7.4
+    },
+    {
+      "date": "2025-12-30",
+      "score": 65.8,
+      "zoneId": "watch",
+      "goldFuturesClose": 4370.1,
+      "goldPricePerGram": 140.5,
+      "fedFundsRate": 3.72,
+      "predictedScore": 65.9,
+      "forecastError": -0.1
+    },
+    {
+      "date": "2025-12-31",
+      "score": 62.7,
+      "zoneId": "watch",
+      "goldFuturesClose": 4325.6,
+      "goldPricePerGram": 139.07,
+      "fedFundsRate": 3.72,
+      "predictedScore": 65.8,
+      "forecastError": -3.1
+    },
+    {
+      "date": "2026-01-02",
+      "score": 61.3,
+      "zoneId": "watch",
+      "goldFuturesClose": 4314.4,
+      "goldPricePerGram": 138.71,
+      "fedFundsRate": 3.64,
+      "predictedScore": 62.7,
+      "forecastError": -1.4
+    },
+    {
+      "date": "2026-01-05",
+      "score": 65.1,
+      "zoneId": "watch",
+      "goldFuturesClose": 4436.9,
+      "goldPricePerGram": 142.65,
+      "fedFundsRate": 3.64,
+      "predictedScore": 61.3,
+      "forecastError": 3.8
+    },
+    {
+      "date": "2026-01-06",
+      "score": 66,
+      "zoneId": "watch",
+      "goldFuturesClose": 4482.2,
+      "goldPricePerGram": 144.11,
+      "fedFundsRate": 3.64,
+      "predictedScore": 65.1,
+      "forecastError": 0.9
+    },
+    {
+      "date": "2026-01-07",
+      "score": 65.7,
+      "zoneId": "watch",
+      "goldFuturesClose": 4449.3,
+      "goldPricePerGram": 143.05,
+      "fedFundsRate": 3.64,
+      "predictedScore": 66,
+      "forecastError": -0.3
+    },
+    {
+      "date": "2026-01-08",
+      "score": 64.7,
+      "zoneId": "watch",
+      "goldFuturesClose": 4449.7,
+      "goldPricePerGram": 143.06,
+      "fedFundsRate": 3.64,
+      "predictedScore": 65.7,
+      "forecastError": -1
+    },
+    {
+      "date": "2026-01-09",
+      "score": 68,
+      "zoneId": "watch",
+      "goldFuturesClose": 4490.3,
+      "goldPricePerGram": 144.37,
+      "fedFundsRate": 3.64,
+      "predictedScore": 64.7,
+      "forecastError": 3.3
+    },
+    {
+      "date": "2026-01-12",
+      "score": 67.9,
+      "zoneId": "watch",
+      "goldFuturesClose": 4604.3,
+      "goldPricePerGram": 148.03,
+      "fedFundsRate": 3.64,
+      "predictedScore": 68,
+      "forecastError": -0.1
+    },
+    {
+      "date": "2026-01-13",
+      "score": 65.4,
+      "zoneId": "watch",
+      "goldFuturesClose": 4589.2,
+      "goldPricePerGram": 147.55,
+      "fedFundsRate": 3.64,
+      "predictedScore": 67.9,
+      "forecastError": -2.5
+    },
+    {
+      "date": "2026-01-14",
+      "score": 66.5,
+      "zoneId": "watch",
+      "goldFuturesClose": 4626.3,
+      "goldPricePerGram": 148.74,
+      "fedFundsRate": 3.64,
+      "predictedScore": 65.4,
+      "forecastError": 1.1
+    },
+    {
+      "date": "2026-01-15",
+      "score": 63.9,
+      "zoneId": "watch",
+      "goldFuturesClose": 4616.3,
+      "goldPricePerGram": 148.42,
+      "fedFundsRate": 3.64,
+      "predictedScore": 66.5,
+      "forecastError": -2.6
+    },
+    {
+      "date": "2026-01-16",
+      "score": 58,
+      "zoneId": "watch",
+      "goldFuturesClose": 4588.4,
+      "goldPricePerGram": 147.52,
+      "fedFundsRate": 3.64,
+      "predictedScore": 63.9,
+      "forecastError": -5.9
+    },
+    {
+      "date": "2026-01-20",
+      "score": 63.9,
+      "zoneId": "watch",
+      "goldFuturesClose": 4759.6,
+      "goldPricePerGram": 153.02,
+      "fedFundsRate": 3.64,
+      "predictedScore": 58,
+      "forecastError": 5.9
+    },
+    {
+      "date": "2026-01-21",
+      "score": 63.1,
+      "zoneId": "watch",
+      "goldFuturesClose": 4831.8,
+      "goldPricePerGram": 155.35,
+      "fedFundsRate": 3.64,
+      "predictedScore": 63.9,
+      "forecastError": -0.8
+    },
+    {
+      "date": "2026-01-22",
+      "score": 67.4,
+      "zoneId": "watch",
+      "goldFuturesClose": 4908.8,
+      "goldPricePerGram": 157.82,
+      "fedFundsRate": 3.64,
+      "predictedScore": 63.1,
+      "forecastError": 4.3
+    },
+    {
+      "date": "2026-01-23",
+      "score": 68.9,
+      "zoneId": "watch",
+      "goldFuturesClose": 4976.2,
+      "goldPricePerGram": 159.99,
+      "fedFundsRate": 3.64,
+      "predictedScore": 67.4,
+      "forecastError": 1.5
+    },
+    {
+      "date": "2026-01-26",
+      "score": 70.6,
+      "zoneId": "accumulation",
+      "goldFuturesClose": 5079.7,
+      "goldPricePerGram": 163.32,
+      "fedFundsRate": 3.64,
+      "predictedScore": 68.9,
+      "forecastError": 1.7
+    },
+    {
+      "date": "2026-01-27",
+      "score": 71,
+      "zoneId": "accumulation",
+      "goldFuturesClose": 5079.9,
+      "goldPricePerGram": 163.32,
+      "fedFundsRate": 3.64,
+      "predictedScore": 70.6,
+      "forecastError": 0.4
+    },
+    {
+      "date": "2026-01-28",
+      "score": 69.9,
+      "zoneId": "watch",
+      "goldFuturesClose": 5301.6,
+      "goldPricePerGram": 170.45,
+      "fedFundsRate": 3.64,
+      "predictedScore": 71,
+      "forecastError": -1.1
+    },
+    {
+      "date": "2026-01-29",
+      "score": 70.3,
+      "zoneId": "accumulation",
+      "goldFuturesClose": 5318.4,
+      "goldPricePerGram": 170.99,
+      "fedFundsRate": 3.64,
+      "predictedScore": 69.9,
+      "forecastError": 0.4
+    },
+    {
+      "date": "2026-01-30",
+      "score": 59.3,
+      "zoneId": "watch",
+      "goldFuturesClose": 4713.9,
+      "goldPricePerGram": 151.56,
+      "fedFundsRate": 3.64,
+      "predictedScore": 70.3,
+      "forecastError": -11
+    },
+    {
+      "date": "2026-02-02",
+      "score": 58.2,
+      "zoneId": "watch",
+      "goldFuturesClose": 4622.5,
+      "goldPricePerGram": 148.62,
+      "fedFundsRate": 3.64,
+      "predictedScore": 59.3,
+      "forecastError": -1.1
+    },
+    {
+      "date": "2026-02-03",
+      "score": 63.1,
+      "zoneId": "watch",
+      "goldFuturesClose": 4903.7,
+      "goldPricePerGram": 157.66,
+      "fedFundsRate": 3.64,
+      "predictedScore": 58.2,
+      "forecastError": 4.9
+    },
+    {
+      "date": "2026-02-04",
+      "score": 63.7,
+      "zoneId": "watch",
+      "goldFuturesClose": 4920.4,
+      "goldPricePerGram": 158.19,
+      "fedFundsRate": 3.64,
+      "predictedScore": 63.1,
+      "forecastError": 0.6
+    },
+    {
+      "date": "2026-02-05",
+      "score": 64.5,
+      "zoneId": "watch",
+      "goldFuturesClose": 4861.4,
+      "goldPricePerGram": 156.3,
+      "fedFundsRate": 3.64,
+      "predictedScore": 63.7,
+      "forecastError": 0.8
+    },
+    {
+      "date": "2026-02-06",
+      "score": 66.4,
+      "zoneId": "watch",
+      "goldFuturesClose": 4951.2,
+      "goldPricePerGram": 159.18,
+      "fedFundsRate": 3.64,
+      "predictedScore": 64.5,
+      "forecastError": 1.9
+    },
+    {
+      "date": "2026-02-09",
+      "score": 67.4,
+      "zoneId": "watch",
+      "goldFuturesClose": 5050.9,
+      "goldPricePerGram": 162.39,
+      "fedFundsRate": 3.64,
+      "predictedScore": 66.4,
+      "forecastError": 1
+    },
+    {
+      "date": "2026-02-10",
+      "score": 68.1,
+      "zoneId": "watch",
+      "goldFuturesClose": 5003.8,
+      "goldPricePerGram": 160.88,
+      "fedFundsRate": 3.64,
+      "predictedScore": 67.4,
+      "forecastError": 0.7
+    },
+    {
+      "date": "2026-02-11",
+      "score": 69.1,
+      "zoneId": "watch",
+      "goldFuturesClose": 5071.6,
+      "goldPricePerGram": 163.06,
+      "fedFundsRate": 3.64,
+      "predictedScore": 68.1,
+      "forecastError": 1
+    },
+    {
+      "date": "2026-02-12",
+      "score": 67.9,
+      "zoneId": "watch",
+      "goldFuturesClose": 4923.7,
+      "goldPricePerGram": 158.3,
+      "fedFundsRate": 3.64,
+      "predictedScore": 69.1,
+      "forecastError": -1.2
+    },
+    {
+      "date": "2026-02-13",
+      "score": 69.8,
+      "zoneId": "watch",
+      "goldFuturesClose": 5022,
+      "goldPricePerGram": 161.46,
+      "fedFundsRate": 3.64,
+      "predictedScore": 67.9,
+      "forecastError": 1.9
+    },
+    {
+      "date": "2026-02-17",
+      "score": 67.4,
+      "zoneId": "watch",
+      "goldFuturesClose": 4882.9,
+      "goldPricePerGram": 156.99,
+      "fedFundsRate": 3.64,
+      "predictedScore": 69.8,
+      "forecastError": -2.4
+    },
+    {
+      "date": "2026-02-18",
+      "score": 68.3,
+      "zoneId": "watch",
+      "goldFuturesClose": 4986.5,
+      "goldPricePerGram": 160.32,
+      "fedFundsRate": 3.64,
+      "predictedScore": 67.4,
+      "forecastError": 0.9
+    },
+    {
+      "date": "2026-02-19",
+      "score": 68,
+      "zoneId": "watch",
+      "goldFuturesClose": 4975.9,
+      "goldPricePerGram": 159.98,
+      "fedFundsRate": 3.64,
+      "predictedScore": 68.3,
+      "forecastError": -0.3
+    },
+    {
+      "date": "2026-02-20",
+      "score": 69.7,
+      "zoneId": "watch",
+      "goldFuturesClose": 5059.3,
+      "goldPricePerGram": 162.66,
+      "fedFundsRate": 3.64,
+      "predictedScore": 68,
+      "forecastError": 1.7
+    },
+    {
+      "date": "2026-02-23",
+      "score": 74.9,
+      "zoneId": "accumulation",
+      "goldFuturesClose": 5204.7,
+      "goldPricePerGram": 167.33,
+      "fedFundsRate": 3.64,
+      "predictedScore": 69.7,
+      "forecastError": 5.2
+    },
+    {
+      "date": "2026-02-24",
+      "score": 73.4,
+      "zoneId": "accumulation",
+      "goldFuturesClose": 5155.8,
+      "goldPricePerGram": 165.76,
+      "fedFundsRate": 3.64,
+      "predictedScore": 74.9,
+      "forecastError": -1.5
+    },
+    {
+      "date": "2026-02-25",
+      "score": 73.3,
+      "zoneId": "accumulation",
+      "goldFuturesClose": 5206.4,
+      "goldPricePerGram": 167.39,
+      "fedFundsRate": 3.64,
+      "predictedScore": 73.4,
+      "forecastError": -0.1
+    },
+    {
+      "date": "2026-02-26",
+      "score": 72.7,
+      "zoneId": "accumulation",
+      "goldFuturesClose": 5176.5,
+      "goldPricePerGram": 166.43,
+      "fedFundsRate": 3.64,
+      "predictedScore": 73.3,
+      "forecastError": -0.6
+    },
+    {
+      "date": "2026-02-27",
+      "score": 74.1,
+      "zoneId": "accumulation",
+      "goldFuturesClose": 5230.5,
+      "goldPricePerGram": 168.16,
+      "fedFundsRate": 3.64,
+      "predictedScore": 72.7,
+      "forecastError": 1.4
+    },
+    {
+      "date": "2026-03-02",
+      "score": 70.8,
+      "zoneId": "accumulation",
+      "goldFuturesClose": 5294.4,
+      "goldPricePerGram": 170.22,
+      "fedFundsRate": 3.64,
+      "predictedScore": 74.1,
+      "forecastError": -3.3
+    },
+    {
+      "date": "2026-03-03",
+      "score": 65.5,
+      "zoneId": "watch",
+      "goldFuturesClose": 5107.4,
+      "goldPricePerGram": 164.21,
+      "fedFundsRate": 3.64,
+      "predictedScore": 70.8,
+      "forecastError": -5.3
+    },
+    {
+      "date": "2026-03-04",
+      "score": 66.6,
+      "zoneId": "watch",
+      "goldFuturesClose": 5120.2,
+      "goldPricePerGram": 164.62,
+      "fedFundsRate": 3.64,
+      "predictedScore": 65.5,
+      "forecastError": 1.1
+    },
+    {
+      "date": "2026-03-05",
+      "score": 62.7,
+      "zoneId": "watch",
+      "goldFuturesClose": 5065.3,
+      "goldPricePerGram": 162.85,
+      "fedFundsRate": 3.64,
+      "predictedScore": 66.6,
+      "forecastError": -3.9
+    },
+    {
+      "date": "2026-03-06",
+      "score": 62.5,
+      "zoneId": "watch",
+      "goldFuturesClose": 5146.1,
+      "goldPricePerGram": 165.45,
+      "fedFundsRate": 3.64,
+      "predictedScore": 62.7,
+      "forecastError": -0.2
+    },
+    {
+      "date": "2026-03-09",
+      "score": 62.2,
+      "zoneId": "watch",
+      "goldFuturesClose": 5091.5,
+      "goldPricePerGram": 163.7,
+      "fedFundsRate": 3.64,
+      "predictedScore": 62.5,
+      "forecastError": -0.3
+    },
+    {
+      "date": "2026-03-10",
+      "score": 66.5,
+      "zoneId": "watch",
+      "goldFuturesClose": 5229.7,
+      "goldPricePerGram": 168.14,
+      "fedFundsRate": 3.64,
+      "predictedScore": 62.2,
+      "forecastError": 4.3
+    },
+    {
+      "date": "2026-03-11",
+      "score": 63.3,
+      "zoneId": "watch",
+      "goldFuturesClose": 5167.4,
+      "goldPricePerGram": 166.14,
+      "fedFundsRate": 3.64,
+      "predictedScore": 66.5,
+      "forecastError": -3.2
+    },
+    {
+      "date": "2026-03-12",
+      "score": 60.2,
+      "zoneId": "watch",
+      "goldFuturesClose": 5115.8,
+      "goldPricePerGram": 164.48,
+      "fedFundsRate": 3.64,
+      "predictedScore": 63.3,
+      "forecastError": -3.1
+    },
+    {
+      "date": "2026-03-13",
+      "score": 56.6,
+      "zoneId": "watch",
+      "goldFuturesClose": 5052.5,
+      "goldPricePerGram": 162.44,
+      "fedFundsRate": 3.64,
+      "predictedScore": 60.2,
+      "forecastError": -3.6
+    },
+    {
+      "date": "2026-03-16",
+      "score": 56,
+      "zoneId": "watch",
+      "goldFuturesClose": 4994,
+      "goldPricePerGram": 160.56,
+      "fedFundsRate": 3.64,
+      "predictedScore": 56.6,
+      "forecastError": -0.6
+    },
+    {
+      "date": "2026-03-17",
+      "score": 57.1,
+      "zoneId": "watch",
+      "goldFuturesClose": 5001,
+      "goldPricePerGram": 160.79,
+      "fedFundsRate": 3.64,
+      "predictedScore": 56,
+      "forecastError": 1.1
+    },
+    {
+      "date": "2026-03-18",
+      "score": 52,
+      "zoneId": "watch",
+      "goldFuturesClose": 4889.9,
+      "goldPricePerGram": 157.21,
+      "fedFundsRate": 3.64,
+      "predictedScore": 57.1,
+      "forecastError": -5.1
+    },
+    {
+      "date": "2026-03-19",
+      "score": 47.2,
+      "zoneId": "caution",
+      "goldFuturesClose": 4600.7,
+      "goldPricePerGram": 147.92,
+      "fedFundsRate": 3.64,
+      "predictedScore": 52,
+      "forecastError": -4.8
+    },
+    {
+      "date": "2026-03-20",
+      "score": 44,
+      "zoneId": "caution",
+      "goldFuturesClose": 4570.4,
+      "goldPricePerGram": 146.94,
+      "fedFundsRate": 3.64,
+      "predictedScore": 47.2,
+      "forecastError": -3.2
+    },
+    {
+      "date": "2026-03-23",
+      "score": 43.6,
+      "zoneId": "caution",
+      "goldFuturesClose": 4404.1,
+      "goldPricePerGram": 141.6,
+      "fedFundsRate": 3.64,
+      "predictedScore": 44,
+      "forecastError": -0.4
+    },
+    {
+      "date": "2026-03-24",
+      "score": 42.2,
+      "zoneId": "caution",
+      "goldFuturesClose": 4399.3,
+      "goldPricePerGram": 141.44,
+      "fedFundsRate": 3.64,
+      "predictedScore": 43.6,
+      "forecastError": -1.4
+    },
+    {
+      "date": "2026-03-25",
+      "score": 44.5,
+      "zoneId": "caution",
+      "goldFuturesClose": 4549.8,
+      "goldPricePerGram": 146.28,
+      "fedFundsRate": 3.64,
+      "predictedScore": 42.2,
+      "forecastError": 2.3
+    },
+    {
+      "date": "2026-03-26",
+      "score": 37.4,
+      "zoneId": "caution",
+      "goldFuturesClose": 4375.5,
+      "goldPricePerGram": 140.68,
+      "fedFundsRate": 3.64,
+      "predictedScore": 44.5,
+      "forecastError": -7.1
+    },
+    {
+      "date": "2026-03-27",
+      "score": 39.7,
+      "zoneId": "caution",
+      "goldFuturesClose": 4492,
+      "goldPricePerGram": 144.42,
+      "fedFundsRate": 3.64,
+      "predictedScore": 37.4,
+      "forecastError": 2.3
+    },
+    {
+      "date": "2026-03-30",
+      "score": 40.2,
+      "zoneId": "caution",
+      "goldFuturesClose": 4526,
+      "goldPricePerGram": 145.51,
+      "fedFundsRate": 3.64,
+      "predictedScore": 39.7,
+      "forecastError": 0.5
+    },
+    {
+      "date": "2026-03-31",
+      "score": 47.7,
+      "zoneId": "caution",
+      "goldFuturesClose": 4647.6,
+      "goldPricePerGram": 149.42,
+      "fedFundsRate": 3.64,
+      "predictedScore": 40.2,
+      "forecastError": 7.5
+    },
+    {
+      "date": "2026-04-01",
+      "score": 51.1,
+      "zoneId": "watch",
+      "goldFuturesClose": 4783.2,
+      "goldPricePerGram": 153.78,
+      "fedFundsRate": 3.64,
+      "predictedScore": 47.7,
+      "forecastError": 3.4
+    },
+    {
+      "date": "2026-04-02",
+      "score": 47.3,
+      "zoneId": "caution",
+      "goldFuturesClose": 4651.5,
+      "goldPricePerGram": 149.55,
+      "fedFundsRate": 3.64,
+      "predictedScore": 51.1,
+      "forecastError": -3.8
+    },
+    {
+      "date": "2026-04-06",
+      "score": 48.6,
+      "zoneId": "caution",
+      "goldFuturesClose": 4656.8,
+      "goldPricePerGram": 149.72,
+      "fedFundsRate": 3.64,
+      "predictedScore": 47.3,
+      "forecastError": 1.3
+    },
+    {
+      "date": "2026-04-07",
+      "score": 46.4,
+      "zoneId": "caution",
+      "goldFuturesClose": 4657.1,
+      "goldPricePerGram": 149.73,
+      "fedFundsRate": 3.64,
+      "predictedScore": 48.6,
+      "forecastError": -2.2
+    },
+    {
+      "date": "2026-04-08",
+      "score": 52,
+      "zoneId": "watch",
+      "goldFuturesClose": 4749.5,
+      "goldPricePerGram": 152.7,
+      "fedFundsRate": 3.64,
+      "predictedScore": 46.4,
+      "forecastError": 5.6
+    },
+    {
+      "date": "2026-04-09",
+      "score": 53.6,
+      "zoneId": "watch",
+      "goldFuturesClose": 4792.2,
+      "goldPricePerGram": 154.07,
+      "fedFundsRate": 3.64,
+      "predictedScore": 52,
+      "forecastError": 1.6
+    },
+    {
+      "date": "2026-04-10",
+      "score": 53.5,
+      "zoneId": "watch",
+      "goldFuturesClose": 4761.9,
+      "goldPricePerGram": 153.1,
+      "fedFundsRate": 3.64,
+      "predictedScore": 53.6,
+      "forecastError": -0.1
+    },
+    {
+      "date": "2026-04-13",
+      "score": 53,
+      "zoneId": "watch",
+      "goldFuturesClose": 4742.4,
+      "goldPricePerGram": 152.47,
+      "fedFundsRate": 3.64,
+      "predictedScore": 53.5,
+      "forecastError": -0.5
+    },
+    {
+      "date": "2026-04-14",
+      "score": 54.4,
+      "zoneId": "watch",
+      "goldFuturesClose": 4825,
+      "goldPricePerGram": 155.13,
+      "fedFundsRate": 3.64,
+      "predictedScore": 53,
+      "forecastError": 1.4
+    },
+    {
+      "date": "2026-04-15",
+      "score": 53.7,
+      "zoneId": "watch",
+      "goldFuturesClose": 4800,
+      "goldPricePerGram": 154.32,
+      "fedFundsRate": 3.64,
+      "predictedScore": 54.4,
+      "forecastError": -0.7
+    },
+    {
+      "date": "2026-04-16",
+      "score": 51.6,
+      "zoneId": "watch",
+      "goldFuturesClose": 4785.4,
+      "goldPricePerGram": 153.85,
+      "fedFundsRate": 3.64,
+      "predictedScore": 53.7,
+      "forecastError": -2.1
+    },
+    {
+      "date": "2026-04-17",
+      "score": 56.2,
+      "zoneId": "watch",
+      "goldFuturesClose": 4857.6,
+      "goldPricePerGram": 156.18,
+      "fedFundsRate": 3.64,
+      "predictedScore": 51.6,
+      "forecastError": 4.6
+    }
+  ],
+  "nextForecast": {
+    "basisDate": "2026-04-17",
+    "forecastDate": "2026-04-20",
+    "predictedScore": 56.2,
+    "model": "Persistence baseline: tomorrow score = latest available score"
+  },
+  "methodology": [
+    "Use a compact set of six interpretable signals instead of the full feature table.",
+    "Convert the latest value of each signal into its historical percentile.",
+    "Flip the percentile when lower values are historically more bullish for gold.",
+    "Weight the signals into a 0-100 Gold Timing Score.",
+    "Treat 70+ as the accumulation threshold; below that, keep the page in watch or caution mode."
+  ]
+}
