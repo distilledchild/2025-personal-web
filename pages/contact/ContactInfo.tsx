@@ -1,4 +1,4 @@
-import { Github, Mail, MapPin, Plus, X } from 'lucide-react';
+import { Github, Mail, Plus, X } from 'lucide-react';
 import React, { useState, useEffect } from 'react';
 import { API_URL } from '../../utils/apiConfig';
 import { useLockBodyScroll } from '../../hooks/useLockBodyScroll';
@@ -13,7 +13,6 @@ export const ContactInfo: React.FC<ContactInfoProps> = ({ user, isAuthorized }) 
     const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
     const [contactInfo, setContactInfo] = useState<any>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [userLocation, setUserLocation] = useState<{ city: string; state: string; country: string; lat: number; lon: number } | null>(null);
     const [stateSuggestions, setStateSuggestions] = useState<string[]>([]);
     const [formData, setFormData] = useState({
         Email: '',
@@ -23,31 +22,6 @@ export const ContactInfo: React.FC<ContactInfoProps> = ({ user, isAuthorized }) 
         state: '',
         country: ''
     });
-
-    useEffect(() => {
-        const fetchUserLocation = async () => {
-            try {
-                // Use backend proxy to avoid Mixed Content (HTTP vs HTTPS) issues
-                const response = await fetch(`${API_URL}/api/utils/geo`);
-                if (response.ok) {
-                    const data = await response.json();
-                    if (data.status === 'success') {
-                        setUserLocation({
-                            city: data.city,
-                            state: data.regionName,
-                            country: data.country,
-                            lat: data.lat,
-                            lon: data.lon
-                        });
-                    }
-                }
-            } catch (error) {
-                console.error('Failed to fetch user location:', error);
-            }
-        };
-
-        fetchUserLocation();
-    }, []);
 
     useEffect(() => {
         fetchContactInfo();
@@ -197,36 +171,6 @@ export const ContactInfo: React.FC<ContactInfoProps> = ({ user, isAuthorized }) 
         'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'
     ];
 
-    // Get Google Maps embed URL with red marker
-    const getMapUrl = () => {
-        const hasContactLocation = contactInfo?.Location?.city || contactInfo?.Location?.state || (contactInfo?.Location?.latitude && contactInfo?.Location?.longitude);
-
-        if (hasContactLocation) {
-            const { city, state, country, latitude, longitude } = contactInfo.Location;
-            if (latitude && longitude) {
-                return `https://maps.google.com/maps?q=${latitude},${longitude}&z=12&output=embed`;
-            }
-            const location = `${city || ''}, ${state || ''}, ${country || ''}`.replace(/^,\s*|\s*,$/g, '');
-            return `https://maps.google.com/maps?q=${encodeURIComponent(location)}&z=12&output=embed`;
-        } else if (userLocation) {
-            return `https://maps.google.com/maps?q=${userLocation.lat},${userLocation.lon}&z=12&output=embed`;
-        }
-
-        return '';
-    };
-
-    // Get display location text
-    const getLocationText = () => {
-        if (contactInfo?.Location?.city || contactInfo?.Location?.state) {
-            const { city, state, country } = contactInfo.Location;
-            const parts = [city, state, country].filter(Boolean);
-            return parts.join(', ');
-        } else if (userLocation) {
-            return `${userLocation.city}, ${userLocation.state}, ${userLocation.country}`;
-        }
-        return 'Loading...';
-    };
-
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         await handleSave();
@@ -260,10 +204,7 @@ export const ContactInfo: React.FC<ContactInfoProps> = ({ user, isAuthorized }) 
                 </div>
             )}
 
-            {/* 2 Column Layout: 50% Contact Cards, 50% Google Map */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                {/* Left Column - Contact Cards */}
-                <div className="space-y-6">
+            <div className="w-full max-w-2xl mx-auto space-y-6 py-8 lg:py-12">
                     <button
                         onClick={handleCopy}
                         className="w-full flex items-center p-6 bg-slate-50 rounded-2xl hover:bg-purple-50 transition-colors group border border-slate-100 hover:border-purple-100 cursor-pointer text-left"
@@ -309,36 +250,6 @@ export const ContactInfo: React.FC<ContactInfoProps> = ({ user, isAuthorized }) 
                         </div>
                     </a>
 
-                    <div className="w-full flex items-center p-6 bg-slate-50 rounded-2xl border border-slate-100">
-                        <div className="bg-white p-4 rounded-full shadow-sm text-black">
-                            <MapPin size={32} />
-                        </div>
-                        <div className="ml-6 flex-1">
-                            <p className="text-sm text-slate-500 uppercase font-bold tracking-wider mb-1">Located In</p>
-                            <p className="text-xl text-slate-900 font-medium">{getLocationText()}</p>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Right Column - Google Maps Embed */}
-                <div className="bg-slate-50 rounded-2xl overflow-hidden border border-slate-100 h-[400px] lg:h-auto min-h-[400px]">
-                    {getMapUrl() ? (
-                        <iframe
-                            width="100%"
-                            height="100%"
-                            frameBorder="0"
-                            scrolling="no"
-                            marginHeight={0}
-                            marginWidth={0}
-                            src={getMapUrl()}
-                            title="Location Map"
-                        ></iframe>
-                    ) : (
-                        <div className="w-full h-full flex items-center justify-center text-slate-400">
-                            Loading map...
-                        </div>
-                    )}
-                </div>
             </div>
 
             {/* Edit Modal */}
