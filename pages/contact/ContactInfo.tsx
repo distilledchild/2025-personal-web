@@ -1,4 +1,4 @@
-import { Github, Mail, Plus, X } from 'lucide-react';
+import { Github, Mail, MapPin, Plus, X } from 'lucide-react';
 import React, { useState, useEffect } from 'react';
 import { API_URL } from '../../utils/apiConfig';
 import { useLockBodyScroll } from '../../hooks/useLockBodyScroll';
@@ -171,6 +171,24 @@ export const ContactInfo: React.FC<ContactInfoProps> = ({ user, isAuthorized }) 
         'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'
     ];
 
+    const getMapUrl = () => {
+        const location = contactInfo?.Location;
+        if (!location) return '';
+
+        if (location.latitude && location.longitude) {
+            return `https://maps.google.com/maps?q=${location.latitude},${location.longitude}&z=12&output=embed`;
+        }
+
+        const address = [location.city, location.state, location.country].filter(Boolean).join(', ');
+        return address ? `https://maps.google.com/maps?q=${encodeURIComponent(address)}&z=12&output=embed` : '';
+    };
+
+    const getLocationText = () => {
+        const location = contactInfo?.Location;
+        const address = [location?.city, location?.state, location?.country].filter(Boolean).join(', ');
+        return address || 'Location not set';
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         await handleSave();
@@ -204,7 +222,8 @@ export const ContactInfo: React.FC<ContactInfoProps> = ({ user, isAuthorized }) 
                 </div>
             )}
 
-            <div className="w-full max-w-2xl mx-auto space-y-6 py-8 lg:py-12">
+            <div className={`w-full mx-auto py-8 lg:py-12 ${isAuthorized ? 'grid grid-cols-1 lg:grid-cols-2 gap-8' : 'max-w-2xl'}`}>
+                <div className="space-y-6">
                     <button
                         onClick={handleCopy}
                         className="w-full flex items-center p-6 bg-slate-50 rounded-2xl hover:bg-purple-50 transition-colors group border border-slate-100 hover:border-purple-100 cursor-pointer text-left"
@@ -233,23 +252,58 @@ export const ContactInfo: React.FC<ContactInfoProps> = ({ user, isAuthorized }) 
                         </div>
                     </a>
 
-                    <a
-                        href={contactInfo?.LinkedIn ? `https://${contactInfo.LinkedIn}` : '#'}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="w-full flex items-center p-6 bg-slate-50 rounded-2xl hover:bg-purple-50 transition-colors group border border-slate-100 hover:border-purple-100 cursor-pointer text-left"
-                    >
-                        <div className="bg-white p-4 rounded-full shadow-sm text-black group-hover:text-[#2362BC] transition-colors">
-                            <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
-                            </svg>
-                        </div>
-                        <div className="ml-6 text-left">
-                            <p className="text-sm text-slate-500 group-hover:text-purple-600 uppercase font-bold tracking-wider mb-1 transition-colors">LinkedIn</p>
-                            <p className="text-xl text-slate-900 font-medium break-all">{contactInfo?.LinkedIn?.replace('https://linkedin.com/in/', '') || 'Loading...'}</p>
-                        </div>
-                    </a>
+                    {isAuthorized && (
+                        <a
+                            href={contactInfo?.LinkedIn ? `https://${contactInfo.LinkedIn}` : '#'}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="w-full flex items-center p-6 bg-slate-50 rounded-2xl hover:bg-purple-50 transition-colors group border border-slate-100 hover:border-purple-100 cursor-pointer text-left"
+                        >
+                            <div className="bg-white p-4 rounded-full shadow-sm text-black group-hover:text-[#2362BC] transition-colors">
+                                <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+                                </svg>
+                            </div>
+                            <div className="ml-6 text-left">
+                                <p className="text-sm text-slate-500 group-hover:text-purple-600 uppercase font-bold tracking-wider mb-1 transition-colors">LinkedIn</p>
+                                <p className="text-xl text-slate-900 font-medium break-all">{contactInfo?.LinkedIn?.replace('https://linkedin.com/in/', '') || 'Loading...'}</p>
+                            </div>
+                        </a>
+                    )}
 
+                    {isAuthorized && (
+                        <div className="w-full flex items-center p-6 bg-slate-50 rounded-2xl border border-slate-100">
+                            <div className="bg-white p-4 rounded-full shadow-sm text-black">
+                                <MapPin size={32} />
+                            </div>
+                            <div className="ml-6 flex-1">
+                                <p className="text-sm text-slate-500 uppercase font-bold tracking-wider mb-1">Located In</p>
+                                <p className="text-xl text-slate-900 font-medium">{getLocationText()}</p>
+                            </div>
+                        </div>
+                    )}
+                </div>
+
+                {isAuthorized && (
+                    <div className="bg-slate-50 rounded-2xl overflow-hidden border border-slate-100 h-[400px] lg:h-auto min-h-[400px]">
+                        {getMapUrl() ? (
+                            <iframe
+                                width="100%"
+                                height="100%"
+                                frameBorder="0"
+                                scrolling="no"
+                                marginHeight={0}
+                                marginWidth={0}
+                                src={getMapUrl()}
+                                title="Location Map"
+                            />
+                        ) : (
+                            <div className="w-full h-full flex items-center justify-center text-slate-400">
+                                Location not set
+                            </div>
+                        )}
+                    </div>
+                )}
             </div>
 
             {/* Edit Modal */}
