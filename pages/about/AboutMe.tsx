@@ -245,20 +245,21 @@ export const AboutMe: React.FC<AboutMeProps> = ({ user, isAuthorized }) => {
     return (
         <div className="animate-fadeIn space-y-8 text-slate-700 leading-relaxed text-lg relative" style={{ textAlign: 'justify' }}>
             <div className="block overflow-hidden">
-                <div className="float-left mr-8 mb-4">
-                    <img
-                        src={`https://storage.googleapis.com/distilledchild/about/me/distilledchild-profile-pic.jpg?t=${profilePicTimestamp}`}
-                        alt="Profile"
-                        className="w-72 h-72 rounded-2xl object-cover shadow-lg transition-all duration-300"
-                        onError={(e) => {
-                            // Use a more visible placeholder if the image is missing
-                            const target = e.target as HTMLImageElement;
-                            if (!target.src.includes('placeholder')) {
-                                target.src = 'https://via.placeholder.com/300/f8fafc/64748b?text=Upload+Profile+Photo';
-                            }
-                        }}
-                    />
-                </div>
+                {isAuthorized && (
+                    <div className="float-left mr-8 mb-4">
+                        <img
+                            src={`https://storage.googleapis.com/distilledchild/about/me/distilledchild-profile-pic.jpg?t=${profilePicTimestamp}`}
+                            alt="Profile"
+                            className="w-72 h-72 rounded-2xl object-cover shadow-lg transition-all duration-300"
+                            onError={(e) => {
+                                const target = e.target as HTMLImageElement;
+                                if (!target.src.includes('placeholder')) {
+                                    target.src = 'https://via.placeholder.com/300/f8fafc/64748b?text=Upload+Profile+Photo';
+                                }
+                            }}
+                        />
+                    </div>
+                )}
                 <div
                     dangerouslySetInnerHTML={{ __html: aboutMe?.introduction || '' }}
                 />

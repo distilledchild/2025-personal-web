@@ -25,7 +25,7 @@ export const About: React.FC = () => {
 
                     // Check authorization from MEMBER collection
                     const data = await fetchMemberRole(storedUser.email);
-                    setIsAuthorized(Boolean(data.authorized));
+                    setIsAuthorized(String(data.role || '').toUpperCase() === 'ADMIN');
                 } catch (err) {
                     console.error('Failed to check authorization:', err);
                     setIsAuthorized(false);
