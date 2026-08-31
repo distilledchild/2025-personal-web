@@ -88,10 +88,13 @@ const Layout: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
   const [userRole, setUserRole] = React.useState<string | null>(null);
   const [isAuthorized, setIsAuthorized] = React.useState(false);
+  const [isAuthLoading, setIsAuthLoading] = React.useState(true);
   const researchDefaultPath = '/research/paperfinder';
+  const isAdminUser = !isAuthLoading && String(userRole || '').toUpperCase() === 'ADMIN';
 
   React.useEffect(() => {
     const checkAuth = async () => {
+      setIsAuthLoading(true);
       const stored = getStoredUserProfile<any>();
       if (stored) {
         try {
@@ -104,11 +107,13 @@ const Layout: React.FC = () => {
         } catch (e) {
           console.error("Failed to parse user profile or check authorization", e);
           setIsAuthorized(false);
+          setUserRole(null);
         }
       } else {
         setUserRole(null);
         setIsAuthorized(false);
       }
+      setIsAuthLoading(false);
     };
 
     checkAuth();
@@ -180,9 +185,11 @@ const Layout: React.FC = () => {
               <Link to={researchDefaultPath} onClick={() => setMobileMenuOpen(false)} className="text-2xl font-extrabold text-teal-500 hover:text-teal-300 transition-colors px-4 py-2">
                 Research
               </Link>
-              <Link to="/blog" onClick={() => setMobileMenuOpen(false)} className="text-2xl font-extrabold text-pink-500 hover:text-pink-300 transition-colors px-4 py-2">
-                Blog
-              </Link>
+              {isAdminUser && (
+                <Link to="/blog" onClick={() => setMobileMenuOpen(false)} className="text-2xl font-extrabold text-pink-500 hover:text-pink-300 transition-colors px-4 py-2">
+                  Blog
+                </Link>
+              )}
               <Link to="/interests/analysis/1" onClick={() => setMobileMenuOpen(false)} className="text-2xl font-extrabold text-[#FFA300] hover:text-[#FFD180] transition-colors px-4 py-2">
                 Interests
               </Link>
@@ -217,12 +224,14 @@ const Layout: React.FC = () => {
             active={location.pathname.startsWith('/research')}
             colorClass="text-teal-500 hover:text-teal-300"
           />
-          <LiquidTab
-            to="/blog"
-            label="Blog"
-            active={location.pathname.startsWith('/blog')}
-            colorClass="text-pink-500 hover:text-pink-300"
-          />
+          {isAdminUser && (
+            <LiquidTab
+              to="/blog"
+              label="Blog"
+              active={location.pathname.startsWith('/blog')}
+              colorClass="text-pink-500 hover:text-pink-300"
+            />
+          )}
           <LiquidTab
             to="/interests/analysis/1"
             label="Interests"
@@ -248,8 +257,14 @@ const Layout: React.FC = () => {
         <Route path="/research/singlecellseq" element={<Navigate to="/research/sequencings/singlecellseq" replace />} />
         <Route path="/research/:submenu" element={<Research />} />
         <Route path="/research/:submenu/:subId" element={<Research />} />
-        <Route path="/blog" element={<Navigate to="/blog/tech-bio" replace />} />
-        <Route path="/blog/:tab" element={<Blog />} />
+        <Route
+          path="/blog"
+          element={isAuthLoading ? null : isAdminUser ? <Navigate to="/blog/tech-bio" replace /> : <Navigate to="/" replace />}
+        />
+        <Route
+          path="/blog/:tab"
+          element={isAuthLoading ? null : isAdminUser ? <Blog /> : <Navigate to="/" replace />}
+        />
         <Route path="/interests" element={<Navigate to="/interests/analysis/1" replace />} />
         <Route path="/interests/:submenu" element={<Interests isAuthorized={isAuthorized} />} />
         <Route path="/interests/:submenu/:subId" element={<Interests isAuthorized={isAuthorized} />} />

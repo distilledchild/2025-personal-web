@@ -170,7 +170,7 @@ export const Blog: React.FC = () => {
 
                     // Check authorization from MEMBER collection
                     const data = await fetchMemberRole(userData.email);
-                    setIsAuthorized(Boolean(data.authorized));
+                    setIsAuthorized(String(data.role || '').toUpperCase() === 'ADMIN');
                 } catch (e) {
                     console.error('Failed to parse user data or check authorization', e);
                     setIsAuthorized(false);
