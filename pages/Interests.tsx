@@ -364,11 +364,7 @@ export const Interests: React.FC<{ isAuthorized: boolean }> = ({ isAuthorized })
         };
     }, [isAuthorized]);
 
-    useEffect(() => {
-        if (!adminCheckLoading && activeTab === 'workout' && !isAdminUser) {
-            navigate('/interests/analysis/1', { replace: true });
-        }
-    }, [activeTab, adminCheckLoading, isAdminUser, navigate]);
+    // Workout tab is publicly accessible to all users
 
     useEffect(() => {
         if (activeTab === 'art') {
@@ -601,10 +597,10 @@ export const Interests: React.FC<{ isAuthorized: boolean }> = ({ isAuthorized })
 
         if (activeTab === 'travel' || activeTab === 'art') {
             fetchStates();
-        } else if (activeTab === 'workout' && !adminCheckLoading && isAdminUser) {
+        } else if (activeTab === 'workout') {
             loadStravaActivities();
         }
-    }, [activeTab, adminCheckLoading, isAdminUser]);
+    }, [activeTab]);
 
     // test for fetching data from backend
     // useEffect(() => {
@@ -738,7 +734,7 @@ export const Interests: React.FC<{ isAuthorized: boolean }> = ({ isAuthorized })
     const interestTabs = [
         { id: 'analysis', label: 'Analysis', icon: BarChart3 },
         { id: 'art', label: 'Art', icon: Palette },
-        ...(isAdminUser ? [{ id: 'workout', label: 'Workout', icon: Dumbbell }] : []),
+        { id: 'workout', label: 'Workout', icon: Dumbbell },
         { id: 'travel', label: 'Travel', icon: Plane }
     ];
 
@@ -748,10 +744,6 @@ export const Interests: React.FC<{ isAuthorized: boolean }> = ({ isAuthorized })
                 <p className="text-slate-500">Loading...</p>
             </div>
         );
-    }
-
-    if (activeTab === 'workout' && !isAdminUser) {
-        return null;
     }
 
     return (
@@ -870,7 +862,7 @@ export const Interests: React.FC<{ isAuthorized: boolean }> = ({ isAuthorized })
                         </div>
                     )}
 
-                    {activeTab === 'workout' && isAdminUser && (
+                    {activeTab === 'workout' && (
                         <div className="animate-fadeIn space-y-8">
                             <div className="flex justify-between items-center">
                                 <div>
