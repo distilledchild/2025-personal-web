@@ -47,16 +47,8 @@ export const About: React.FC = () => {
         };
     }, []);
 
-    useEffect(() => {
-        if (!isAuthLoading && tab === 'academics' && !isAuthorized) {
-            navigate('/about/me', { replace: true });
-        }
-    }, [isAuthLoading, isAuthorized, navigate, tab]);
-
     // Map URL param to valid tabs, default to 'me'
-    const activeTab = (tab === 'academics' && !isAuthorized)
-        ? 'me'
-        : (tab === 'me' || tab === 'milestones' || tab === 'academics' || tab === 'tech-stack') ? tab : 'me';
+    const activeTab = (tab === 'me' || tab === 'milestones' || tab === 'academics' || tab === 'tech-stack') ? tab : 'me';
 
     const handleTabChange = (newTab: string) => {
         navigate(`/about/${newTab}`);
@@ -69,7 +61,7 @@ export const About: React.FC = () => {
                 tabs={[
                     { id: 'me', label: 'Me' },
                     { id: 'milestones', label: 'Milestones' },
-                    ...(isAuthorized ? [{ id: 'academics', label: 'Academic' }] : []),
+                    { id: 'academics', label: 'Academic' },
                     { id: 'tech-stack', label: 'Tech Stack' }
                 ]}
                 activeTab={activeTab}
@@ -82,7 +74,7 @@ export const About: React.FC = () => {
                 <div className="max-w-7xl mx-auto">
                     {activeTab === 'me' && <AboutMe user={user} isAuthorized={isAuthorized} />}
                     {activeTab === 'milestones' && <AboutMilestones user={user} isAuthorized={isAuthorized} />}
-                    {isAuthorized && activeTab === 'academics' && <AboutAcademics user={user} isAuthorized={isAuthorized} />}
+                    {activeTab === 'academics' && <AboutAcademics user={user} isAuthorized={isAuthorized} />}
                     {activeTab === 'tech-stack' && <AboutTechStack />}
                 </div>
             </div>
