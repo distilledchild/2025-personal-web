@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Plane, Dumbbell, BarChart3, ChevronLeft, ChevronRight, PersonStanding, Footprints, Bike, Palette, MapPin, X, UploadCloud, Save, Loader2 } from 'lucide-react';
+import { Plane, Dumbbell, BarChart3, ChevronLeft, ChevronRight, PersonStanding, Footprints, Bike, Palette, MapPin, X, UploadCloud, Save, Loader2, Pencil, Trash2 } from 'lucide-react';
 import { ComposableMap, Geographies, Geography, Marker, Annotation } from 'react-simple-maps';
 import { geoCentroid, geoAlbersUsa } from 'd3-geo';
 import { API_URL } from '../utils/apiConfig';
@@ -60,16 +60,25 @@ interface StateInfo {
 // Strava activity interface and data
 interface StravaActivity {
     id: number;
+    activity_id?: number;
+    _id?: string;
     name: string;
     distance: number;
+    distance_unit?: 'km' | 'mi';
     moving_time: number;
     elapsed_time: number;
     total_elevation_gain: number;
     type: string;
     sport_type: string;
     start_date: string;
+    start_date_local?: string;
     average_speed: number;
     max_speed: number;
+    location_text?: string;
+    device_text?: string;
+    average_pace_text?: string;
+    source_timezone?: string;
+    ocr_text?: string;
 }
 
 interface MonthlyStats {
@@ -79,6 +88,7 @@ interface MonthlyStats {
 }
 
 interface WorkoutScreenshotDraft {
+    editingActivityId?: number | string;
     name: string;
     sport_type: string;
     distanceValue: string;
@@ -449,6 +459,73 @@ export const Interests: React.FC<{ isAuthorized: boolean }> = ({ isAuthorized })
         }
     };
 
+    const handleEditActivity = (activity: StravaActivity) => {
+        const distanceUnit = activity.distance_unit || 'km';
+        const distanceValue = distanceUnit === 'mi'
+            ? (activity.distance / 1609.344).toFixed(2)
+            : (activity.distance / 1000).toFixed(2);
+
+        setWorkoutScreenshotDraft({
+            editingActivityId: activity.activity_id || activity.id,
+            name: activity.name || '',
+            sport_type: activity.sport_type || activity.type || 'Workout',
+            distanceValue: distanceValue,
+            distanceUnit: distanceUnit,
+            movingTimeText: formatDurationText(activity.moving_time || 0),
+            startDateLocal: toDateTimeLocalInput(activity.start_date_local || activity.start_date),
+            totalElevationGain: String(Math.round(activity.total_elevation_gain || 0)),
+            location_text: activity.location_text || '',
+            device_text: activity.device_text || '',
+            average_pace_text: activity.average_pace_text || '',
+            source_timezone: activity.source_timezone || '',
+            ocr_text: activity.ocr_text || ''
+        });
+        setWorkoutScreenshotError('');
+
+        // Smooth scroll to the workout form
+        setTimeout(() => {
+            const formElement = document.getElementById('workout-screenshot-form');
+            if (formElement) {
+                formElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }, 50);
+    };
+
+    const handleDeleteActivity = async (activity: StravaActivity) => {
+        const targetId = activity.activity_id || activity.id;
+        const displayName = activity.name || 'this workout';
+        if (!window.confirm(`Are you sure you want to delete "${displayName}"?`)) {
+            return;
+        }
+
+        const adminEmail = getAdminEmail();
+        if (!adminEmail) {
+            alert('Admin login is required.');
+            return;
+        }
+
+        try {
+            const response = await fetch(`${API_URL}/api/workouts/${targetId}`, {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ adminEmail })
+            });
+
+            const data = await response.json();
+            if (!response.ok) {
+                throw new Error(data.details || data.error || 'Failed to delete workout');
+            }
+
+            setStravaActivities(prev => prev.filter(a => (a.activity_id || a.id) !== targetId));
+            if (workoutScreenshotDraft?.editingActivityId === targetId) {
+                setWorkoutScreenshotDraft(null);
+            }
+        } catch (error) {
+            console.error('Failed to delete workout:', error);
+            alert(error instanceof Error ? error.message : 'Failed to delete workout');
+        }
+    };
+
     const handleWorkoutScreenshotSave = async () => {
         if (!workoutScreenshotDraft) return;
 
@@ -467,8 +544,14 @@ export const Interests: React.FC<{ isAuthorized: boolean }> = ({ isAuthorized })
         setWorkoutScreenshotError('');
 
         try {
-            const response = await fetch(`${API_URL}/api/workouts/screenshot`, {
-                method: 'POST',
+            const isEditing = Boolean(workoutScreenshotDraft.editingActivityId);
+            const url = isEditing
+                ? `${API_URL}/api/workouts/${workoutScreenshotDraft.editingActivityId}`
+                : `${API_URL}/api/workouts/screenshot`;
+            const method = isEditing ? 'PUT' : 'POST';
+
+            const response = await fetch(url, {
+                method,
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     adminEmail,
@@ -502,8 +585,14 @@ export const Interests: React.FC<{ isAuthorized: boolean }> = ({ isAuthorized })
                 id: data.workout.activity_id || data.workout.id
             };
 
-            setStravaActivities(prev => [savedActivity, ...prev]
-                .sort((a: any, b: any) => new Date(b.start_date).getTime() - new Date(a.start_date).getTime()));
+            if (isEditing) {
+                const targetId = workoutScreenshotDraft.editingActivityId;
+                setStravaActivities(prev => prev.map(a => ((a.activity_id || a.id) === targetId ? savedActivity : a))
+                    .sort((a: any, b: any) => new Date(b.start_date).getTime() - new Date(a.start_date).getTime()));
+            } else {
+                setStravaActivities(prev => [savedActivity, ...prev]
+                    .sort((a: any, b: any) => new Date(b.start_date).getTime() - new Date(a.start_date).getTime()));
+            }
             setWorkoutScreenshotDraft(null);
         } catch (error) {
             setWorkoutScreenshotError(error instanceof Error ? error.message : 'Failed to save workout');
@@ -634,7 +723,7 @@ export const Interests: React.FC<{ isAuthorized: boolean }> = ({ isAuthorized })
             const monthDate = new Date(todayDate.getFullYear(), todayDate.getMonth() - (11 - index), 1);
             const year = monthDate.getFullYear();
             const month = monthDate.getMonth();
-            const totals = { walk: 0, run: 0 };
+            const totals = { walk: 0, run: 0, bike: 0 };
 
             stravaActivities.forEach((activity) => {
                 const activityDate = new Date(activity.start_date);
@@ -645,13 +734,16 @@ export const Interests: React.FC<{ isAuthorized: boolean }> = ({ isAuthorized })
                     totals.walk += Number(activity.distance || 0) / 1000;
                 } else if (sportType.includes('run')) {
                     totals.run += Number(activity.distance || 0) / 1000;
+                } else if (isRideActivity(sportType)) {
+                    totals.bike += Number(activity.distance || 0) / 1000;
                 }
             });
 
             return {
                 month: monthDate.toLocaleDateString('en-US', { month: 'short' }),
                 walk: Number(totals.walk.toFixed(2)),
-                run: Number(totals.run.toFixed(2))
+                run: Number(totals.run.toFixed(2)),
+                bike: Number(totals.bike.toFixed(2))
             };
         });
     }, [stravaActivities, todayDate]);
@@ -662,58 +754,98 @@ export const Interests: React.FC<{ isAuthorized: boolean }> = ({ isAuthorized })
     const endIndex = startIndex + itemsPerPage;
     const currentActivities = stravaActivities.slice(startIndex, endIndex);
 
-    const workoutColumns = useMemo<DataTableColumn<StravaActivity>[]>(() => [
-        {
-            key: 'date',
-            header: 'Date',
-            render: (activity) => new Date(activity.start_date).toLocaleDateString('en-US', {
-                month: 'short',
-                day: 'numeric',
-                year: 'numeric'
-            })
-        },
-        {
-            key: 'activityName',
-            header: 'Activity Name',
-            className: 'font-medium text-slate-900',
-            render: (activity) => activity.name
-        },
-        {
-            key: 'type',
-            header: 'Type',
-            render: (activity) => (
-                activity.sport_type.toLowerCase() === 'walk' ? (
-                    <PersonStanding size={24} className="text-[#FFCC80]" />
-                ) : isRideActivity(activity.sport_type) ? (
-                    <Bike size={24} className="text-[#FF7700]" />
-                ) : activity.sport_type.toLowerCase() === 'run' || activity.sport_type.toLowerCase() === 'running' ? (
-                    <Footprints size={24} className="text-[#FFA300]" />
-                ) : (
-                    <span className="text-xs text-gray-600">{activity.sport_type}</span>
+    const workoutColumns = useMemo<DataTableColumn<StravaActivity>[]>(() => {
+        const columns: DataTableColumn<StravaActivity>[] = [
+            {
+                key: 'date',
+                header: 'Date',
+                render: (activity) => new Date(activity.start_date).toLocaleDateString('en-US', {
+                    month: 'short',
+                    day: 'numeric',
+                    year: 'numeric'
+                })
+            },
+            {
+                key: 'activityName',
+                header: 'Activity Name',
+                className: 'font-medium text-slate-900',
+                render: (activity) => activity.name
+            },
+            {
+                key: 'type',
+                header: 'Type',
+                render: (activity) => (
+                    activity.sport_type.toLowerCase() === 'walk' ? (
+                        <PersonStanding size={24} className="text-[#FFCC80]" />
+                    ) : isRideActivity(activity.sport_type) ? (
+                        <Bike size={24} className="text-[#FF7700]" />
+                    ) : activity.sport_type.toLowerCase() === 'run' || activity.sport_type.toLowerCase() === 'running' ? (
+                        <Footprints size={24} className="text-[#FFA300]" />
+                    ) : (
+                        <span className="text-xs text-gray-600">{activity.sport_type}</span>
+                    )
                 )
-            )
-        },
-        {
-            key: 'distance',
-            header: 'Distance',
-            render: (activity) => `${(activity.distance / 1000).toFixed(2)} km`
-        },
-        {
-            key: 'time',
-            header: 'Time',
-            render: (activity) => `${Math.floor(activity.moving_time / 3600)}h ${Math.floor((activity.moving_time % 3600) / 60)}m`
-        },
-        {
-            key: 'elevation',
-            header: 'Elevation',
-            render: (activity) => `${activity.total_elevation_gain.toFixed(0)} m`
-        },
-        {
-            key: 'avgPace',
-            header: 'Avg Pace',
-            render: (activity) => formatPacePerKm(activity.distance, activity.moving_time)
+            },
+            {
+                key: 'distance',
+                header: 'Distance',
+                render: (activity) => `${(activity.distance / 1000).toFixed(2)} km`
+            },
+            {
+                key: 'time',
+                header: 'Time',
+                render: (activity) => `${Math.floor(activity.moving_time / 3600)}h ${Math.floor((activity.moving_time % 3600) / 60)}m`
+            },
+            {
+                key: 'elevation',
+                header: 'Elevation',
+                render: (activity) => `${activity.total_elevation_gain.toFixed(0)} m`
+            },
+            {
+                key: 'avgPace',
+                header: 'Avg Pace',
+                render: (activity) => formatPacePerKm(activity.distance, activity.moving_time)
+            }
+        ];
+
+        if (isAuthorized && isAdminUser) {
+            columns.push({
+                key: 'actions',
+                header: 'Actions',
+                className: 'text-right',
+                render: (activity) => (
+                    <div className="flex items-center justify-end gap-2">
+                        <button
+                            type="button"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                handleEditActivity(activity);
+                            }}
+                            className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold text-orange-600 bg-orange-50 hover:bg-orange-100 rounded-lg transition-colors border border-orange-200"
+                            title="Edit activity"
+                        >
+                            <Pencil size={13} />
+                            Edit
+                        </button>
+                        <button
+                            type="button"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                handleDeleteActivity(activity);
+                            }}
+                            className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold text-red-600 bg-red-50 hover:bg-red-100 rounded-lg transition-colors border border-red-200"
+                            title="Delete activity"
+                        >
+                            <Trash2 size={13} />
+                            Delete
+                        </button>
+                    </div>
+                )
+            });
         }
-    ], []);
+
+        return columns;
+    }, [isAuthorized, isAdminUser]);
 
     const handleNextPage = () => {
         if (currentPage < totalPages) {
@@ -928,7 +1060,17 @@ export const Interests: React.FC<{ isAuthorized: boolean }> = ({ isAuthorized })
                                     )}
 
                                     {workoutScreenshotDraft && (
-                                        <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+                                        <div id="workout-screenshot-form" className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm scroll-mt-24">
+                                            <div className="mb-4 flex items-center justify-between border-b border-slate-100 pb-3">
+                                                <h4 className="text-sm font-bold uppercase tracking-wider text-slate-700">
+                                                    {workoutScreenshotDraft.editingActivityId ? 'Edit Workout Details' : 'Workout Draft'}
+                                                </h4>
+                                                {workoutScreenshotDraft.editingActivityId && (
+                                                    <span className="rounded-full bg-orange-100 px-2.5 py-0.5 text-xs font-semibold text-orange-700">
+                                                        Editing Mode
+                                                    </span>
+                                                )}
+                                            </div>
                                             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
                                                 <label className="space-y-1">
                                                     <span className="text-xs font-bold uppercase tracking-wide text-slate-500">Name</span>
@@ -1023,11 +1165,12 @@ export const Interests: React.FC<{ isAuthorized: boolean }> = ({ isAuthorized })
                                 <div className="mb-4 flex items-center justify-between gap-4">
                                     <div>
                                         <h4 className="text-lg font-bold text-slate-900">Distance over the last 12 months</h4>
-                                        <p className="text-sm text-slate-500">Monthly walking and running distance (km)</p>
+                                        <p className="text-sm text-slate-500">Monthly walking, running, and biking distance (km)</p>
                                     </div>
                                     <div className="flex shrink-0 items-center gap-4 text-sm font-medium text-slate-600">
                                         <span className="flex items-center gap-2"><span className="h-3 w-3 rounded-full bg-[#FFCC80]" />Walk</span>
                                         <span className="flex items-center gap-2"><span className="h-3 w-3 rounded-full bg-[#FFA300]" />Run</span>
+                                        <span className="flex items-center gap-2"><span className="h-3 w-3 rounded-full bg-[#FF7700]" />Bike</span>
                                     </div>
                                 </div>
                                 <ResponsiveContainer width="100%" height={234}>
@@ -1038,6 +1181,7 @@ export const Interests: React.FC<{ isAuthorized: boolean }> = ({ isAuthorized })
                                         <Tooltip formatter={(value: number) => [formatDistanceKm(value), 'Distance']} />
                                         <Line type="monotone" dataKey="walk" name="Walk" stroke="#FFCC80" strokeWidth={3} dot={{ r: 4, fill: '#FFCC80' }} activeDot={{ r: 6 }} />
                                         <Line type="monotone" dataKey="run" name="Run" stroke="#FFA300" strokeWidth={3} dot={{ r: 4, fill: '#FFA300' }} activeDot={{ r: 6 }} />
+                                        <Line type="monotone" dataKey="bike" name="Bike" stroke="#FF7700" strokeWidth={3} dot={{ r: 4, fill: '#FF7700' }} activeDot={{ r: 6 }} />
                                     </LineChart>
                                 </ResponsiveContainer>
                             </div>

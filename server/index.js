@@ -3859,6 +3859,104 @@ app.post('/api/workouts/screenshot', async (req, res) => {
     }
 });
 
+// Update a workout activity
+app.put('/api/workouts/:id', async (req, res) => {
+    try {
+        const adminEmail = await requireWorkoutScreenshotAdmin(req, res);
+        if (!adminEmail) return;
+
+        const idParam = req.params.id;
+        const workout = req.body?.workout || {};
+        const distance = Number(workout.distance);
+        const movingTime = Number(workout.moving_time);
+        const startDate = workout.start_date ? new Date(workout.start_date) : null;
+
+        if (!distance || !movingTime || !startDate || Number.isNaN(startDate.getTime())) {
+            return res.status(400).json({ error: 'Workout distance, moving time, and start date are required' });
+        }
+
+        const updateFields = {
+            name: String(workout.name || 'Workout').trim() || 'Workout',
+            distance,
+            distance_unit: workout.distance_unit === 'mi' ? 'mi' : 'km',
+            moving_time: movingTime,
+            elapsed_time: Number(workout.elapsed_time || movingTime),
+            total_elevation_gain: Number(workout.total_elevation_gain || 0),
+            type: String(workout.type || workout.sport_type || 'Workout'),
+            sport_type: String(workout.sport_type || workout.type || 'Workout'),
+            start_date: startDate,
+            start_date_local: workout.start_date_local ? new Date(workout.start_date_local) : startDate,
+            average_speed: distance / movingTime,
+            max_speed: Number(workout.max_speed || 0),
+            location_text: String(workout.location_text || ''),
+            device_text: String(workout.device_text || ''),
+            average_pace_text: String(workout.average_pace_text || ''),
+            source_timezone: String(workout.source_timezone || '')
+        };
+
+        const orFilters = [];
+        const numericId = Number(idParam);
+        if (!Number.isNaN(numericId)) {
+            orFilters.push({ activity_id: numericId });
+        }
+        if (mongoose.Types.ObjectId.isValid(idParam)) {
+            orFilters.push({ _id: idParam });
+        }
+        orFilters.push({ external_activity_id: idParam });
+
+        const filter = orFilters.length > 1 ? { $or: orFilters } : orFilters[0];
+
+        const updatedWorkout = await Workout.findOneAndUpdate(
+            filter,
+            { $set: updateFields },
+            { new: true }
+        );
+
+        if (!updatedWorkout) {
+            return res.status(404).json({ error: 'Workout not found' });
+        }
+
+        console.log(`[WORKOUT] Updated workout ${idParam} by admin ${adminEmail}`);
+        res.json({ success: true, workout: updatedWorkout });
+    } catch (err) {
+        console.error('[WORKOUT] Update failed:', err);
+        res.status(500).json({ error: 'Failed to update workout', details: err.message });
+    }
+});
+
+// Delete a workout activity
+app.delete('/api/workouts/:id', async (req, res) => {
+    try {
+        const adminEmail = await requireWorkoutScreenshotAdmin(req, res);
+        if (!adminEmail) return;
+
+        const idParam = req.params.id;
+        const orFilters = [];
+        const numericId = Number(idParam);
+        if (!Number.isNaN(numericId)) {
+            orFilters.push({ activity_id: numericId });
+        }
+        if (mongoose.Types.ObjectId.isValid(idParam)) {
+            orFilters.push({ _id: idParam });
+        }
+        orFilters.push({ external_activity_id: idParam });
+
+        const filter = orFilters.length > 1 ? { $or: orFilters } : orFilters[0];
+
+        const deletedWorkout = await Workout.findOneAndDelete(filter);
+
+        if (!deletedWorkout) {
+            return res.status(404).json({ error: 'Workout not found' });
+        }
+
+        console.log(`[WORKOUT] Deleted workout ${idParam} by admin ${adminEmail}`);
+        res.json({ success: true, message: 'Workout deleted successfully', id: idParam });
+    } catch (err) {
+        console.error('[WORKOUT] Delete failed:', err);
+        res.status(500).json({ error: 'Failed to delete workout', details: err.message });
+    }
+});
+
 // Clean up duplicate workouts (development only)
 app.delete('/api/workouts/cleanup-duplicates', async (req, res) => {
     try {
