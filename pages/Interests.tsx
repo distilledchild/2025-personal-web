@@ -1178,7 +1178,7 @@ export const Interests: React.FC<{ isAuthorized: boolean }> = ({ isAuthorized })
                                         <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
                                         <XAxis dataKey="month" tick={{ fill: '#64748b', fontSize: 12 }} />
                                         <YAxis tick={{ fill: '#64748b', fontSize: 12 }} width={42} />
-                                        <Tooltip formatter={(value: number) => [formatDistanceKm(value), 'Distance']} />
+                                        <Tooltip formatter={(value: number, name: string) => [formatDistanceKm(value), name || 'Distance']} />
                                         <Line type="monotone" dataKey="walk" name="Walk" stroke="#FFCC80" strokeWidth={3} dot={{ r: 4, fill: '#FFCC80' }} activeDot={{ r: 6 }} />
                                         <Line type="monotone" dataKey="run" name="Run" stroke="#FFA300" strokeWidth={3} dot={{ r: 4, fill: '#FFA300' }} activeDot={{ r: 6 }} />
                                         <Line type="monotone" dataKey="bike" name="Bike" stroke="#FF7700" strokeWidth={3} dot={{ r: 4, fill: '#FF7700' }} activeDot={{ r: 6 }} />
@@ -1221,7 +1221,7 @@ export const Interests: React.FC<{ isAuthorized: boolean }> = ({ isAuthorized })
                                                     <YAxis stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} />
                                                     <Tooltip
                                                         contentStyle={{ backgroundColor: 'rgba(255,255,255,0.95)', borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)' }}
-                                                        formatter={(value: number) => [formatDistanceKm(value), 'Distance']}
+                                                        formatter={(value: number, _name: string, item: any) => [formatDistanceKm(value), item?.payload?.name || 'Distance']}
                                                     />
                                                     <Bar dataKey="distance" radius={[8, 8, 0, 0]}>
                                                         {chartData.map((entry, index) => (
