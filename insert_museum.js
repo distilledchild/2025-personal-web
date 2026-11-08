@@ -24,8 +24,14 @@ async function insertData() {
 
     // ─── Edit museums to insert ───────────────────────────────────────────────
     const newMuseums = [
-        // Example — add/edit entries as needed:
-        // { museum_code: 'ABM', museum_name: 'Albuquerque Museum', city_code: 'ABQ', state: 'NM', show: 'Y', artworks: [] },
+        {
+            museum_code: 'SDMA',
+            museum_name: 'The San Diego Museum of Art',
+            city_code: 'SAN',
+            state: 'CA',
+            show: 'Y',
+            artworks: []
+        }
     ];
 
     // ─── Insert Cities ────────────────────────────────────────────────────────
